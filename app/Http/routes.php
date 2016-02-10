@@ -39,6 +39,7 @@ Route::group(['middleware' => ['web']], function () {
 });
 
 Route::post('select', array('as' => 'ajax.module_select', 'uses' => 'AjaxController@getModules'));
+Route::post('select', array('as' => 'ajax.parent_select', 'uses' => 'AjaxController@checkParents'));
 
 Route::controllers([
     'auth' => 'Auth\AuthController',

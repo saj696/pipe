@@ -72,12 +72,11 @@ class WorkspacesController extends Controller
     {
         $workspace = Workspace::findOrFail($id);
 
-        $workspace->name_en = $request->input('name_en');
-        $workspace->name_bn = $request->input('name_bn');
-        $workspace->component_id = $request->input('component_id');
-        $workspace->icon = $request->input('icon');
-        $workspace->description = $request->input('description');
-        $workspace->ordering = $request->input('ordering');
+        $workspace->name = $request->input('name');
+        $workspace->type = $request->input('type');
+        $workspace->parent = $request->input('parent');
+        $workspace->location = $request->input('location');
+        $workspace->status = $request->input('status');
         $workspace->updated_by = Auth::user()->id;
         $workspace->updated_at = time();
         $workspace->update();

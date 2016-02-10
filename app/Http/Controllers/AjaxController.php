@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Models\Module;
+use App\Models\Workspace;
 use App\Article;
 use App\Tag;
 use Carbon\Carbon;
@@ -27,5 +28,13 @@ class AjaxController extends Controller
         $component_id = $request->input('component_id');
         $data = Module::where('component_id', '=', $component_id)->lists('name_en', 'id');;
         return response()->json($data);
+    }
+
+    public function checkParents(Request $request)
+    {
+        $parent_id = $request->input('parent_id');
+        $type_id = $request->input('type_id');
+        $parent_type_id = Workspace::where('id', '=', $parent_id)->value('type');
+        return response()->json($parent_type_id);
     }
 }
