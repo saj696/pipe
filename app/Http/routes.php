@@ -36,10 +36,11 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('users', 'User\UsersController');
     Route::resource('roles', 'User\RolesController');
     Route::resource('workspaces', 'Setup\WorkspacesController');
+    Route::resource('materials', 'Setup\MaterialsController');
 });
 
-Route::post('select', array('as' => 'ajax.module_select', 'uses' => 'AjaxController@getModules'));
-Route::post('select', array('as' => 'ajax.parent_select', 'uses' => 'AjaxController@checkParents'));
+Route::post('module_select', array('as' => 'ajax.module_select', 'uses' => 'AjaxController@getModules'));
+Route::post('parent_select', array('as' => 'ajax.parent_select', 'uses' => 'AjaxController@checkParents'));
 
 Route::controllers([
     'auth' => 'Auth\AuthController',
