@@ -8,7 +8,7 @@
                         <i class="fa fa-coffee"></i>Daily Usage Registers
                     </div>
                     <div>
-                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="<?php echo e(url('/usageRegisters/create' )); ?>">New</a>
+                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="<?php echo e(url('/usageRegisters/create')); ?>">New</a>
                     </div>
                 </div>
 

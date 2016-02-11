@@ -32,7 +32,7 @@ class UsageRegistersController extends Controller
     public function show($id)
     {
         $UsageRegister = UsageRegister::findOrFail($id);
-        return view('UsageRegisters.show', compact('UsageRegister'));
+        return view('usageRegisters.show', compact('UsageRegister'));
     }
 
     public function create()
@@ -52,15 +52,15 @@ class UsageRegistersController extends Controller
 
         $UsageRegister->save();
 
-        Session()->flash('flash_message', 'UsageRegister has been created!');
-        return redirect('UsageRegisters');
+        Session()->flash('flash_message', 'Usage Register has been created!');
+        return redirect('usageRegisters');
     }
 
     public function edit($id)
     {
         $types = Config::get('common.UsageRegister_type');
         $UsageRegister = UsageRegister::findOrFail($id);
-        return view('UsageRegisters.edit', compact('types', 'UsageRegister'));
+        return view('usageRegisters.edit', compact('types', 'UsageRegister'));
     }
 
     public function update($id, UsageRegisterRequest $request)
@@ -74,7 +74,7 @@ class UsageRegistersController extends Controller
         $UsageRegister->updated_at = time();
         $UsageRegister->update();
 
-        Session()->flash('flash_message', 'UsageRegister has been updated!');
-        return redirect('UsageRegisters');
+        Session()->flash('flash_message', 'Usage Register has been updated!');
+        return redirect('usageRegisters');
     }
 }
