@@ -7,10 +7,10 @@
             <div class="portlet box yellow">
                 <div class="portlet-title">
                     <div class="caption">
-                        <i class="fa fa-coffee"></i>Product Types
+                        <i class="fa fa-coffee"></i>Products
                     </div>
                     <div>
-                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="{{ url('/product_types/create' )}}">New</a>
+                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="{{ url('/products/create' )}}">Add New Product</a>
                     </div>
                 </div>
                 <div class="portlet-body">
@@ -37,15 +37,13 @@
                             </thead>
                             <tbody>
 
-                            @if(sizeof($product_types)>0)
-                            @foreach($product_types as $product_type)
+                            @if(sizeof($products)>0)
+                            @foreach($products as $product)
                             <tr>
-                                <td>{{ $product_type->title }}</td>
-                                <td>{{ $product_type->created_at ? date('d-m-Y  h:i:s A',$product_type->created_at): '' }}</td>
-                                <td>{{ $product_type->updated_by ? date('d-m-Y  h:i:s A',$product_type->updated_by): '' }}</td>
-                                <td>{{ \Illuminate\Support\Facades\Config::get('common.status')[$product_type->status] }}</td>
+                                <td>{{ $product->title }}</td>
+                                <td>{{ \Illuminate\Support\Facades\Config::get('common.status')[$product->status] }}</td>
                                 <td>
-                                    <a class="label label-danger" href="{{ url('/product_types/'.$product_type->id.'/edit' )}}">Edit</a>
+                                    <a class="label label-danger" href="{{ url('/products/'.$product->id.'/edit' )}}">Edit</a>
                                 </td>
                             </tr>
                             @endforeach
@@ -57,7 +55,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="pagination"> {{ $product_types->links() }} </div>
+                    {{--<div class="pagination"> {{ $tasks->links() }} </div>--}}
                 </div>
             </div>
         </div>
