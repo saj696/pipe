@@ -27,7 +27,7 @@
 <div class="form-group{{ $errors->has('status') ? ' has-error' : '' }}">
     {{ Form::label('status', 'Status', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7">
-        {{ Form::select('status', Config::get('common.status'), 1,['class'=>'form-control', 'placeholder'=>'Select']) }}
+        {{ Form::select('status', Config::get('common.status'), null,['class'=>'form-control', 'placeholder'=>'Select']) }}
         @if ($errors->has('status'))
             <span class="help-block">
                 <strong>{{ $errors->first('status') }}</strong>

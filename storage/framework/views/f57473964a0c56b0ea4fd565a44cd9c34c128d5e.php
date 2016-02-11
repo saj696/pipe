@@ -33,7 +33,7 @@
     <?php echo e(Form::label('status', 'Status', ['class'=>'col-md-3 control-label'])); ?>
 
     <div class="col-md-7">
-        <?php echo e(Form::select('status', Config::get('common.status'), 1,['class'=>'form-control', 'placeholder'=>'Select'])); ?>
+        <?php echo e(Form::select('status', Config::get('common.status'), null,['class'=>'form-control', 'placeholder'=>'Select'])); ?>
 
         <?php if($errors->has('status')): ?>
             <span class="help-block">
