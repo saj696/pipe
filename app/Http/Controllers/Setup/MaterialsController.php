@@ -69,14 +69,12 @@ class MaterialsController extends Controller
 
         $material->name = $request->input('name');
         $material->type = $request->input('type');
-        $material->parent = $request->input('parent');
-        $material->location = $request->input('location');
         $material->status = $request->input('status');
         $material->updated_by = Auth::user()->id;
         $material->updated_at = time();
         $material->update();
 
         Session()->flash('flash_message', 'Material has been updated!');
-        return redirect('Materials');
+        return redirect('materials');
     }
 }

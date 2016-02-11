@@ -3,7 +3,7 @@
     <div class="portlet box green">
         <div class="portlet-title">
             <div class="caption">
-                <i class="fa fa-gift"></i> Edit: {{ $workspace->name }}
+                <i class="fa fa-gift"></i> Edit: {{ $material->name }}
             </div>
             <div class="tools">
                 <a href="" class="collapse">
@@ -19,7 +19,7 @@
         <div class="portlet-body form">
             <div class="form-horizontal" role="form">
                 <div class="form-body">
-                    {{ Form::model($workspace, ['method'=>'PATCH','action'=>['Setup\MaterialsController@update', $workspace->id]]) }}
+                    {{ Form::model($material, ['method'=>'PATCH','action'=>['Setup\MaterialsController@update', $material->id]]) }}
                     @include('materials.form', ['submitText'=>'Update'])
                     {{ Form::close() }}
                 </div>
