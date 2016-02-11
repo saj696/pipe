@@ -14,14 +14,9 @@ class Material extends Model
         'name'
     ];
 
-//    public function users()
-//    {
-//        return $this->hasMany('App\Models\User');
-//    }
-//
-//    public function parentInfo()
-//    {
-//        return $this->belongsTo('App\Models\Workspace', 'parent');
-//    }
+    public function UsageRegisters()
+    {
+        return $this->hasMany('App\Models\UsageRegister');
+    }
 
 }
