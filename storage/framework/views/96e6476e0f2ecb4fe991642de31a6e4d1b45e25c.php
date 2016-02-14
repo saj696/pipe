@@ -45,10 +45,29 @@
     <?php /*</div>*/ ?>
 <?php /*</div>*/ ?>
 
+<table class="table table-bordered">
+    <tr>
+        <td>
+            <div class="form-group<?php echo e($errors->has('date') ? ' has-error' : ''); ?>">
+                <?php echo e(Form::label('date', 'Date', ['class'=>'col-md-4 control-label'])); ?>
+
+                <div class="col-md-4">
+                    <?php echo e(Form::text('date', null,['class'=>'form-control col-md-2'])); ?>
+
+                    <?php if($errors->has('name')): ?>
+                        <span class="help-block">
+                            <strong><?php echo e($errors->first('date')); ?></strong>
+                        </span>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
 <table class="table table-bordered" id="adding_elements">
     <thead>
         <tr>
-            <th>Date</th>
             <th>Material</th>
             <th>Usage</th>
         </tr>
@@ -56,17 +75,8 @@
     <tbody>
         <tr>
             <td>
-                <div>
-                    <?php echo e(Form::text('date[]', null,['class'=>'form-control quantity'])); ?>
+                <?php echo e(Form::select('material_id[]', $materials, null,['class'=>'form-control', 'id'=>'material_id', 'placeholder'=>'Select'])); ?>
 
-                </div>
-            </td>
-
-            <td>
-                <div>
-                    <?php echo e(Form::text('material_id[]', null,['class'=>'form-control quantity'])); ?>
-
-                </div>
             </td>
 
             <td>
@@ -99,6 +109,10 @@
 
 <script type="text/javascript">
 
+    $(function() {
+        $( "#date" ).datepicker();
+    });
+
     jQuery(document).ready(function()
     {
         $(document).on("keyup", ".quantity", function()
@@ -119,14 +133,18 @@
         row.className = "tableHover";
         //alert(row.id);
         var cell1 = row.insertCell(0);
-        cell1.innerHTML = "<input type='text' name='date[]' class='form-control quantity'/>";
+
+        cell1.innerHTML = "<select name='material_id[]' id='material_id" + ExId + "' class='form-control'>\n\
+        <option value=''>Select</option>\n\
+        <?php
+        foreach ($materials as $id=>$material)
+            echo "<option value='" . $id. "'>" . $material . "</option>";
+        ?>";
         var cell1 = row.insertCell(1);
-        cell1.innerHTML = "<input type='text' name='material_id[]' class='form-control quantity'/>";
-        var cell1 = row.insertCell(2);
         cell1.innerHTML = "<input type='text' name='usage[]' class='form-control quantity'/>"+
-                "<input type='hidden' id='elmIndex[]' name='elmIndex[]' value='" + ExId + "'/>";
+        "<input type='hidden' id='elmIndex[]' name='elmIndex[]' value='" + ExId + "'/>";
         cell1.style.cursor = "default";
-        cell1 = row.insertCell(3);
+        cell1 = row.insertCell(2);
         cell1.innerHTML = "<img style='width: 25px; height: 25px;'  onclick=\"RowDecrement('adding_elements', 'T"+ExId+"')\" src='<?php echo e(URL::asset('public/image/xmark.png')); ?>' />";
         cell1.style.cursor = "default";
         ExId = ExId + 1;

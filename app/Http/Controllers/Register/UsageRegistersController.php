@@ -38,6 +38,7 @@ class UsageRegistersController extends Controller
     public function create()
     {
         $materials = Material::lists('name', 'id');
+
         return view('usageRegisters.create', compact('materials'));
     }
 

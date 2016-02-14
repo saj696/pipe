@@ -74,6 +74,9 @@
     <link href="<?php echo e(URL::asset('css/layout.css')); ?>" rel="stylesheet" type="text/css"/>
     <link href="<?php echo e(URL::asset('css/darkblue.css')); ?>" rel="stylesheet" type="text/css" id="style_color"/>
     <link href="<?php echo e(URL::asset('css/custom.css')); ?>" rel="stylesheet" type="text/css"/>
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
     <!-- END THEME STYLES -->
     <link rel="shortcut icon" href="favicon.ico"/>
 </head>

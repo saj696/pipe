@@ -1,53 +1,26 @@
 {!! csrf_field() !!}
 
-{{--<div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">--}}
-    {{--{{ Form::label('name', 'Name', ['class'=>'col-md-3 control-label']) }}--}}
-    {{--<div class="col-md-7">--}}
-        {{--{{ Form::text('name', null,['class'=>'form-control']) }}--}}
-        {{--@if ($errors->has('name'))--}}
-            {{--<span class="help-block">--}}
-                {{--<strong>{{ $errors->first('name') }}</strong>--}}
-            {{--</span>--}}
-        {{--@endif--}}
-    {{--</div>--}}
-{{--</div>--}}
-
-{{--<div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">--}}
-    {{--{{ Form::label('type', 'Type', ['class'=>'col-md-3 control-label']) }}--}}
-    {{--<div class="col-md-7">--}}
-        {{--{{ Form::select('type', $types, null,['class'=>'form-control', 'id'=>'type', 'placeholder'=>'Select']) }}--}}
-        {{--@if ($errors->has('type'))--}}
-            {{--<span class="help-block">--}}
-                {{--<strong>{{ $errors->first('type') }}</strong>--}}
-            {{--</span>--}}
-        {{--@endif--}}
-    {{--</div>--}}
-{{--</div>--}}
-
-{{--<div class="form-group{{ $errors->has('status') ? ' has-error' : '' }}">--}}
-    {{--{{ Form::label('status', 'Status', ['class'=>'col-md-3 control-label']) }}--}}
-    {{--<div class="col-md-7">--}}
-        {{--{{ Form::select('status', Config::get('common.status'), null,['class'=>'form-control', 'placeholder'=>'Select']) }}--}}
-        {{--@if ($errors->has('status'))--}}
-            {{--<span class="help-block">--}}
-                {{--<strong>{{ $errors->first('status') }}</strong>--}}
-            {{--</span>--}}
-        {{--@endif--}}
-    {{--</div>--}}
-{{--</div>--}}
-
-{{--<div class="form-actions">--}}
-    {{--<div class="row">--}}
-        {{--<div class="col-md-offset-3 col-md-9">--}}
-        {{--{{ Form::submit($submitText, ['class'=>'btn green']) }}--}}
-        {{--</div>--}}
-    {{--</div>--}}
-{{--</div>--}}
+<table class="table table-bordered">
+    <tr>
+        <td>
+            <div class="form-group{{ $errors->has('date') ? ' has-error' : '' }}">
+                {{ Form::label('date', 'Date', ['class'=>'col-md-4 control-label']) }}
+                <div class="col-md-4">
+                    {{ Form::text('date', null,['class'=>'form-control col-md-2']) }}
+                    @if ($errors->has('name'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('date') }}</strong>
+                        </span>
+                    @endif
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
 
 <table class="table table-bordered" id="adding_elements">
     <thead>
         <tr>
-            <th>Date</th>
             <th>Material</th>
             <th>Usage</th>
         </tr>
@@ -55,15 +28,7 @@
     <tbody>
         <tr>
             <td>
-                <div>
-                    {{ Form::text('date[]', null,['class'=>'form-control quantity']) }}
-                </div>
-            </td>
-
-            <td>
-                <div>
-                    {{ Form::text('material_id[]', null,['class'=>'form-control quantity']) }}
-                </div>
+                {{ Form::select('material_id[]', $materials, null,['class'=>'form-control', 'id'=>'material_id', 'placeholder'=>'Select']) }}
             </td>
 
             <td>
@@ -94,6 +59,10 @@
 
 <script type="text/javascript">
 
+    $(function() {
+        $( "#date" ).datepicker();
+    });
+
     jQuery(document).ready(function()
     {
         $(document).on("keyup", ".quantity", function()
@@ -114,14 +83,18 @@
         row.className = "tableHover";
         //alert(row.id);
         var cell1 = row.insertCell(0);
-        cell1.innerHTML = "<input type='text' name='date[]' class='form-control quantity'/>";
+
+        cell1.innerHTML = "<select name='material_id[]' id='material_id" + ExId + "' class='form-control'>\n\
+        <option value=''>Select</option>\n\
+        <?php
+        foreach ($materials as $id=>$material)
+            echo "<option value='" . $id. "'>" . $material . "</option>";
+        ?>";
         var cell1 = row.insertCell(1);
-        cell1.innerHTML = "<input type='text' name='material_id[]' class='form-control quantity'/>";
-        var cell1 = row.insertCell(2);
         cell1.innerHTML = "<input type='text' name='usage[]' class='form-control quantity'/>"+
-                "<input type='hidden' id='elmIndex[]' name='elmIndex[]' value='" + ExId + "'/>";
+        "<input type='hidden' id='elmIndex[]' name='elmIndex[]' value='" + ExId + "'/>";
         cell1.style.cursor = "default";
-        cell1 = row.insertCell(3);
+        cell1 = row.insertCell(2);
         cell1.innerHTML = "<img style='width: 25px; height: 25px;'  onclick=\"RowDecrement('adding_elements', 'T"+ExId+"')\" src='{{ URL::asset('public/image/xmark.png') }}' />";
         cell1.style.cursor = "default";
         ExId = ExId + 1;
