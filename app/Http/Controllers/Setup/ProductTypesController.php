@@ -23,7 +23,7 @@ class ProductTypesController extends Controller
      */
     public function index()
     {
-        return view('productTypes/index')->with('product_types',ProductType::all());
+        return view('productTypes/index')->with('product_types',ProductType::paginate(Config::get('common.pagination')));
     }
 
     /**
@@ -90,6 +90,8 @@ class ProductTypesController extends Controller
         $product_type = ProductType::findOrFail($id);
         $product_type->title = $request->input('title');
         $product_type->status = $request->input('status');
+        $product_type->updated_at = time();
+        $product_type->updated_by = Auth::user()->id;
         $product_type->update();
         Session()->flash('flash_message', 'Data has been Updated');
         return redirect('product_types');

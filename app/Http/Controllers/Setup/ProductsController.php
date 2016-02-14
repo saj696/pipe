@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
@@ -63,6 +64,8 @@ class ProductsController extends Controller
         }
         $product->color = $request->input('color');
         $product->status = $request->input('status');
+        $product->created_at = time();
+        $product->created_by = Auth::user()->id;
         $product->save();
         Session()->flash('flash_message', 'Data has been Saved');
         return redirect('products');
@@ -116,6 +119,8 @@ class ProductsController extends Controller
         }
         $product->color = $request->input('color');
         $product->status = $request->input('status');
+        $product->update_at = time();
+        $product->update_by = Auth::user()->id;
         $product->update();
         Session()->flash('flash_message', 'Data has been Updated');
         return redirect('products');

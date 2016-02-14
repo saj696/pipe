@@ -53,6 +53,8 @@ class SuppliersController extends Controller
         $supplier->contact_person_phone = $request->input('contact_person_phone');
         $supplier->supplier_description = $request->input('supplier_description');
         $supplier->status = $request->input('status');
+        $supplier->created_at = time();
+        $supplier->created_by = Auth::user()->id;
         $supplier->save();
         Session()->flash('flash_message','Data has been Saved');
         return redirect('suppliers');
@@ -100,6 +102,8 @@ class SuppliersController extends Controller
         $supplier->contact_person_phone = $request->input('contact_person_phone');
         $supplier->supplier_description = $request->input('supplier_description');
         $supplier->status = $request->input('status');
+        $supplier->updated_at = time();
+        $supplier->updated_by = Auth::user()->id;
         $supplier->update();
         Session()->flash('flash_message','Data has been Updated');
         return redirect('suppliers');
