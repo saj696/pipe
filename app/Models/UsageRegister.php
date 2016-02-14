@@ -12,7 +12,6 @@ class UsageRegister extends Model
     protected $fillable = [
         'date',
         'material',
-        'color',
         'usage'
     ];
 
@@ -28,7 +27,7 @@ class UsageRegister extends Model
 
     public function setDateAttribute($value)
     {
-        return strtotime($value);
+        $this->attributes['date']=strtotime($value);
     }
 
 }

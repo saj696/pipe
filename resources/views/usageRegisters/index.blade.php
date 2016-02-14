@@ -44,7 +44,7 @@
                                             {{ $usageRegister->date }}
                                         </td>
                                         <td>
-                                            {{ $materials[$usageRegister->material_id] }}
+                                            {{ $usageRegister->material->name }}
                                         </td>
                                         <td>
                                             {{ $usageRegister->usage }}

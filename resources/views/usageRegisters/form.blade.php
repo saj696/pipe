@@ -7,7 +7,7 @@
                 {{ Form::label('date', 'Date', ['class'=>'col-md-4 control-label']) }}
                 <div class="col-md-4">
                     {{ Form::text('date', null,['class'=>'form-control col-md-2']) }}
-                    @if ($errors->has('name'))
+                    @if ($errors->has('date'))
                         <span class="help-block">
                             <strong>{{ $errors->first('date') }}</strong>
                         </span>

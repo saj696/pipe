@@ -8,10 +8,11 @@ $baseDir = dirname($vendorDir);
 return array(
     'CreateArticlesTable' => $baseDir . '/database/migrations/2016_01_02_143902_create_articles_table.php',
     'CreateComponentsTable' => $baseDir . '/database/migrations/2016_01_13_183904_create_components_table.php',
-    'CreateDailyUsageRegistersTable' => $baseDir . '/database/migrations/2016_02_11_072821_create_daily_usage_registers_table_old.php',
+    'CreateDailyUsageRegistersTable' => $baseDir . '/database/migrations/2016_02_11_084717_create_daily_usage_registers_table.php',
     'CreateMaterialsTable' => $baseDir . '/database/migrations/2016_02_11_054222_create_materials_table.php',
     'CreateModulesTable' => $baseDir . '/database/migrations/2016_01_13_191706_create_modules_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
+    'CreateProductionRegistersTable' => $baseDir . '/database/migrations/2016_02_14_105512_create_production_registers_table.php',
     'CreateTagsTable' => $baseDir . '/database/migrations/2016_01_09_144101_create_tags_table.php',
     'CreateTasksTable' => $baseDir . '/database/migrations/2016_01_13_192905_create_tasks_table.php',
     'CreateUserGroupRoleTableAgain' => $baseDir . '/database/migrations/2016_01_20_173053_createUserGroupRoleTableAgain.php',

@@ -38,6 +38,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('workspaces', 'Setup\WorkspacesController');
     Route::resource('materials', 'Setup\MaterialsController');
     Route::resource('usageRegisters', 'Register\UsageRegistersController');
+    Route::resource('productionRegisters', 'Register\ProductionRegistersController');
 });
 
 Route::post('module_select', array('as' => 'ajax.module_select', 'uses' => 'AjaxController@getModules'));

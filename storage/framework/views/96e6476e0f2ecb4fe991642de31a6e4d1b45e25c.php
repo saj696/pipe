@@ -10,7 +10,7 @@
                 <div class="col-md-4">
                     <?php echo e(Form::text('date', null,['class'=>'form-control col-md-2'])); ?>
 
-                    <?php if($errors->has('name')): ?>
+                    <?php if($errors->has('date')): ?>
                         <span class="help-block">
                             <strong><?php echo e($errors->first('date')); ?></strong>
                         </span>
