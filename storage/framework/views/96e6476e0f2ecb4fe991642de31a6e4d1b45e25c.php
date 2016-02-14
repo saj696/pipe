@@ -1,50 +1,6 @@
 <?php echo csrf_field(); ?>
 
 
-<?php /*<div class="form-group<?php echo e($errors->has('name') ? ' has-error' : ''); ?>">*/ ?>
-    <?php /*<?php echo e(Form::label('name', 'Name', ['class'=>'col-md-3 control-label'])); ?>*/ ?>
-    <?php /*<div class="col-md-7">*/ ?>
-        <?php /*<?php echo e(Form::text('name', null,['class'=>'form-control'])); ?>*/ ?>
-        <?php /*<?php if($errors->has('name')): ?>*/ ?>
-            <?php /*<span class="help-block">*/ ?>
-                <?php /*<strong><?php echo e($errors->first('name')); ?></strong>*/ ?>
-            <?php /*</span>*/ ?>
-        <?php /*<?php endif; ?>*/ ?>
-    <?php /*</div>*/ ?>
-<?php /*</div>*/ ?>
-
-<?php /*<div class="form-group<?php echo e($errors->has('type') ? ' has-error' : ''); ?>">*/ ?>
-    <?php /*<?php echo e(Form::label('type', 'Type', ['class'=>'col-md-3 control-label'])); ?>*/ ?>
-    <?php /*<div class="col-md-7">*/ ?>
-        <?php /*<?php echo e(Form::select('type', $types, null,['class'=>'form-control', 'id'=>'type', 'placeholder'=>'Select'])); ?>*/ ?>
-        <?php /*<?php if($errors->has('type')): ?>*/ ?>
-            <?php /*<span class="help-block">*/ ?>
-                <?php /*<strong><?php echo e($errors->first('type')); ?></strong>*/ ?>
-            <?php /*</span>*/ ?>
-        <?php /*<?php endif; ?>*/ ?>
-    <?php /*</div>*/ ?>
-<?php /*</div>*/ ?>
-
-<?php /*<div class="form-group<?php echo e($errors->has('status') ? ' has-error' : ''); ?>">*/ ?>
-    <?php /*<?php echo e(Form::label('status', 'Status', ['class'=>'col-md-3 control-label'])); ?>*/ ?>
-    <?php /*<div class="col-md-7">*/ ?>
-        <?php /*<?php echo e(Form::select('status', Config::get('common.status'), null,['class'=>'form-control', 'placeholder'=>'Select'])); ?>*/ ?>
-        <?php /*<?php if($errors->has('status')): ?>*/ ?>
-            <?php /*<span class="help-block">*/ ?>
-                <?php /*<strong><?php echo e($errors->first('status')); ?></strong>*/ ?>
-            <?php /*</span>*/ ?>
-        <?php /*<?php endif; ?>*/ ?>
-    <?php /*</div>*/ ?>
-<?php /*</div>*/ ?>
-
-<?php /*<div class="form-actions">*/ ?>
-    <?php /*<div class="row">*/ ?>
-        <?php /*<div class="col-md-offset-3 col-md-9">*/ ?>
-        <?php /*<?php echo e(Form::submit($submitText, ['class'=>'btn green'])); ?>*/ ?>
-        <?php /*</div>*/ ?>
-    <?php /*</div>*/ ?>
-<?php /*</div>*/ ?>
-
 <table class="table table-bordered">
     <tr>
         <td>
@@ -83,7 +39,7 @@
                 <?php echo e(Form::text('usage[]', null,['class'=>'form-control quantity'])); ?>
 
             </td>
-            <td style="min-width: 25px;">
+            <td style="width: 25px; height: 34px;">
 
             </td>
         </tr>

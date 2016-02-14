@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
+use App\Models\UsageRegister;
 
 class UsageRegisterRequest extends Request
 {
@@ -24,10 +25,31 @@ class UsageRegisterRequest extends Request
      */
     public function rules()
     {
-        return [
-            'material_id'=>'required|integer',
-            'date'=>'required|date',
-            'usage'=>'required|integer'
-        ];
+        switch($this->method())
+        {
+            case 'GET':
+            case 'DELETE':
+            {
+                return [];
+            }
+            case 'POST':
+            {
+                return [
+                    'material_id'=>'required|array',
+                    'date'=>'required|date',
+                    'usage'=>'required|array'
+                ];
+            }
+            case 'PUT':
+            case 'PATCH':
+            {
+                return [
+                    'material_id'=>'required|integer',
+                    'date'=>'required|date',
+                    'usage'=>'required|integer'
+                ];
+            }
+            default:break;
+        }
     }
 }

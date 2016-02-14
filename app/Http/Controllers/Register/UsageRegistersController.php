@@ -25,8 +25,9 @@ class UsageRegistersController extends Controller
     public function index()
     {
         $usageRegisters = UsageRegister::paginate(Config::get('common.pagination'));
+        $materials = Material::lists('name', 'id');
         $status = Config::get('common.status');
-        return view('usageRegisters.index', compact('usageRegisters', 'status'));
+        return view('usageRegisters.index', compact('usageRegisters', 'materials', 'status'));
     }
 
     public function show($id)
@@ -38,20 +39,26 @@ class UsageRegistersController extends Controller
     public function create()
     {
         $materials = Material::lists('name', 'id');
-
         return view('usageRegisters.create', compact('materials'));
     }
 
     public function store(UsageRegisterRequest $request)
     {
-        $UsageRegister = New UsageRegister;
-        $UsageRegister->name = $request->input('name');
-        $UsageRegister->type = $request->input('type');
-        $UsageRegister->status = $request->input('status');
-        $UsageRegister->created_by = Auth::user()->id;
-        $UsageRegister->created_at = time();
+        $count = sizeof($request->input('material_id'));
+        $materialInput = $request->input('material_id');
+        $usageInput = $request->input('usage');
 
-        $UsageRegister->save();
+        for($i=0; $i<$count; $i++)
+        {
+            $UsageRegister = New UsageRegister;
+            $UsageRegister->date = $request->input('date');
+            $UsageRegister->material_id = $materialInput[$i];
+            $UsageRegister->usage = $usageInput[$i];
+            $UsageRegister->created_by = Auth::user()->id;
+            $UsageRegister->created_at = time();
+
+            $UsageRegister->save();
+        }
 
         Session()->flash('flash_message', 'Usage Register has been created!');
         return redirect('usageRegisters');
@@ -59,17 +66,18 @@ class UsageRegistersController extends Controller
 
     public function edit($id)
     {
-        $types = Config::get('common.UsageRegister_type');
         $UsageRegister = UsageRegister::findOrFail($id);
-        return view('usageRegisters.edit', compact('types', 'UsageRegister'));
+        $materials = Material::lists('name', 'id');
+        return view('usageRegisters.edit', compact('UsageRegister', 'materials'));
     }
 
     public function update($id, UsageRegisterRequest $request)
     {
         $UsageRegister = UsageRegister::findOrFail($id);
 
-        $UsageRegister->name = $request->input('name');
-        $UsageRegister->type = $request->input('type');
+        $UsageRegister->date = $request->input('date');
+        $UsageRegister->material_id = $request->input('material_id');
+        $UsageRegister->usage = $request->input('usage');
         $UsageRegister->status = $request->input('status');
         $UsageRegister->updated_by = Auth::user()->id;
         $UsageRegister->updated_at = time();

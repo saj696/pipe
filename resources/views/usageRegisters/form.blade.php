@@ -34,7 +34,7 @@
             <td>
                 {{ Form::text('usage[]', null,['class'=>'form-control quantity']) }}
             </td>
-            <td style="min-width: 25px;">
+            <td style="width: 25px; height: 34px;">
 
             </td>
         </tr>

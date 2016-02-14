@@ -43,7 +43,7 @@
 
                                         </td>
                                         <td>
-                                            <?php echo e($usageRegister->material_id); ?>
+                                            <?php echo e($materials[$usageRegister->material_id]); ?>
 
                                         </td>
                                         <td>
