@@ -28,6 +28,12 @@
                                         Color
                                     </th>
                                     <th>
+                                        Wholesale Price
+                                    </th>
+                                    <th>
+                                        Retail Price
+                                    </th>
+                                    <th>
                                         Diameter
                                     </th>
                                     <th>
@@ -52,6 +58,8 @@
                                 <td>{{ $product->title }}</td>
                                 <td>{{ $product->productTypes->title }}</td>
                                 <td>{{ $product->materials->name }}</td>
+                                <td>{{ $product->wholesale_price}}</td>
+                                <td>{{ $product->retail_price}}</td>
                                 <td>{{ $product->diameter }}</td>
                                 <td>{{ $product->weight }}</td>
                                 <td>{{ $product->length }}</td>

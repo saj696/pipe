@@ -63,6 +63,8 @@ class ProductsController extends Controller
             $product->weight = $nmub[1]/$nmub[0];
         }
         $product->color = $request->input('color');
+        $product->wholesale_price = $request->input('wholesale_price');
+        $product->retail_price = $request->input('retail_price');
         $product->status = $request->input('status');
         $product->created_at = time();
         $product->created_by = Auth::user()->id;
@@ -118,6 +120,8 @@ class ProductsController extends Controller
             $product->weight = $nmub[1]/$nmub[0];
         }
         $product->color = $request->input('color');
+        $product->wholesale_price = $request->input('wholesale_price');
+        $product->retail_price = $request->input('retail_price');
         $product->status = $request->input('status');
         $product->update_at = time();
         $product->update_by = Auth::user()->id;

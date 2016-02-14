@@ -66,6 +66,28 @@
         @endif
     </div>
 </div>
+<div class="form-group{{ $errors->has('wholesale_price') ? ' has-error' : '' }}">
+    {{ Form::label('wholesale_price', 'Wholesale Price', ['class'=>'col-md-3 control-label']) }}
+    <div class="col-md-7">
+        {{ Form::text('wholesale_price',null,['class'=>'form-control']) }}
+        @if ($errors->has('length'))
+            <span class="help-block">
+                <strong>{{ $errors->first('wholesale_price') }}</strong>
+            </span>
+        @endif
+    </div>
+</div>
+<div class="form-group{{ $errors->has('retail_price') ? ' has-error' : '' }}">
+    {{ Form::label('retail_price', 'Retail Price', ['class'=>'col-md-3 control-label']) }}
+    <div class="col-md-7">
+        {{ Form::text('retail_price',null,['class'=>'form-control']) }}
+        @if ($errors->has('length'))
+            <span class="help-block">
+                <strong>{{ $errors->first('retail_price') }}</strong>
+            </span>
+        @endif
+    </div>
+</div>
 <div class="form-group{{ $errors->has('status') ? ' has-error' : '' }}">
     {{ Form::label('status', 'Status', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7">
