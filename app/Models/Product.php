@@ -10,14 +10,14 @@ class Product extends Model
       'id'
     ];
     public $timestamps = false;
+    public $table = 'products';
 
-    public function product_types()
+    public function productTypes()
     {
-        return $this->belongsTo('app/Models/ProductType');
-        return $this->belongsTo('app/Models/Material');
+        return $this->belongsTo('App\Models\ProductType','product_type_id');
     }
     public function materials()
     {
-        return $this->belongsTo('app/Models/Material');
+        return $this->belongsTo('App\Models\Material','color');
     }
 }

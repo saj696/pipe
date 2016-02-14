@@ -9,10 +9,15 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
 class ProductsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('perm');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +25,7 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        $products = Product::with('productTypes','materials')->paginate(Config::get('common.pagination'));
         return view('products/index')->with('products',$products);
     }
 
@@ -45,9 +50,22 @@ class ProductsController extends Controller
      */
     public function store(ProductRequest $request)
     {
-        dd('ss');
         $product = New Product();
         $product->title = $request->input('title');
+        $product->product_type_id = $request->input('product_type_id');
+        $product->length = $request->input('length');
+        $product->diameter = $request->input('diameter');
+        $product->weight = $weight = $request->input('weight');
+        if(!is_numeric($weight))
+        {
+            $nmub = explode('/',$weight);
+            $product->weight = $nmub[1]/$nmub[0];
+        }
+        $product->color = $request->input('color');
+        $product->status = $request->input('status');
+        $product->save();
+        Session()->flash('flash_message', 'Data has been Saved');
+        return redirect('products');
     }
 
     /**
@@ -56,10 +74,10 @@ class ProductsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
+//    public function show($id)
+//    {
+//        //
+//    }
 
     /**
      * Show the form for editing the specified resource.
@@ -69,7 +87,10 @@ class ProductsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $product_types = ProductType::lists('title','id');
+        $color = Material::where('type',3)->lists('name','id');
+        return view('products.edit',compact('product','product_types','color'));
     }
 
     /**
@@ -79,9 +100,25 @@ class ProductsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, $id)
     {
-        //
+//        dd($request->input());
+        $product = Product::findOrFail($id);
+        $product->title = $request->input('title');
+        $product->product_type_id = $request->input('product_type_id');
+        $product->length = $request->input('length');
+        $product->diameter = $request->input('diameter');
+        $product->weight = $weight = $request->input('weight');
+        if(!is_numeric($weight))
+        {
+            $nmub = explode('/',$weight);
+            $product->weight = $nmub[1]/$nmub[0];
+        }
+        $product->color = $request->input('color');
+        $product->status = $request->input('status');
+        $product->update();
+        Session()->flash('flash_message', 'Data has been Updated');
+        return redirect('products');
     }
 
     /**
@@ -90,8 +127,8 @@ class ProductsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
-    }
+//    public function destroy($id)
+//    {
+//        //
+//    }
 }

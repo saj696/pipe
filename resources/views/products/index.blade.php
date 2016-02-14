@@ -22,10 +22,19 @@
                                         Title
                                     </th>
                                     <th>
-                                        Created Time
+                                        Product Type
                                     </th>
                                     <th>
-                                        Updated Time
+                                        Color
+                                    </th>
+                                    <th>
+                                        Diameter
+                                    </th>
+                                    <th>
+                                        Weight
+                                    </th>
+                                    <th>
+                                        Length
                                     </th>
                                     <th>
                                         Status
@@ -41,6 +50,11 @@
                             @foreach($products as $product)
                             <tr>
                                 <td>{{ $product->title }}</td>
+                                <td>{{ $product->productTypes->title }}</td>
+                                <td>{{ $product->materials->name }}</td>
+                                <td>{{ $product->diameter }}</td>
+                                <td>{{ $product->weight }}</td>
+                                <td>{{ $product->length }}</td>
                                 <td>{{ \Illuminate\Support\Facades\Config::get('common.status')[$product->status] }}</td>
                                 <td>
                                     <a class="label label-danger" href="{{ url('/products/'.$product->id.'/edit' )}}">Edit</a>

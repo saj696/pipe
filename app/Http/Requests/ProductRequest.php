@@ -25,7 +25,7 @@ class ProductRequest extends Request
     {
         return [
             'title'=>'required',
-            'product_type'=>'required',
+            'product_type_id'=>'required',
             'diameter'=>'required',
             'length'=>'required',
             'weight'=>'required',
