@@ -22,6 +22,7 @@
                                     <th>Supplier Type</th>
                                     <th>Company Office phone</th>
                                     <th>Contact Person</th>
+                                    <th>Contact Person Phone No.</th>
                                     <th> Status </th>
                                     <th> Action </th>
                                 </tr>
@@ -35,6 +36,7 @@
                                 <td>{{ \Illuminate\Support\Facades\Config::get('common.supplier_types')[$supplier->suppliers_type] }}</td>
                                 <td>{{ $supplier->company_office_phone }}</td>
                                 <td>{{ $supplier->contact_person }}</td>
+                                <td>{{ $supplier->contact_person_phone }}</td>
                                 <td>{{ \Illuminate\Support\Facades\Config::get('common.status')[$supplier->status] }}</td>
                                 <td>
                                     <a class="label label-danger" href="{{ url('/suppliers/'.$supplier->id.'/edit' )}}">Edit</a>
