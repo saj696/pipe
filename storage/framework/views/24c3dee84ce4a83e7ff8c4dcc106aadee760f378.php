@@ -47,7 +47,7 @@
     <?php echo e(Form::label('dob', 'Date Of Birth', ['class'=>'col-md-3 control-label'])); ?>
 
     <div class="col-md-7">
-        <?php echo e(Form::text('dob', null,['class'=>'form-control col-md-3'])); ?>
+        <?php echo e(Form::text('dob', null,['class'=>'form-control col-md-3', 'id'=>'dob'])); ?>
 
         <?php if($errors->has('dob')): ?>
             <span class="help-block">
@@ -61,7 +61,7 @@
     <?php echo e(Form::label('joining_date', 'Joining Date', ['class'=>'col-md-3 control-label'])); ?>
 
     <div class="col-md-7">
-        <?php echo e(Form::text('joining_date', null,['class'=>'form-control col-md-3'])); ?>
+        <?php echo e(Form::text('joining_date', null,['class'=>'form-control col-md-3', 'id'=>'date'])); ?>
 
         <?php if($errors->has('joining_date')): ?>
             <span class="help-block">
@@ -89,7 +89,7 @@
     <?php echo e(Form::label('present_address', 'Present Address', ['class'=>'col-md-3 control-label'])); ?>
 
     <div class="col-md-7">
-        <?php echo e(Form::text('present_address', null,['class'=>'form-control col-md-3'])); ?>
+        <?php echo e(Form::textarea('present_address', null,['class'=>'form-control col-md-3', 'rows'=>3])); ?>
 
         <?php if($errors->has('present_address')): ?>
             <span class="help-block">
@@ -103,7 +103,7 @@
     <?php echo e(Form::label('permanent_address', 'Permanent Address', ['class'=>'col-md-3 control-label'])); ?>
 
     <div class="col-md-7">
-        <?php echo e(Form::text('permanent_address', null,['class'=>'form-control col-md-3'])); ?>
+        <?php echo e(Form::textarea('permanent_address', null,['class'=>'form-control col-md-3', 'rows'=>3])); ?>
 
         <?php if($errors->has('permanent_address')): ?>
             <span class="help-block">
@@ -129,14 +129,19 @@
 
 <div class="form-actions">
     <div class="row">
-        <div class="col-md-offset-3 col-md-9">
-        <?php echo e(Form::submit($submitText, ['class'=>'btn green'])); ?>
+        <div class="text-center col-md-12">
+            <?php echo e(Form::submit($submitText, ['class'=>'btn green'])); ?>
 
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
+
+    $(function() {
+        $( "#date" ).datepicker();
+        $( "#dob" ).datepicker();
+    });
 
     jQuery(document).ready(function()
     {

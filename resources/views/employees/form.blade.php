@@ -39,7 +39,7 @@
 <div class="form-group{{ $errors->has('dob') ? ' has-error' : '' }}">
     {{ Form::label('dob', 'Date Of Birth', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7">
-        {{ Form::text('dob', null,['class'=>'form-control col-md-3']) }}
+        {{ Form::text('dob', null,['class'=>'form-control col-md-3', 'id'=>'dob']) }}
         @if ($errors->has('dob'))
             <span class="help-block">
                 <strong>{{ $errors->first('dob') }}</strong>
@@ -51,7 +51,7 @@
 <div class="form-group{{ $errors->has('joining_date') ? ' has-error' : '' }}">
     {{ Form::label('joining_date', 'Joining Date', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7">
-        {{ Form::text('joining_date', null,['class'=>'form-control col-md-3']) }}
+        {{ Form::text('joining_date', null,['class'=>'form-control col-md-3', 'id'=>'date']) }}
         @if ($errors->has('joining_date'))
             <span class="help-block">
                 <strong>{{ $errors->first('joining_date') }}</strong>
@@ -60,13 +60,13 @@
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('designation') ? ' has-error' : '' }}">
-    {{ Form::label('designation', 'Designation', ['class'=>'col-md-3 control-label']) }}
+<div class="form-group{{ $errors->has('designation_id') ? ' has-error' : '' }}">
+    {{ Form::label('designation_id', 'Designation', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7">
-        {{ Form::select('designation', $designations, null,['class'=>'form-control', 'placeholder'=>'Select']) }}
-        @if ($errors->has('designation'))
+        {{ Form::select('designation_id', $designations, null,['class'=>'form-control', 'placeholder'=>'Select']) }}
+        @if ($errors->has('designation_id'))
             <span class="help-block">
-                <strong>{{ $errors->first('designation') }}</strong>
+                <strong>{{ $errors->first('designation_id') }}</strong>
             </span>
         @endif
     </div>
@@ -75,7 +75,7 @@
 <div class="form-group{{ $errors->has('present_address') ? ' has-error' : '' }}">
     {{ Form::label('present_address', 'Present Address', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7">
-        {{ Form::text('present_address', null,['class'=>'form-control col-md-3']) }}
+        {{ Form::textarea('present_address', null,['class'=>'form-control col-md-3', 'rows'=>3]) }}
         @if ($errors->has('present_address'))
             <span class="help-block">
                 <strong>{{ $errors->first('present_address') }}</strong>
@@ -87,7 +87,7 @@
 <div class="form-group{{ $errors->has('permanent_address') ? ' has-error' : '' }}">
     {{ Form::label('permanent_address', 'Permanent Address', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7">
-        {{ Form::text('permanent_address', null,['class'=>'form-control col-md-3']) }}
+        {{ Form::textarea('permanent_address', null,['class'=>'form-control col-md-3', 'rows'=>3]) }}
         @if ($errors->has('permanent_address'))
             <span class="help-block">
                 <strong>{{ $errors->first('permanent_address') }}</strong>
@@ -110,13 +110,18 @@
 
 <div class="form-actions">
     <div class="row">
-        <div class="col-md-offset-3 col-md-9">
-        {{ Form::submit($submitText, ['class'=>'btn green']) }}
+        <div class="text-center col-md-12">
+            {{ Form::submit($submitText, ['class'=>'btn green']) }}
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
+
+    $(function() {
+        $( "#date" ).datepicker();
+        $( "#dob" ).datepicker();
+    });
 
     jQuery(document).ready(function()
     {

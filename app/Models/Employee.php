@@ -23,4 +23,23 @@ class Employee extends Model
         return $this->belongsTo('App\Models\Designation');
     }
 
+    public function getDobAttribute($value)
+    {
+        return date('d-m-Y', $value);
+    }
+
+    public function setDobAttribute($value)
+    {
+        $this->attributes['dob']=strtotime($value);
+    }
+
+    public function getJoiningDateAttribute($value)
+    {
+        return date('d-m-Y', $value);
+    }
+
+    public function setJoiningDateAttribute($value)
+    {
+        $this->attributes['joining_date']=strtotime($value);
+    }
 }

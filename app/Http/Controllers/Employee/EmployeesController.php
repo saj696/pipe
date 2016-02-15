@@ -43,23 +43,28 @@ class EmployeesController extends Controller
 
     public function store(EmployeeRequest $request)
     {
-        $designation = New Employee;
-        $designation->name = $request->input('name');
-        $designation->salary = $request->input('salary');
-        $designation->hourly_rate = $request->input('hourly_rate');
-        $designation->created_by = Auth::user()->id;
-        $designation->created_at = time();
+        $employee = New Employee;
+        $employee->name = $request->input('name');
+        $employee->mobile = $request->input('mobile');
+        $employee->email = $request->input('email');
+        $employee->present_address = $request->input('present_address');
+        $employee->permanent_address = $request->input('permanent_address');
+        $employee->dob = $request->input('dob');
+        $employee->designation_id = $request->input('designation_id');
+        $employee->joining_date = $request->input('joining_date');
+        $employee->created_by = Auth::user()->id;
+        $employee->created_at = time();
 
-        $designation->save();
+        $employee->save();
 
-        Session()->flash('flash_message', 'Designation has been created!');
-        return redirect('designations');
+        Session()->flash('flash_message', 'Employee has been created!');
+        return redirect('employees');
     }
 
     public function edit($id)
     {
-        $designation = Designation::findOrFail($id);
-        return view('designations.edit', compact('designation'));
+        $employee = Employee::findOrFail($id);
+        return view('employees.edit', compact('employee'));
     }
 
     public function update($id, DesignationRequest $request)

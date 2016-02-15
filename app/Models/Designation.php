@@ -13,7 +13,7 @@ class Designation extends Model
         'name'
     ];
 
-    public function employee()
+    public function employees()
     {
         return $this->hasMany('App\Models\Employee');
     }

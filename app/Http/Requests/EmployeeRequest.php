@@ -26,8 +26,10 @@ class EmployeeRequest extends Request
     {
         return [
             'name'=>'required',
-            'mobile'=>'required',
-            'designation'=>'required|integer'
+            'mobile'=>'required|min:11',
+            'email'=>'email',
+            'joining_date'=>'required|date',
+            'designation_id'=>'required|integer'
         ];
     }
 }
