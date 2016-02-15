@@ -3,7 +3,7 @@
     <div class="portlet box green">
         <div class="portlet-title">
             <div class="caption">
-                <i class="fa fa-gift"></i> Edit: {{ $materials[$UsageRegister->material_id] }}
+                <i class="fa fa-gift"></i> Edit: {{ $products[$productionRegister->product_id] }}
             </div>
             <div class="tools">
                 <a href="" class="collapse">
@@ -19,8 +19,8 @@
         <div class="portlet-body form">
             <div class="form-horizontal" role="form">
                 <div class="form-body">
-                    {{ Form::model($UsageRegister, ['method'=>'PATCH','action'=>['Register\UsageRegistersController@update', $UsageRegister->id]]) }}
-                    @include('usageRegisters.editForm', ['submitText'=>'Update'])
+                    {{ Form::model($productionRegister, ['method'=>'PATCH','action'=>['Register\ProductionRegistersController@update', $productionRegister->id]]) }}
+                    @include('productionRegisters.editForm', ['submitText'=>'Update'])
                     {{ Form::close() }}
                 </div>
             </div>

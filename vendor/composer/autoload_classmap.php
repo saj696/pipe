@@ -13,6 +13,8 @@ return array(
     'CreateModulesTable' => $baseDir . '/database/migrations/2016_01_13_191706_create_modules_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
     'CreateProductionRegistersTable' => $baseDir . '/database/migrations/2016_02_14_105512_create_production_registers_table.php',
+    'CreateStocksTable' => $baseDir . '/database/migrations/2016_02_15_044402_create_stocks_table.php',
+    'CreateStocksTableAgain' => $baseDir . '/database/migrations/2016_02_15_052207_create_stocks_table_again.php',
     'CreateTagsTable' => $baseDir . '/database/migrations/2016_01_09_144101_create_tags_table.php',
     'CreateTasksTable' => $baseDir . '/database/migrations/2016_01_13_192905_create_tasks_table.php',
     'CreateUserGroupRoleTableAgain' => $baseDir . '/database/migrations/2016_01_20_173053_createUserGroupRoleTableAgain.php',

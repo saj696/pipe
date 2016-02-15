@@ -44,7 +44,6 @@ class ProductionRegisterRequest extends Request
             case 'PATCH':
             {
                 return [
-                    'product_id'=>'required|integer',
                     'date'=>'required|date',
                     'production'=>'required|integer'
                 ];

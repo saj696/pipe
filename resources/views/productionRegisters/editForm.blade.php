@@ -12,41 +12,41 @@
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('material_id') ? ' has-error' : '' }}">
-    {{ Form::label('material_id', 'Material', ['class'=>'col-md-4 control-label']) }}
+<div class="form-group{{ $errors->has('product_id') ? ' has-error' : '' }}">
+    {{ Form::label('product_id', 'Product', ['class'=>'col-md-4 control-label']) }}
     <div class="col-md-4">
-        {{ Form::select('material_id', $materials, null,['class'=>'form-control', 'placeholder'=>'Select']) }}
-        @if ($errors->has('material_id'))
+        {{ Form::select('product_id', $products, null,['class'=>'form-control', 'placeholder'=>'Select', 'disabled'=>'disabled']) }}
+        @if ($errors->has('product_id'))
             <span class="help-block">
-                <strong>{{ $errors->first('material_id') }}</strong>
+                <strong>{{ $errors->first('product_id') }}</strong>
             </span>
         @endif
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('usage') ? ' has-error' : '' }}">
-    {{ Form::label('usage', 'usage', ['class'=>'col-md-4 control-label']) }}
+<div class="form-group{{ $errors->has('production') ? ' has-error' : '' }}">
+    {{ Form::label('production', 'production', ['class'=>'col-md-4 control-label']) }}
     <div class="col-md-4">
-        {{ Form::text('usage', null,['class'=>'form-control col-md-2']) }}
-        @if ($errors->has('usage'))
+        {{ Form::text('production', null,['class'=>'form-control col-md-2']) }}
+        @if ($errors->has('production'))
             <span class="help-block">
-                <strong>{{ $errors->first('usage') }}</strong>
+                <strong>{{ $errors->first('production') }}</strong>
             </span>
         @endif
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('status') ? ' has-error' : '' }}">
-    {{ Form::label('status', 'Status', ['class'=>'col-md-4 control-label']) }}
-    <div class="col-md-4">
-        {{ Form::select('status', Config::get('common.status'), null,['class'=>'form-control', 'placeholder'=>'Select']) }}
-        @if ($errors->has('status'))
-            <span class="help-block">
-                <strong>{{ $errors->first('status') }}</strong>
-            </span>
-        @endif
-    </div>
-</div>
+{{--<div class="form-group{{ $errors->has('status') ? ' has-error' : '' }}">--}}
+    {{--{{ Form::label('status', 'Status', ['class'=>'col-md-4 control-label']) }}--}}
+    {{--<div class="col-md-4">--}}
+        {{--{{ Form::select('status', Config::get('common.status'), null,['class'=>'form-control', 'placeholder'=>'Select']) }}--}}
+        {{--@if ($errors->has('status'))--}}
+            {{--<span class="help-block">--}}
+                {{--<strong>{{ $errors->first('status') }}</strong>--}}
+            {{--</span>--}}
+        {{--@endif--}}
+    {{--</div>--}}
+{{--</div>--}}
 
 <div class="form-actions">
     <div class="row">
