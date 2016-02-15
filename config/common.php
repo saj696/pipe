@@ -11,7 +11,7 @@
 return [
 
     'workspace_type' => ['1'=>'Showroom', '2'=>'Delivery Center', '3'=>'Factory'],
-    'pagination' => 5,
+    'pagination' => 10,
     'status' => ['1'=>'Active','0'=>'Inactive'],
     'material_type' => ['1'=>'Normal', '2'=>'Color', '3'=>'Mixer'],
     'customer_type' =>['1'=>'Dealer','2'=>'Non Dealer'],
