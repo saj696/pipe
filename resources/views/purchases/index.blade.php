@@ -19,28 +19,22 @@
                             <thead>
                                 <tr>
                                     <th>
-                                        Title
+                                        Supplier
                                     </th>
                                     <th>
-                                        purchase Type
+                                        Purchase Date
                                     </th>
                                     <th>
-                                        Color
+                                        No of Items
                                     </th>
                                     <th>
-                                        Wholesale Price
+                                        Transportation Cost
                                     </th>
                                     <th>
-                                        Retail Price
+                                        Total
                                     </th>
                                     <th>
-                                        Diameter
-                                    </th>
-                                    <th>
-                                        Weight
-                                    </th>
-                                    <th>
-                                        Length
+                                        Paid
                                     </th>
                                     <th>
                                         Status
@@ -55,14 +49,12 @@
                             @if(sizeof($purchases)>0)
                             @foreach($purchases as $purchase)
                             <tr>
-                                <td>{{ $purchase->title }}</td>
-                                <td>{{ $purchase->purchaseTypes->title }}</td>
-                                <td>{{ $purchase->materials->name }}</td>
-                                <td>{{ $purchase->wholesale_price}}</td>
-                                <td>{{ $purchase->retail_price}}</td>
-                                <td>{{ $purchase->diameter }}</td>
-                                <td>{{ $purchase->weight }}</td>
-                                <td>{{ $purchase->length }}</td>
+                                <td>{{ $purchase->supplier->company_name }}</td>
+                                <td>{{ $purchase->purchase_date }}</td>
+                                <td>{{ $purchase->purchaseDetails->count() }}</td>
+                                <td>{{ $purchase->transportation_cost }}</td>
+                                <td>{{ $purchase->total }}</td>
+                                <td>{{ $purchase->paid }}</td>
                                 <td>{{ \Illuminate\Support\Facades\Config::get('common.status')[$purchase->status] }}</td>
                                 <td>
                                     <a class="label label-danger" href="{{ url('/purchases/'.$purchase->id.'/edit' )}}">Edit</a>
@@ -71,13 +63,13 @@
                             @endforeach
                             @else
                             <tr>
-                                <td colspan="7" class="text-center danger">No Data Found</td>
+                                <td colspan="8" class="text-center danger">No Data Found</td>
                             </tr>
                             @endif
                             </tbody>
                         </table>
                     </div>
-                    {{--<div class="pagination"> {{ $tasks->links() }} </div>--}}
+                    <div class="pagination"> {{ $purchases->links() }} </div>
                 </div>
             </div>
         </div>
