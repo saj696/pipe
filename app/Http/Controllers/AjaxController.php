@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Requests;
+use App\Models\Customer;
 use App\Models\Module;
+use App\Models\Supplier;
 use App\Models\Workspace;
 use App\Article;
 use App\Tag;
@@ -36,5 +38,23 @@ class AjaxController extends Controller
         $type_id = $request->input('type_id');
         $parent_type_id = Workspace::where('id', '=', $parent_id)->value('type');
         return response()->json($parent_type_id);
+    }
+
+    public function getCustomers(Request $request)
+    {
+        $customers=Customer::where('status',1)->lists('name','id');
+        $dropdown= view('ajaxView.customerDropDown')->with('customers',$customers)->render();
+        return response()->json($dropdown);
+    }
+    public function getSuppliers(Request $request)
+    {
+        $suppliers=Supplier::where('status',1)->lists('company_name','id');
+        $dropdown= view('ajaxView.supplierDropDown')->with('suppliers',$suppliers)->render();
+        return response()->json($dropdown);
+    }
+
+    public function getEmployees(Request $request)
+    {
+
     }
 }
