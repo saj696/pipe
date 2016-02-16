@@ -162,8 +162,6 @@
         </div>
     </div>
 </div>
-
-
 <script type="text/javascript">
     $(document).on('ready',function(){
         findTotal();
@@ -192,6 +190,7 @@
     function closeIt(ele)
     {
         ele.closest('.purchase_row').remove();
+        findTotal();
     }
     $(document).on('change','.quantity',function(){
         findRowTotal(this);
@@ -205,6 +204,15 @@
         findRowTotal(this);
         findTotal();
     });
+    $(document).on('change','.material_id',function(){
+        var currentMaterial = $(this).val();
+        var allMaterials = $('.material_id option:selected[value='+currentMaterial+']');
+        var noOfObject = allMaterials.toArray().length;
+        if(noOfObject>1){
+            $(this).val('');
+            alert('This Material already exists');
+        }
+    });
     function findRowTotal(ele){
         var thisQuantity = parseFloat($(ele).closest('.purchase_row').find('.quantity').val());
         var thisUnitPrice = parseFloat($(ele).closest('.purchase_row').find('.unit_price').val());
@@ -217,6 +225,7 @@
             total+= parseFloat($(this).html());
         });
         total+= parseFloat($('#transportation_cost').val());
+        if(total)
         $('#total_amount').val(total);
         $('#total_amount').css('background','#F7F779');
         setTimeout(function () {

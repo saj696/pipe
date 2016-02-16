@@ -58,6 +58,7 @@
                                 <td>{{ \Illuminate\Support\Facades\Config::get('common.status')[$purchase->status] }}</td>
                                 <td>
                                     <a class="label label-danger" href="{{ url('/purchases/'.$purchase->id.'/edit' )}}">Edit</a>
+                                    <a class="label label-info" href="{{ url('/purchases/'.$purchase->id )}}">View</a>
                                 </td>
                             </tr>
                             @endforeach
