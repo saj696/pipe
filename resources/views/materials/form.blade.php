@@ -38,7 +38,7 @@
 
 <div class="form-actions">
     <div class="row">
-        <div class="col-md-offset-3 col-md-9">
+        <div class="text-center col-md-12">
         {{ Form::submit($submitText, ['class'=>'btn green']) }}
         </div>
     </div>

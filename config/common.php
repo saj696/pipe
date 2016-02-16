@@ -17,5 +17,8 @@ return [
     'customer_type' =>['1'=>'Dealer','2'=>'Non Dealer'],
     'sales_customer_type' => ['1'=>'Customer','2'=>'Supplier','3'=>'Employee'],
     'material_type' => ['1'=>'Normal', '2'=>'Color', '3'=>'Mixer'],
-    'supplier_types'=>[1=>'Local',2=>'International']
+    'supplier_types'=>[1=>'Local',2=>'International'],
+    'person_type_employee'=>1,
+    'person_type_supplier'=>2,
+    'person_type_customer'=>3,
 ];

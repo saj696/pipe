@@ -50,7 +50,8 @@ class ProductionRegistersController extends Controller
         $productionInput = $request->input('production');
 
         DB::beginTransaction();
-        try {
+        try
+        {
             for ($i = 0; $i < $count; $i++)
             {
                 $productionRegister = New ProductionRegister;
