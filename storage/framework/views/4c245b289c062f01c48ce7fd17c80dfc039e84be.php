@@ -1,9 +1,9 @@
-@extends('layouts.app')
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="portlet box green ">
         <div class="portlet-title">
             <div class="caption">
-                <i class="fa fa-gift"></i> Edit: {{ $employee->name }}
+                <i class="fa fa-gift"></i> Edit: <?php echo e($employee->name); ?>
+
             </div>
             <div class="tools">
                 <a href="" class="collapse">
@@ -19,11 +19,15 @@
         <div class="portlet-body form">
             <div class="form-horizontal" role="form">
                 <div class="form-body">
-                    {{ Form::model($employee, ['method'=>'PATCH','action'=>['Employee\EmployeesController@update', $employee->id]]) }}
-                    @include('employees.form', ['submitText'=>'Update'])
-                    {{ Form::close() }}
+                    <?php echo e(Form::model($employee, ['method'=>'PATCH','action'=>['Employee\EmployeesController@update', $employee->id]])); ?>
+
+                    <?php echo $__env->make('employees.form', ['submitText'=>'Update'], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                    <?php echo e(Form::close()); ?>
+
                 </div>
             </div>
         </div>
     </div>
-@stop
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

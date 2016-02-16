@@ -71,15 +71,15 @@
     </div>
 </div>
 
-<div class="form-group<?php echo e($errors->has('designation') ? ' has-error' : ''); ?>">
-    <?php echo e(Form::label('designation', 'Designation', ['class'=>'col-md-3 control-label'])); ?>
+<div class="form-group<?php echo e($errors->has('designation_id') ? ' has-error' : ''); ?>">
+    <?php echo e(Form::label('designation_id', 'Designation', ['class'=>'col-md-3 control-label'])); ?>
 
     <div class="col-md-7">
-        <?php echo e(Form::select('designation', $designations, null,['class'=>'form-control', 'placeholder'=>'Select'])); ?>
+        <?php echo e(Form::select('designation_id', $designations, null,['class'=>'form-control', 'placeholder'=>'Select'])); ?>
 
-        <?php if($errors->has('designation')): ?>
+        <?php if($errors->has('designation_id')): ?>
             <span class="help-block">
-                <strong><?php echo e($errors->first('designation')); ?></strong>
+                <strong><?php echo e($errors->first('designation_id')); ?></strong>
             </span>
         <?php endif; ?>
     </div>

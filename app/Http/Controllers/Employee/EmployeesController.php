@@ -64,20 +64,26 @@ class EmployeesController extends Controller
     public function edit($id)
     {
         $employee = Employee::findOrFail($id);
-        return view('employees.edit', compact('employee'));
+        $designations = Designation::lists('name', 'id');
+        return view('employees.edit', compact('employee', 'designations'));
     }
 
-    public function update($id, DesignationRequest $request)
+    public function update($id, EmployeeRequest $request)
     {
-        $designation = Designation::findOrFail($id);
-        $designation->name = $request->input('name');
-        $designation->salary = $request->input('salary');
-        $designation->hourly_rate = $request->input('hourly_rate');
-        $designation->updated_by = Auth::user()->id;
-        $designation->updated_at = time();
-        $designation->update();
+        $employee = Employee::findOrFail($id);
+        $employee->name = $request->input('name');
+        $employee->mobile = $request->input('mobile');
+        $employee->email = $request->input('email');
+        $employee->present_address = $request->input('present_address');
+        $employee->permanent_address = $request->input('permanent_address');
+        $employee->dob = $request->input('dob');
+        $employee->designation_id = $request->input('designation_id');
+        $employee->joining_date = $request->input('joining_date');
+        $employee->updated_by = Auth::user()->id;
+        $employee->updated_at = time();
+        $employee->update();
 
-        Session()->flash('flash_message', 'Designation has been updated!');
-        return redirect('designations');
+        Session()->flash('flash_message', 'Employee has been updated!');
+        return redirect('employees');
     }
 }
