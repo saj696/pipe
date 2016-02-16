@@ -15,7 +15,7 @@ class ProductionRegister extends Model
         'production'
     ];
 
-    public function Product()
+    public function product()
     {
         return $this->belongsTo('App\Models\Product');
     }

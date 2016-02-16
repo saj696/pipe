@@ -49,94 +49,104 @@ class ProductionRegistersController extends Controller
         $productInput = $request->input('product_id');
         $productionInput = $request->input('production');
 
-        DB::beginTransaction(); // DB Transaction handle START
-
-        for($i=0; $i<$count; $i++)
-        {
-            $productionRegister = New ProductionRegister;
-            $productionRegister->date = $request->input('date');
-            $productionRegister->product_id = $productInput[$i];
-            $productionRegister->production = $productionInput[$i];
-            $productionRegister->created_by = Auth::user()->id;
-            $productionRegister->created_at = time();
-            $productionRegister->save();
-
-            $existingStock = DB::table('stocks')->where(['workspace_id'=>1, 'product_id'=>$productInput[$i]])->first();
-
-            if($existingStock)
+        DB::beginTransaction();
+        try {
+            for ($i = 0; $i < $count; $i++)
             {
-                $stock = Stock::findOrFail($existingStock->id);
-                $stock->quantity = $productionInput[$i] + $existingStock->quantity;
-                $stock->updated_by = Auth::user()->id;
-                $stock->updated_at = time();
-                $stock->update();
+                $productionRegister = New ProductionRegister;
+                $productionRegister->date = $request->input('date');
+                $productionRegister->product_id = $productInput[$i];
+                $productionRegister->production = $productionInput[$i];
+                $productionRegister->created_by = Auth::user()->id;
+                $productionRegister->created_at = time();
+                $productionRegister->save();
+
+                $existingStock = DB::table('stocks')->where(['workspace_id' => 1, 'product_id' => $productInput[$i]])->first();
+
+                if ($existingStock)
+                {
+                    $stock = Stock::findOrFail($existingStock->id);
+                    $stock->quantity = $productionInput[$i] + $existingStock->quantity;
+                    $stock->updated_by = Auth::user()->id;
+                    $stock->updated_at = time();
+                    $stock->update();
+                }
+                else
+                {
+                    $stock = New Stock;
+                    $stock->workspace_id = 1;
+                    $stock->product_id = $productInput[$i];
+                    $stock->quantity = $productionInput[$i];
+                    $stock->created_by = Auth::user()->id;
+                    $stock->created_at = time();
+                    $stock->save();
+                }
             }
-            else
-            {
-                $stock = New Stock;
-                $stock->workspace_id = 1;
-                $stock->product_id = $productInput[$i];
-                $stock->quantity = $productionInput[$i];
-                $stock->created_by = Auth::user()->id;
-                $stock->created_at = time();
-                $stock->save();
-            }
+
+            DB::commit();
+            Session()->flash('flash_message', 'Production Register has been created!');
         }
-
-        DB::commit();  // DB Transaction handle END
-
-        Session()->flash('flash_message', 'Production Register has been created!');
+        catch (\Exception $e)
+        {
+            DB::rollback();
+            Session()->flash('flash_message', 'Production Register not created!');
+        }
         return redirect('productionRegisters');
     }
 
     public function edit($id)
     {
-        $productionRegister = ProductionRegister::findOrFail($id);
+        $productionRegister = ProductionRegister::with('product')->findOrFail($id);
         $products = Product::lists('title', 'id');
         return view('productionRegisters.edit', compact('productionRegister', 'products'));
     }
 
     public function update($id, ProductionRegisterRequest $request)
     {
-        DB::beginTransaction(); // DB Transaction handle START
-
-        $existingRegister = DB::table('production_registers')->where('id', $id)->first();
-
-        $UsageRegister = ProductionRegister::findOrFail($id);
-
-        $UsageRegister->date = $request->input('date');
-        $UsageRegister->production = $request->input('production');
-        $UsageRegister->updated_by = Auth::user()->id;
-        $UsageRegister->updated_at = time();
-        $UsageRegister->update();
-
-        $existingStock = DB::table('stocks')->where(['workspace_id'=>1, 'product_id'=>$existingRegister->product_id])->first();
-
-        if($existingRegister->production != $request->input('production'))
+        DB::beginTransaction();
+        try
         {
-            if($existingRegister->production > $request->input('production'))
+            $existingRegister = DB::table('production_registers')->where('id', $id)->first();
+            $UsageRegister = ProductionRegister::findOrFail($id);
+            $UsageRegister->date = $request->input('date');
+            $UsageRegister->production = $request->input('production');
+            $UsageRegister->updated_by = Auth::user()->id;
+            $UsageRegister->updated_at = time();
+            $UsageRegister->update();
+
+            $existingStock = DB::table('stocks')->where(['workspace_id' => 1, 'product_id' => $existingRegister->product_id])->first();
+
+            if ($existingRegister->production != $request->input('production'))
             {
-                $difference = $existingRegister->production - $request->input('production');
-                $stock = Stock::findOrFail($existingStock->id);
-                $stock->quantity = $existingStock->quantity - $difference;
-                $stock->updated_by = Auth::user()->id;
-                $stock->updated_at = time();
-                $stock->update();
+                if ($existingRegister->production > $request->input('production'))
+                {
+                    $difference = $existingRegister->production - $request->input('production');
+                    $stock = Stock::findOrFail($existingStock->id);
+                    $stock->quantity = $existingStock->quantity - $difference;
+                    $stock->updated_by = Auth::user()->id;
+                    $stock->updated_at = time();
+                    $stock->update();
+                }
+                elseif ($existingRegister->production < $request->input('production'))
+                {
+                    $difference = $request->input('production') - $existingRegister->production;
+                    $stock = Stock::findOrFail($existingStock->id);
+                    $stock->quantity = $existingStock->quantity + $difference;
+                    $stock->updated_by = Auth::user()->id;
+                    $stock->updated_at = time();
+                    $stock->update();
+                }
             }
-            elseif($existingRegister->production < $request->input('production'))
-            {
-                $difference =  $request->input('production') - $existingRegister->production;
-                $stock = Stock::findOrFail($existingStock->id);
-                $stock->quantity = $existingStock->quantity + $difference;
-                $stock->updated_by = Auth::user()->id;
-                $stock->updated_at = time();
-                $stock->update();
-            }
+
+            DB::commit();
+            Session()->flash('flash_message', 'Production Register has been updated!');
+        }
+        catch (\Exception $e)
+        {
+            DB::rollback();
+            Session()->flash('flash_message', 'Production Register not updated!');
         }
 
-        DB::commit();  // DB Transaction handle END
-
-        Session()->flash('flash_message', 'Production Register has been updated!');
         return redirect('productionRegisters');
     }
 }
