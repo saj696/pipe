@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Models\Customer;
 use App\Models\Module;
+use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\Workspace;
 use App\Article;
@@ -40,21 +41,29 @@ class AjaxController extends Controller
         return response()->json($parent_type_id);
     }
 
-    public function getCustomers(Request $request)
+    public function getCustomers()
     {
         $customers=Customer::where('status',1)->lists('name','id');
         $dropdown= view('ajaxView.customerDropDown')->with('customers',$customers)->render();
         return response()->json($dropdown);
     }
-    public function getSuppliers(Request $request)
+    public function getSuppliers()
     {
         $suppliers=Supplier::where('status',1)->lists('company_name','id');
         $dropdown= view('ajaxView.supplierDropDown')->with('suppliers',$suppliers)->render();
         return response()->json($dropdown);
     }
 
-    public function getEmployees(Request $request)
+    public function getEmployees()
     {
 
+    }
+
+    public function getProducts(Request $request)
+    {
+        $title=$request->input('p');
+        $suppliers=Product::select('id as value','title as label')->where('status',1)->where('title','like','%'.$title.'%')->get();
+//        dd($suppliers);
+        return response()->json($suppliers);
     }
 }
