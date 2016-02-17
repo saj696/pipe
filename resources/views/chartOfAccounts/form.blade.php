@@ -12,15 +12,22 @@
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
-    {{ Form::label('type', 'Type', ['class'=>'col-md-3 control-label']) }}
+<div class="form-group{{ $errors->has('code') ? ' has-error' : '' }}">
+    {{ Form::label('code', 'Code', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7">
-        {{ Form::select('type', $types, null,['class'=>'form-control', 'id'=>'type', 'placeholder'=>'Select']) }}
-        @if ($errors->has('type'))
+        {{ Form::text('code', null,['class'=>'form-control']) }}
+        @if ($errors->has('code'))
             <span class="help-block">
-                <strong>{{ $errors->first('type') }}</strong>
+                <strong>{{ $errors->first('code') }}</strong>
             </span>
         @endif
+    </div>
+</div>
+
+<div class="form-group">
+    {{ Form::label('parent', 'Parent', ['class'=>'col-md-3 control-label']) }}
+    <div class="col-md-7">
+        {{ Form::select('parent', $parents, null,['class'=>'form-control', 'placeholder'=>'Select']) }}
     </div>
 </div>
 

@@ -52,7 +52,7 @@
 <div class="form-actions">
     <div class="row">
         <div class="text-center col-md-12">
-        {{ Form::submit($submitText, ['class'=>'btn green']) }}
+        {{ Form::submit($submitText, ['class'=>'btn btn-circle green']) }}
         </div>
     </div>
 </div>
