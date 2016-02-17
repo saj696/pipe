@@ -63,8 +63,9 @@ class ChartOfAccountsController extends Controller
 
     public function edit($id)
     {
+        $parents = ChartOfAccount::lists('name', 'id');
         $chart = ChartOfAccount::findOrFail($id);
-        return view('chartOfAccounts.edit', compact('chart'));
+        return view('chartOfAccounts.edit', compact('chart', 'parents'));
     }
 
     public function update($id, ChartOfAccountRequest $request)
@@ -89,11 +90,11 @@ class ChartOfAccountsController extends Controller
             {
                 if(!isset($accounts['parent'][$ca]))
                 {
-                    $html .= "<li style='margin: 5px;'>" . "<label style='padding: 2px 8px 2px 8px;' class='btn btn-circle red'>". $accounts['cid'][$ca]->name . "</label>". "</li>";
+                    $html .= "<li style='margin: 5px;'>" . "<label style='padding: 2px 8px 2px 8px;' class='btn btn-circle red'><a style='color:white;' href='".url('/charts/'.$accounts['cid'][$ca]->id.'/edit' )."'>". $accounts['cid'][$ca]->name . "</a></label>". "</li>";
                 }
                 if(isset($accounts['parent'][$ca]))
                 {
-                    $html .= "<li style='margin: 5px;'>" . "<label style='padding: 2px 8px 2px 8px;' class='btn btn-circle green'>" . $accounts['cid'][$ca]->name . "</label>";
+                    $html .= "<li style='margin: 5px;'>" . "<label style='padding: 2px 8px 2px 8px;' class='btn btn-circle green'><a style='color:white;' href='".url('/charts/'.$accounts['cid'][$ca]->id.'/edit' )."'>" . $accounts['cid'][$ca]->name . "</a></label>";
                     $html .= $this->buildChartTree($ca, $accounts);
                     $html .= "</li>";
                 }
