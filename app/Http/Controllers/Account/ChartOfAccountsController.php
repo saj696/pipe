@@ -74,6 +74,7 @@ class ChartOfAccountsController extends Controller
         $chart->parent = $request->input('parent');
         $chart->name = $request->input('name');
         $chart->code = $request->input('code');
+        $chart->status = $request->input('status');
         $chart->update();
 
         Session()->flash('flash_message', 'Chart Of Account has been updated!');
