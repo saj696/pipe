@@ -61,8 +61,8 @@ class AjaxController extends Controller
 
     public function getProducts(Request $request)
     {
-        $title=$request->input('p');
-        $suppliers=Product::select('id as value','title as label')->where('status',1)->where('title','like','%'.$title.'%')->get();
+        $title=$request->input('q');
+        $suppliers=Product::select('id as value','title as label','retail_price','wholesale_price')->where('status',1)->where('title','like', $title.'%')->get();
 //        dd($suppliers);
         return response()->json($suppliers);
     }

@@ -33,7 +33,7 @@ class CustomersController extends Controller
         $customers = DB::table('customer')
             ->select('*')
             ->where(['status' => 1])
-            ->paginate(Config::get('common.pagination'));;
+            ->paginate(Config::get('common.pagination'));
 
 //        dd($customers);
         return view('customer.index')->with('customers', $customers);

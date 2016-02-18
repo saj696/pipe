@@ -9,7 +9,16 @@ class SalesOrder extends Model
     protected $table = 'sales_order';
     public $timestamps = false;
 
-    protected $fillable = [
-        'customer_type',
-    ];
+
+    public function salesOrderItems()
+    {
+        return $this->hasMany('App\Models\SalesOrderItem');
+    }
+
+    public function workspaces()
+    {
+        return $this->belongsTo('App\Models\Workspace','workspace_id');
+    }
+
+
 }

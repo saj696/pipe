@@ -7,7 +7,8 @@ use Illuminate\Support\ServiceProvider;
 class HelperServiceProvider extends ServiceProvider
 {
     protected $helpers = [
-        'UserHelper'
+        'UserHelper',
+        'CommonHelper'
     ];
 
     /**

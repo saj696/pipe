@@ -38,6 +38,8 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('workspaces', 'Setup\WorkspacesController');
     Route::resource('materials', 'Setup\MaterialsController');
     Route::resource('usageRegisters', 'Register\UsageRegistersController');
+    Route::resource('customers', 'Customer\CustomersController');
+    Route::resource('salesOrder', 'Sales\SalesOrderController');
     Route::resource('productionRegisters', 'Register\ProductionRegistersController');
     Route::resource('designations', 'Employee\DesignationsController');
     Route::resource('employees', 'Employee\EmployeesController');
@@ -46,6 +48,10 @@ Route::group(['middleware' => ['web']], function () {
 
 Route::post('module_select', array('as' => 'ajax.module_select', 'uses' => 'AjaxController@getModules'));
 Route::post('parent_select', array('as' => 'ajax.parent_select', 'uses' => 'AjaxController@checkParents'));
+Route::post('customer_select', array('as' => 'ajax.customer_select', 'uses' => 'AjaxController@getCustomers'));
+Route::post('supplier_select', array('as' => 'ajax.supplier_select', 'uses' => 'AjaxController@getSuppliers'));
+Route::post('employee_select', array('as' => 'ajax.employee_select', 'uses' => 'AjaxController@getEmployees'));
+Route::post('product_select', array('as' => 'ajax.product_select', 'uses' => 'AjaxController@getProducts'));
 
 Route::controllers([
     'auth' => 'Auth\AuthController',

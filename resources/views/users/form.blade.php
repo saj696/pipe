@@ -60,10 +60,26 @@
     </div>
 </div>
 
-<div class="form-group">
+<div class="form-group{{ $errors->has('user_group_id') ? ' has-error' : '' }}">
     {{ Form::label('user_group_id', 'User Group', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7">
         {{ Form::select('user_group_id', $groups, null,['class'=>'form-control', 'placeholder'=>'Select']) }}
+        @if ($errors->has('user_group_id'))
+            <span class="help-block">
+                <strong>{{ $errors->first('user_group_id') }}</strong>
+            </span>
+        @endif
+    </div>
+</div>
+<div class="form-group{{ $errors->has('workspace_id') ? ' has-error' : '' }}">
+    {{ Form::label('workspace_id', 'Workspace', ['class'=>'col-md-3 control-label']) }}
+    <div class="col-md-7">
+        {{ Form::select('workspace_id', $workspaces, null,['class'=>'form-control', 'placeholder'=>'Select']) }}
+        @if ($errors->has('workspace_id'))
+            <span class="help-block">
+                <strong>{{ $errors->first('workspace_id') }}</strong>
+            </span>
+        @endif
     </div>
 </div>
 

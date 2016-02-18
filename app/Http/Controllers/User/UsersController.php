@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Requests;
 use App\Models\User;
 use App\Models\UserGroup;
+use App\Models\Workspace;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
@@ -36,7 +37,8 @@ class UsersController extends Controller
     public function create()
     {
         $groups = UserGroup::lists('name_en', 'id');
-        return view('users.create', compact('groups'));
+        $workspaces = Workspace::lists('name', 'id');
+        return view('users.create', compact('groups','workspaces'));
     }
 
     public function store(UserRequest $request)
@@ -48,6 +50,7 @@ class UsersController extends Controller
         $user->name_en = $request->input('name_en');
         $user->name_bn = $request->input('name_bn');
         $user->user_group_id = $request->input('user_group_id');
+        $user->workspace_id = $request->input('workspace_id');
         $user->status = $request->input('status');
         $user->created_by = Auth::user()->id;
         $user->created_at = time();
@@ -62,7 +65,8 @@ class UsersController extends Controller
     {
         $user = User::findOrFail($id);
         $groups = UserGroup::lists('name_en', 'id');
-        return view('users.edit', compact('user', 'groups'));
+        $workspaces = Workspace::lists('name', 'id');
+        return view('users.edit', compact('user', 'groups','workspaces'));
     }
 
     public function update($id, UserRequest $request)
@@ -75,6 +79,7 @@ class UsersController extends Controller
         $user->name_en = $request->input('name_en');
         $user->name_bn = $request->input('name_bn');
         $user->user_group_id = $request->input('user_group_id');
+        $user->workspace_id = $request->input('workspace_id');
         $user->status = $request->input('status');
         $user->updated_by = Auth::user()->id;
         $user->updated_at = time();

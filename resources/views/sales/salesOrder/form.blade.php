@@ -26,14 +26,31 @@
     </div>
 </div>
 
-<div class="form-group">
+<div class="form-group{{ $errors->has('product') ? ' has-error' : '' }}">
     <div class="col-md-offset-5 col-md-3">
         {{ Form::text('product', null,['class'=>'form-control','id'=>'product','placeholder'=>'Search Product']) }}
+        @if ($errors->has('product'))
+            <span class="help-block">
+                <strong>{{ $errors->first('product') }}</strong>
+            </span>
+        @endif
     </div>
+
 </div>
 
-<div class="product_list">
-
+<div class="product_list" data-product-id="0">
+    <div class='col-md-offset-3 col-md-2'>
+        <label for="">Product Name</label>
+    </div>
+    <div class='col-md-2'>
+        <label for="">Sales Quantity</label>
+    </div>
+    <div class='col-md-2'>
+        <label for="">Unit Price</label>
+    </div>
+    <div class='col-md-2'>
+        <label for="">Total</label>
+    </div>
 </div>
 
 <div class="form-group{{ $errors->has('total') ? ' has-error' : '' }}">
@@ -159,18 +176,21 @@
             },
 //            minLength: 3,
             select: function (event, ui) {
-                //console.log(ui);
-
+//                console.log(ui);
+                var index = $('.product_list').data('product-id');
                 var html = "<div class='form-group single_product'>" +
                         "<div class='col-md-offset-3 col-md-2'>" +
                         " <input type='text' class='form-control' value='" + ui.item.label + "' disabled>" +
-                        "<input class='product_id' type='hidden' value='" + ui.item.value + "' name='product_id'> " +
+                        "<input class='product_id' type='hidden' value='" + ui.item.value + "' name='product[" + index + "][product_id]'> " +
                         "</div>" +
                         "<div class='col-md-2'>" +
-                        "<input type='text' class='form-control' name='sales_quantity' placeholder='Sales Quantity'> " +
+                        "<input required type='text' class='form-control pcal single_p_quantity' name='product[" + index + "][sales_quantity]' placeholder='Sales Quantity'> " +
                         "</div>" +
                         "<div class='col-md-2'>" +
-                        "<input type='text' class='form-control' name='unit_price' placeholder='Unit Price'> " +
+                        "<input required title='W: " + ui.item.wholesale_price + ", R: " + ui.item.retail_price + "' type='text' class='form-control pcal single_p_rate' name='product[" + index + "][unit_price]' placeholder='Unit Price'> " +
+                        "</div>" +
+                        "<div class='col-md-2'>" +
+                        "<input  type='text' class='form-control single_p_total'> " +
                         "</div>" +
                         "<div class='col-md-1'>" +
                         "<span class='btn btn-danger remove_product'>X</span>" +
@@ -185,6 +205,7 @@
                     }
                 });
                 if (status) {
+                    $('.product_list').data('product-id', index + 1)
                     $('.product_list').append(html);
                 }
                 $(this).val('');
@@ -199,8 +220,66 @@
         });
 
         $(document).on('click', '.remove_product', function () {
-            $(this).closest('.single_product').remove();
+            var obj = $(this);
+            obj.closest('.single_product').remove();
+            findTotal();
+            calculateAmount();
         });
 
-    })
+        $(document).on('change', '.pcal', function () {
+            rowTotal(this);
+        });
+
+        $(document).on('change', '#paid', function () {
+            calculateAmount();
+        });
+
+        $(document).on('change', '#discount', function () {
+            calculateAmount();
+        });
+
+        $(document).on('change', '#transport_cost', function () {
+            calculateAmount();
+        });
+
+
+    });
+
+    function rowTotal(ele) {
+        var q = $(ele).closest('.single_product').find('.single_p_quantity').val();
+        var r = $(ele).closest('.single_product').find('.single_p_rate').val();
+        if (q && r) {
+            $(ele).closest('.single_product').find('.single_p_total').val(parseFloat(q) * parseFloat(r));
+            findTotal();
+        }
+
+    }
+    function findTotal() {
+        var total = 0;
+        $.each($('.single_p_total'), function () {
+            if (this.value)
+                total += parseFloat(this.value);
+        });
+        $('#total').val(total);
+        calculateAmount();
+    }
+
+    function calculateAmount() {
+        var discount = parseFloat($('#discount').val());
+        var t_cost = parseFloat($('#transport_cost').val());
+        var paid_amount = parseFloat($('#paid').val());
+        var total_amount = parseFloat($('#total').val());
+        var due = 0.0;
+        if (!discount) {
+            discount = 0;
+        }
+        if (!t_cost) {
+            t_cost = 0;
+        }
+        if (!paid_amount) {
+            paid_amount = 0
+        }
+        due = (total_amount + t_cost) - (paid_amount + discount);
+        $('#due').val(due);
+    }
 </script>
