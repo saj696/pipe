@@ -36,6 +36,8 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('users', 'User\UsersController');
     Route::resource('roles', 'User\RolesController');
     Route::resource('workspaces', 'Setup\WorkspacesController');
+    Route::resource('product_types', 'Setup\ProductTypesController');
+    Route::resource('products', 'Setup\ProductsController');
     Route::resource('materials', 'Setup\MaterialsController');
     Route::resource('usageRegisters', 'Register\UsageRegistersController');
     Route::resource('customers', 'Customer\CustomersController');
@@ -43,6 +45,8 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('productionRegisters', 'Register\ProductionRegistersController');
     Route::resource('designations', 'Employee\DesignationsController');
     Route::resource('employees', 'Employee\EmployeesController');
+    Route::resource('suppliers', 'Setup\SuppliersController');
+    Route::resource('purchases', 'Setup\PurchasesController');
     Route::resource('charts', 'Account\ChartOfAccountsController');
 });
 

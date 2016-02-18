@@ -59,7 +59,7 @@ class PurchasesController extends Controller
     {
 //        dd($request->input());
         if(!$request->input('items')){
-            Session()->flash('error_message','Purchases Update has not been Completed');
+            Session()->flash('error_message','Purchases has not been Completed');
             return redirect('purchases');
         }
         $user_id = Auth::user()->id;
