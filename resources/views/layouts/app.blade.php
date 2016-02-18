@@ -239,6 +239,14 @@
                     {{ Session::get('flash_message') }}
                 </div>
             @endif
+            @if(Session::has('error_message'))
+                <div class="alert alert-danger{{ Session::has('error_message_important')?'alert-important':'' }}">
+                    @if(Session::has('error_message_important'))
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    @endif
+                    {{ Session::get('error_message') }}
+                </div>
+            @endif
 
             @yield('content')
 
