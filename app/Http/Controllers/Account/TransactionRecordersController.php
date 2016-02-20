@@ -90,18 +90,40 @@ class TransactionRecordersController extends Controller
         return view('transactionRecorders.edit', compact('recorder','accounts', 'types', 'employees', 'suppliers', 'customers'));
     }
 
-    public function update($id, MaterialRequest $request)
+    public function update($id, TransactionRecorderRequest $request)
     {
-        $material = Material::findOrFail($id);
+        $recorder = TransactionRecorder::findOrFail($id);
 
-        $material->name = $request->input('name');
-        $material->type = $request->input('type');
-        $material->status = $request->input('status');
-        $material->updated_by = Auth::user()->id;
-        $material->updated_at = time();
-        $material->update();
+        $slice = substr($request->account_code, 0,1);
 
-        Session()->flash('flash_message', 'Material has been updated!');
-        return redirect('materials');
+        if($slice==1 || $slice==2 || $slice==3)
+        {
+            $recorder->from_whom_type = $request->from_whom_type;
+            $recorder->from_whom = $request->from_whom;
+            $recorder->total_amount = $request->total_amount;
+            $recorder->amount = $request->amount;
+            $recorder->transaction_detail = $request->transaction_detail;
+        }
+        elseif($slice==4)
+        {
+            $recorder->to_whom_type = $request->to_whom_type;
+            $recorder->to_whom = $request->to_whom;
+            $recorder->total_amount = $request->total_amount;
+            $recorder->amount = $request->amount;
+            $recorder->transaction_detail = $request->transaction_detail;
+        }
+        elseif($slice==5 || $slice==6)
+        {
+            $recorder->amount = $request->amount;
+        }
+
+        $recorder->date = $request->date;
+        $recorder->account_code = $request->account_code;
+        $recorder->updated_by = Auth::user()->id;
+        $recorder->updated_at = time();
+        $recorder->update();
+
+        Session()->flash('flash_message', 'Transaction Recorder has been updated!');
+        return redirect('recorders');
     }
 }
