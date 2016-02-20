@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Module;
 use App\Models\Product;
 use App\Models\Supplier;
+use App\Models\Employee;
 use App\Models\Workspace;
 use App\Article;
 use App\Tag;
@@ -56,7 +57,9 @@ class AjaxController extends Controller
 
     public function getEmployees()
     {
-
+        $employees=Employee::where('status',1)->lists('name','id');
+        $dropdown= view('ajaxView.employeeDropDown')->with('employees',$employees)->render();
+        return response()->json($dropdown);
     }
 
     public function getProducts(Request $request)

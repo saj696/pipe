@@ -11,9 +11,14 @@ class TransactionRecorder extends Model
 
     protected $fillable = [];
 
-//    public function UsageRegisters()
-//    {
-//        return $this->hasMany('App\Models\UsageRegister');
-//    }
+    public function getDateAttribute($value)
+    {
+        return date('d-m-Y', $value);
+    }
+
+    public function setDateAttribute($value)
+    {
+        $this->attributes['date']=strtotime($value);
+    }
 
 }

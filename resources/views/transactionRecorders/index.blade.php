@@ -10,7 +10,7 @@
                         <i class="fa fa-coffee"></i>Transaction Recorders
                     </div>
                     <div>
-                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="{{ url('/transactionRecorders/create' )}}">New</a>
+                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="{{ url('/recorders/create' )}}">New</a>
                     </div>
                 </div>
 
@@ -23,13 +23,10 @@
                                         Date
                                     </th>
                                     <th>
-                                        Account Code
+                                        Account
                                     </th>
                                     <th>
                                         Amount
-                                    </th>
-                                    <th>
-                                        Name
                                     </th>
                                     <th>
                                         Action
@@ -44,16 +41,13 @@
                                             {{ $recorder->date }}
                                         </td>
                                         <td>
-                                            {{ $recorder->account_code }}
+                                            {{ $accounts[$recorder->account_code] }}
                                         </td>
                                         <td>
-                                            {{ $recorder->paid_amount }}
+                                            {{ $recorder->amount }}
                                         </td>
                                         <td>
-                                            {{ $recorder->paid_amount }}
-                                        </td>
-                                        <td>
-                                            <a class="label label-danger" href="{{ url('/transactionRecorders/'.$recorder->id.'/edit' )}}">Edit</a>
+                                            <a class="label label-danger" href="{{ url('/recorders/'.$recorder->id.'/edit' )}}">Edit</a>
                                         </td>
                                     </tr>
                                 @endforeach

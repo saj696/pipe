@@ -4,9 +4,13 @@ namespace App\Http\Controllers\Account;
 
 use App\Http\Requests;
 use App\Models\TransactionRecorder;
+use App\Models\ChartOfAccount;
+use App\Models\Customer;
+use App\Models\Employee;
+use App\Models\Supplier;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\MaterialRequest;
+use App\Http\Requests\TransactionRecorderRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
@@ -25,53 +29,65 @@ class TransactionRecordersController extends Controller
     public function index()
     {
         $recorders = TransactionRecorder::paginate(Config::get('common.pagination'));
+        $accounts = ChartOfAccount::whereIn('code', Config::get('common.transaction_accounts'))->lists('name', 'code');
         $status = Config::get('common.status');
-        return view('transactionRecorders.index', compact('recorders', 'status'));
+        return view('transactionRecorders.index', compact('recorders', 'status', 'accounts'));
     }
 
     public function create()
     {
-        $types = Config::get('common.material_type');
-        return view('materials.create', compact('types'));
+        $accounts = ChartOfAccount::whereIn('code', Config::get('common.transaction_accounts'))->lists('name', 'code');
+        $types = Config::get('common.sales_customer_type');
+
+        return view('transactionRecorders.create', compact('accounts', 'types'));
     }
 
-    public function store(MaterialRequest $request)
+    public function store(TransactionRecorderRequest $request)
     {
-        DB::beginTransaction();
-        try
+        $recorder = New TransactionRecorder;
+
+        $slice = substr($request->account_code, 0,1);
+
+        if($slice==1 || $slice==2 || $slice==3)
         {
-            $material = New Material;
-            $material->name = $request->input('name');
-            $material->type = $request->input('type');
-            $material->status = $request->input('status');
-            $material->created_by = Auth::user()->id;
-            $material->created_at = time();
-            $material->save();
-            $insertedId = $material->id;
-
-            $rawStock = New RawStock;
-            $rawStock->material_id = $insertedId;
-            $rawStock->created_by = Auth::user()->id;
-            $rawStock->created_at = time();
-            $rawStock->save();
-
-            DB::commit();
-            Session()->flash('flash_message', 'Material has been created!');
+            $recorder->from_whom_type = $request->from_whom_type;
+            $recorder->from_whom = $request->from_whom;
+            $recorder->total_amount = $request->total_amount;
+            $recorder->amount = $request->amount;
+            $recorder->transaction_detail = $request->transaction_detail;
         }
-        catch (\Exception $e)
+        elseif($slice==4)
         {
-            DB::rollback();
-            Session()->flash('flash_message', 'Material not created!');
+            $recorder->to_whom_type = $request->to_whom_type;
+            $recorder->to_whom = $request->to_whom;
+            $recorder->total_amount = $request->total_amount;
+            $recorder->amount = $request->amount;
+            $recorder->transaction_detail = $request->transaction_detail;
+        }
+        elseif($slice==5 || $slice==6)
+        {
+            $recorder->amount = $request->amount;
         }
 
-        return redirect('materials');
+        $recorder->date = $request->date;
+        $recorder->account_code = $request->account_code;
+        $recorder->created_by = Auth::user()->id;
+        $recorder->created_at = time();
+        $recorder->save();
+
+        Session()->flash('flash_message', 'Transaction Recorder has been created!');
+        return redirect('recorders');
     }
 
     public function edit($id)
     {
-        $types = Config::get('common.material_type');
-        $material = Material::findOrFail($id);
-        return view('materials.edit', compact('types', 'material'));
+        $accounts = ChartOfAccount::whereIn('code', Config::get('common.transaction_accounts'))->lists('name', 'code');
+        $types = Config::get('common.sales_customer_type');
+        $recorder = TransactionRecorder::findOrFail($id);
+        $employees = Employee::where('status', 1)->lists('name', 'id');
+        $suppliers = Supplier::where('status', 1)->lists('company_name', 'id');
+        $customers = Customer::where('status', 1)->lists('name', 'id');
+        return view('transactionRecorders.edit', compact('recorder','accounts', 'types', 'employees', 'suppliers', 'customers'));
     }
 
     public function update($id, MaterialRequest $request)

@@ -22,4 +22,5 @@ return [
     'person_type_supplier'=>2,
     'person_type_customer'=>3,
     'delivery_type'=>[1=>'Not Yet',2=>'Partial',3=>'Fully'],
+    'transaction_accounts'=>['12000', '20000', '30000', '41000', '50000', '60000'],
 ];
