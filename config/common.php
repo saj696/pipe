@@ -23,5 +23,7 @@ return [
     'person_type_customer'=>3,
     'delivery_type'=>[1=>'Not Yet',2=>'Partial',3=>'Fully'],
     'transaction_accounts'=>['12000', '20000', '30000', '41000', '50000', '60000'],
-    'balance_type'=>['0'=>'Opening', '1'=>'Intermediate', '2'=>'Closing'],
+    'balance_type_opening'=>0,
+    'balance_type_intermediate'=>1,
+    'balance_type_closing'=>2,
 ];
