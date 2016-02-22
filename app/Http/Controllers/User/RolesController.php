@@ -202,6 +202,7 @@ class RolesController extends Controller
 
         foreach($tasks as $task)
         {
+            $data=[];
             $userGroupRole = new UserGroupRole;
             if(isset($task['list']) && $task['list']==1)
             {
