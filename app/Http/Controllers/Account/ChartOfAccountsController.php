@@ -45,7 +45,7 @@ class ChartOfAccountsController extends Controller
 
     public function create()
     {
-        $parents = ChartOfAccount::lists('name', 'id');
+        $parents = ChartOfAccount::where('status', 1)->lists('name', 'id');
         return view('chartOfAccounts.create', compact('parents'));
     }
 
@@ -55,6 +55,11 @@ class ChartOfAccountsController extends Controller
         $chart->parent = $request->input('parent');
         $chart->name = $request->input('name');
         $chart->code = $request->input('code');
+        if($request->input('contra_status'))
+        {
+            $chart->contra_status = $request->input('code');
+            $chart->contra_id = $request->input('contra_id');
+        }
         $chart->save();
 
         Session()->flash('flash_message', 'Chart Of Account has been created!');
@@ -63,7 +68,7 @@ class ChartOfAccountsController extends Controller
 
     public function edit($id)
     {
-        $parents = ChartOfAccount::lists('name', 'id');
+        $parents = ChartOfAccount::where('status', 1)->lists('name', 'id');
         $chart = ChartOfAccount::findOrFail($id);
         return view('chartOfAccounts.edit', compact('chart', 'parents'));
     }
@@ -75,6 +80,11 @@ class ChartOfAccountsController extends Controller
         $chart->name = $request->input('name');
         $chart->code = $request->input('code');
         $chart->status = $request->input('status');
+        if($request->input('contra_status'))
+        {
+            $chart->contra_status = $request->input('code');
+            $chart->contra_id = $request->input('contra_id');
+        }
         $chart->update();
 
         Session()->flash('flash_message', 'Chart Of Account has been updated!');

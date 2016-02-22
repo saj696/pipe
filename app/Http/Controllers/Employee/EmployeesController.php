@@ -74,7 +74,7 @@ class EmployeesController extends Controller
         }
         catch (\Exception $e)
         {
-            DB::rollback();
+            DB::rollBack();
             Session()->flash('flash_message', 'Employee not created!');
         }
 

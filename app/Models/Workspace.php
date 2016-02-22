@@ -26,4 +26,9 @@ class Workspace extends Model
         return $this->belongsTo('App\Models\Workspace', 'parent');
     }
 
+    public function workspaceLedger()
+    {
+        return $this->hasMany('App\Models\WorkspaceLedger', 'workspace_id');
+    }
+
 }

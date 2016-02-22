@@ -89,7 +89,7 @@ class ProductionRegistersController extends Controller
         }
         catch (\Exception $e)
         {
-            DB::rollback();
+            DB::rollBack();
             Session()->flash('flash_message', 'Production Register not created!');
         }
         return redirect('productionRegisters');
