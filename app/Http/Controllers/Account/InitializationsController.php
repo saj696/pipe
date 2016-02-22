@@ -38,7 +38,6 @@ class InitializationsController extends Controller
         return view('initializations.edit', compact('accounts', 'initializations', 'id'));
     }
 
-
     public function update($id, InitializationRequest $request)
     {
         DB::beginTransaction();
