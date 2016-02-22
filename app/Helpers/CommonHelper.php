@@ -39,4 +39,15 @@ class CommonHelper
         return "";
 
     }
+
+    public static function get_years()
+    {
+        $current = intval(date('Y'));
+        $years = [];
+        for($i=$current; $i<$current+5; $i++)
+        {
+            $years[] = $i;
+        }
+        return $years;
+    }
 }

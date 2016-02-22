@@ -9,6 +9,7 @@ use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\Supplier;
 use Carbon\Carbon;
+use App\Helpers\CommonHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TransactionRecorderRequest;
 use Illuminate\Support\Facades\Auth;
@@ -38,8 +39,8 @@ class TransactionRecordersController extends Controller
     {
         $accounts = ChartOfAccount::whereIn('code', Config::get('common.transaction_accounts'))->lists('name', 'code');
         $types = Config::get('common.sales_customer_type');
-
-        return view('transactionRecorders.create', compact('accounts', 'types'));
+        $years = CommonHelper::get_years();
+        return view('transactionRecorders.create', compact('accounts', 'types', 'years'));
     }
 
     public function store(TransactionRecorderRequest $request)
@@ -70,6 +71,7 @@ class TransactionRecordersController extends Controller
         }
 
         $recorder->date = $request->date;
+        $recorder->year = date('Y', strtotime($request->date));
         $recorder->account_code = $request->account_code;
         $recorder->created_by = Auth::user()->id;
         $recorder->created_at = time();
@@ -87,7 +89,8 @@ class TransactionRecordersController extends Controller
         $employees = Employee::where('status', 1)->lists('name', 'id');
         $suppliers = Supplier::where('status', 1)->lists('company_name', 'id');
         $customers = Customer::where('status', 1)->lists('name', 'id');
-        return view('transactionRecorders.edit', compact('recorder','accounts', 'types', 'employees', 'suppliers', 'customers'));
+        $years = CommonHelper::get_years();
+        return view('transactionRecorders.edit', compact('recorder','accounts', 'types', 'employees', 'suppliers', 'customers', 'years'));
     }
 
     public function update($id, TransactionRecorderRequest $request)
@@ -118,6 +121,7 @@ class TransactionRecordersController extends Controller
         }
 
         $recorder->date = $request->date;
+        $recorder->year = date('Y', strtotime($request->date));
         $recorder->account_code = $request->account_code;
         $recorder->updated_by = Auth::user()->id;
         $recorder->updated_at = time();
