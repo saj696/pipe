@@ -28,4 +28,5 @@ return [
     'balance_type_opening'=>0,
     'balance_type_intermediate'=>1,
     'balance_type_closing'=>2,
+    'transaction_type'=> [1=>'General',2=>'Sales',3=>'Sales Return',4=>'Purchase',5=>'Purchase Return',6=>'Wages'],
 ];
