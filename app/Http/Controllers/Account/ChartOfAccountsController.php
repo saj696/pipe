@@ -57,7 +57,7 @@ class ChartOfAccountsController extends Controller
         $chart->code = $request->input('code');
         if($request->input('contra_status'))
         {
-            $chart->contra_status = $request->input('code');
+            $chart->contra_status = 1;
             $chart->contra_id = $request->input('contra_id');
         }
         $chart->save();
@@ -82,7 +82,7 @@ class ChartOfAccountsController extends Controller
         $chart->status = $request->input('status');
         if($request->input('contra_status'))
         {
-            $chart->contra_status = $request->input('code');
+            $chart->contra_status = 1;
             $chart->contra_id = $request->input('contra_id');
         }
         $chart->update();
