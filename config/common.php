@@ -28,5 +28,6 @@ return [
     'balance_type_opening'=>0,
     'balance_type_intermediate'=>1,
     'balance_type_closing'=>2,
-    'transaction_type'=> [1=>'General',2=>'Sales',3=>'Sales Return',4=>'Purchase',5=>'Purchase Return',6=>'Wages'],
+    'transaction_type'=> ['general'=>3,'sales'=>2,'sales_return'=>3,'purchase'=>4,'purchase_return'=>5,'wages'=>6],
+    'debit_credit_indicator'=>['debit'=>1,'credit'=>2],
 ];
