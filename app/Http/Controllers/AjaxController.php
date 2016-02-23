@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Models\Customer;
 use App\Models\Module;
+use App\Models\PersonalAccount;
 use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\Employee;
@@ -68,5 +69,16 @@ class AjaxController extends Controller
         $suppliers=Product::select('id as value','title as label','retail_price','wholesale_price')->where('status',1)->where('title','like', $title.'%')->get();
 //        dd($suppliers);
         return response()->json($suppliers);
+    }
+
+    public function getPersonDueAmount(Request $request)
+    {
+        $inputs=$request->input();
+        $personal=PersonalAccount::where('person_type',$inputs['person_type'])
+            ->where('person_id',$inputs['person_id'])
+            ->select('due')
+            ->first();
+
+        return response()->json($personal->due);
     }
 }

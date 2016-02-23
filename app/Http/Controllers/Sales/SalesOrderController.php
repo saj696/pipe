@@ -76,14 +76,14 @@ class SalesOrderController extends Controller
             }
 
             if ($grand_total != $total) {
-                DB::rollback();
+                DB::rollBack();
                 Session()->flash('flash_message', 'Total amount not match with sum of product amount!');
                 return Redirect::back();
             }
             DB::commit();
             Session()->flash('flash_message', 'Sales Order has been created!');
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
             Session()->flash('flash_message', 'Sales Order not created!');
             return Redirect::back();
         }

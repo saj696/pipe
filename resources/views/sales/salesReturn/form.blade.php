@@ -1,9 +1,8 @@
 {!! csrf_field() !!}
-
 <div class="form-group{{ $errors->has('customer_type') ? ' has-error' : '' }}">
     {{ Form::label('customer_type', 'Customer Type', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7">
-        {{ Form::select('customer_type', Config::get('common.sales_customer_type'), Config::get('common.person_type_customer'),['class'=>'form-control','id'=>'sales_customer_type']) }}
+        {{ Form::select('customer_type', Config::get('common.sales_customer_type'), Config::get('common.person_type_customer'),['class'=>'form-control','id'=>'sales_customer_type',]) }}
         @if ($errors->has('customer_type'))
             <span class="help-block">
                 <strong>{{ $errors->first('customer_type') }}</strong>
@@ -43,10 +42,10 @@
         <label for="">Product Name</label>
     </div>
     <div class='col-md-2'>
-        <label for="">Sales Quantity</label>
+        <label for="">Quantity Returned</label>
     </div>
     <div class='col-md-2'>
-        <label for="">Unit Price</label>
+        <label for="">Price/Unit</label>
     </div>
     <div class='col-md-2'>
         <label for="">Total</label>
@@ -65,70 +64,26 @@
     </div>
 </div>
 
-
-<div class="form-group{{ $errors->has('discount') ? ' has-error' : '' }}">
-    {{ Form::label('discount', 'Discount', ['class'=>'col-md-3 control-label']) }}
+<div class="form-group{{ $errors->has('return_type') ? ' has-error' : '' }}">
+    {{ Form::label('return_type', 'Return Type', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7">
-        {{ Form::text('discount', null,['class'=>'form-control']) }}
-        @if ($errors->has('discount'))
+        {{ Form::select('return_type', Config::get('common.product_return_type'), null,['class'=>'form-control','id'=>'product_return_type','placeholder'=>'Select']) }}
+        @if ($errors->has('return_type'))
             <span class="help-block">
-                <strong>{{ $errors->first('discount') }}</strong>
+                <strong>{{ $errors->first('return_type') }}</strong>
             </span>
         @endif
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('transport_cost') ? ' has-error' : '' }}">
-    {{ Form::label('transport_cost', 'Transport Cost', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
-        {{ Form::text('transport_cost', null,['class'=>'form-control']) }}
-        @if ($errors->has('transport_cost'))
-            <span class="help-block">
-                <strong>{{ $errors->first('transport_cost') }}</strong>
-            </span>
-        @endif
-    </div>
-</div>
-<div class="form-group{{ $errors->has('paid') ? ' has-error' : '' }}">
-    {{ Form::label('paid', 'Paid Amount', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
-        {{ Form::text('paid', null,['class'=>'form-control']) }}
-        @if ($errors->has('paid'))
-            <span class="help-block">
-                <strong>{{ $errors->first('paid') }}</strong>
-            </span>
-        @endif
-    </div>
-</div>
-<div class="form-group{{ $errors->has('due') ? ' has-error' : '' }}">
-    {{ Form::label('due', 'Due', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
-        {{ Form::text('due', null,['class'=>'form-control']) }}
-        @if ($errors->has('due'))
-            <span class="help-block">
-                <strong>{{ $errors->first('due') }}</strong>
-            </span>
-        @endif
-    </div>
-</div>
+<div class="pay_due">
 
-<div class="form-group{{ $errors->has('remarks') ? ' has-error' : '' }}">
-    {{ Form::label('remarks', 'Remarks', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
-        {{ Form::textarea('remarks', null,['class'=>'form-control', 'rows'=>'3']) }}
-        @if ($errors->has('remarks'))
-            <span class="help-block">
-                <strong>{{ $errors->first('remarks') }}</strong>
-            </span>
-        @endif
-    </div>
 </div>
-
 
 <div class="form-actions">
     <div class="row">
-        <div class="col-md-offset-3 col-md-9">
-            {{ Form::submit($submitText, ['class'=>'btn green']) }}
+        <div class="col-md-offset-5 col-md-7">
+            {{ Form::submit('Save', ['class'=>'btn green']) }}
         </div>
     </div>
 </div>
@@ -184,7 +139,7 @@
                         "<input class='product_id' type='hidden' value='" + ui.item.value + "' name='product[" + index + "][product_id]'> " +
                         "</div>" +
                         "<div class='col-md-2'>" +
-                        "<input required type='text' class='form-control pcal single_p_quantity' name='product[" + index + "][sales_quantity]' placeholder='Sales Quantity'> " +
+                        "<input required type='text' class='form-control pcal single_p_quantity' name='product[" + index + "][quantity_returned]' placeholder='Sales Quantity'> " +
                         "</div>" +
                         "<div class='col-md-2'>" +
                         "<input required title='W: " + ui.item.wholesale_price + ", R: " + ui.item.retail_price + "' type='text' class='form-control pcal single_p_rate' name='product[" + index + "][unit_price]' placeholder='Unit Price'> " +
@@ -223,23 +178,45 @@
             var obj = $(this);
             obj.closest('.single_product').remove();
             findTotal();
-            calculateAmount();
         });
 
         $(document).on('change', '.pcal', function () {
             rowTotal(this);
         });
 
-        $(document).on('change', '#paid', function () {
-            calculateAmount();
-        });
+        $(document).on('change', '#product_return_type', function () {
+            var return_type = $(this).val();
+            if (return_type == 2 || return_type == 4) {
+                $.ajax({
+                    url: '{{ route('ajax.get_person_due_amount') }}',
+                    type: 'POST',
+                    dataType: "JSON",
+                    data: {
+                        person_id: $('#customer_id option:selected').val(),
+                        person_type: $('#sales_customer_type option:selected').val()
+                    },
+                    success: function (data, status) {
+                        var name = $('#customer_id option:selected').text()
+                        var html = '<div class="col-md-offset-3 col-md-7">' +
+                                '<div class="alert alert-success">' +
+                                name + ' has due ' + data +
+                                '</div>' +
+                                '</div>' +
+                                '<div class="form-group">' +
+                                '<label class="col-md-3 control-label" for="total">Due Paid</label>' +
+                                '<div class="col-md-7">' +
+                                '<input type="text" id="due_paid" name="due_paid" class="form-control" required>' +
+                                '</div>' +
+                                '</div>';
+                        $('.pay_due').html(html);
+                    },
+                    error: function (xhr, desc, err) {
 
-        $(document).on('change', '#discount', function () {
-            calculateAmount();
-        });
-
-        $(document).on('change', '#transport_cost', function () {
-            calculateAmount();
+                    }
+                })
+            }else{
+                $('.pay_due').html("");
+            }
         });
 
 
@@ -264,22 +241,4 @@
         calculateAmount();
     }
 
-    function calculateAmount() {
-        var discount = parseFloat($('#discount').val());
-        var t_cost = parseFloat($('#transport_cost').val());
-        var paid_amount = parseFloat($('#paid').val());
-        var total_amount = parseFloat($('#total').val());
-        var due = 0.0;
-        if (!discount) {
-            discount = 0;
-        }
-        if (!t_cost) {
-            t_cost = 0;
-        }
-        if (!paid_amount) {
-            paid_amount = 0
-        }
-        due = (total_amount + t_cost) - (paid_amount + discount);
-        $('#due').val(due);
-    }
 </script>

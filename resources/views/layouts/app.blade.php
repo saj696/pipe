@@ -47,6 +47,14 @@
     <script src="{{ URL::asset('js/demo.js') }}" type="text/javascript"></script>
     <script src="{{ URL::asset('js/index.js') }}" type="text/javascript"></script>
     <script src="{{ URL::asset('js/tasks.js') }}" type="text/javascript"></script>
+    <script src="{{ URL::asset('js/select2.min.js') }}" type="text/javascript"></script>
+    <script src="{{ URL::asset('js/jquery.dataTables.min.js') }}" type="text/javascript"></script>
+    <script src="{{ URL::asset('js/dataTables.tableTools.min.js') }}" type="text/javascript"></script>
+    <script src="{{ URL::asset('js/dataTables.colReorder.min.js') }}" type="text/javascript"></script>
+    <script src="{{ URL::asset('js/dataTables.scroller.min.js') }}" type="text/javascript"></script>
+    <script src="{{ URL::asset('js/dataTables.bootstrap.js') }}" type="text/javascript"></script>
+    <script src="{{ URL::asset('js/table-advanced.js') }}" type="text/javascript"></script>
+    <script src="{{ URL::asset('js/ui-toastr.js') }}" type="text/javascript"></script>
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.2.3/css/simple-line-icons.css" rel="stylesheet" type="text/css"/>
@@ -56,6 +64,11 @@
     <link href="{{ URL::asset('css/simple-line-icons.min.css') }}" rel="stylesheet" type="text/css"/>
 
     <link href="{{ URL::asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ URL::asset('css/select2.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ URL::asset('css/dataTables.colReorder.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ URL::asset('css/dataTables.scroller.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ URL::asset('css/dataTables.tableTools.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ URL::asset('css/dataTables.bootstrap.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ URL::asset('css/uniform.default.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ URL::asset('css/bootstrap-switch.min.css') }}" rel="stylesheet" type="text/css"/>
     <!-- END GLOBAL MANDATORY STYLES -->
@@ -74,6 +87,7 @@
     <link href="{{ URL::asset('css/layout.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ URL::asset('css/darkblue.css') }}" rel="stylesheet" type="text/css" id="style_color"/>
     <link href="{{ URL::asset('css/custom.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ URL::asset('css/toastr.min.css') }}" rel="stylesheet" type="text/css"/>
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 
@@ -290,6 +304,8 @@
         Index.initChat();
         Index.initMiniCharts();
         Tasks.initDashboardWidget();
+        TableAdvanced.init();
+        UIToastr.init();
     });
 </script>
 <!-- END JAVASCRIPTS -->

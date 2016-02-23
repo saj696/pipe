@@ -4,10 +4,13 @@
 
     <div class="row">
         <div class="col-md-12">
-            <div class="portlet box green-seagreen">
+            <div class="portlet box blue-hoki">
                 <div class="portlet-title">
                     <div class="caption">
                         <i class="fa fa-globe"></i>Sales Delivery
+                    </div>
+                    <div>
+                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="{{ url('/sales_return/create' )}}">New</a>
                     </div>
                 </div>
                 <div class="portlet-body">
@@ -22,16 +25,10 @@
                                     Customer Type
                                 </th>
                                 <th>
-                                    Order Place
-                                </th>
-                                <th>
-                                    Product Quantity
+                                    Quantity Returned
                                 </th>
                                 <th>
                                     Total Amount
-                                </th>
-                                <th>
-                                    Delivery Status
                                 </th>
                                 <th>
                                     Action
@@ -40,26 +37,15 @@
                             </thead>
                             <tbody>
 
-                            @if(sizeof($salesOrders)>0)
-                                @foreach($salesOrders as $salesOrder)
+                            @if(isset($salesReturns))
+                                @foreach($salesReturns as $salesReturn)
                                     <tr>
-                                        <td>{{ \App\Helpers\CommonHelper::getCustomerName($salesOrder->customer_id,$salesOrder->customer_type) }}</td>
-                                        <td>{{ Config::get('common.sales_customer_type.'.$salesOrder->customer_type) }}</td>
-                                        <td>{{ $salesOrder->workspaces->name }}</td>
-                                        <td>{{ $salesOrder->salesOrderItems->count() }}</td>
-                                        <td>{{ $salesOrder->total}}</td>
+                                        <td>{{ \App\Helpers\CommonHelper::getCustomerName($salesReturn->customer_id,$salesReturn->customer_type) }}</td>
+                                        <td>{{ Config::get('common.sales_customer_type.'.$salesReturn->customer_type) }}</td>
+                                        <td>{{ $salesReturn->quantity }}</td>
+                                        <td>{{ $salesReturn->total_amount}}</td>
                                         <td>
-                                            @if($salesOrder->status==1)
-                                                <span class="label label-danger">Not Yet</span>
-                                            @elseif($salesOrder->status==2)
-                                                <span class="label label-warning">Partial</span>
-                                            @elseif($salesOrder->status==4)
-                                                <span class="label label-success">Delivered</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <a class="label label-success"
-                                               href="{{ url('salesDelivery/'.$salesOrder->id.'/edit') }}">Deliver</a>
+                                            &nbsp;
                                         </td>
                                     </tr>
                                 @endforeach

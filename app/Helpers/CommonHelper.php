@@ -17,7 +17,7 @@ class CommonHelper
     /* Get Customer name for Sales Order */
     public static function getCustomerName($id, $type)
     {
-        if ($type == 1) {
+        if ($type == 3) {
             $customer = DB::table('customer')
                 ->select('name')
                 ->where('id', $id)
@@ -31,7 +31,7 @@ class CommonHelper
                 ->where('status', 1)
                 ->first();
             return $customer->company_name;
-        }elseif($type==3)
+        }elseif($type==1)
         {
             return "";
         }

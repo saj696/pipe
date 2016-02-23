@@ -48,6 +48,10 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('suppliers', 'Setup\SuppliersController');
     Route::resource('purchases', 'Setup\PurchasesController');
     Route::resource('charts', 'Account\ChartOfAccountsController');
+    Route::post('sales_delivery_details', 'Sales\SalesDeliveryController@save');
+    Route::resource('salesDelivery', 'Sales\SalesDeliveryController');
+    Route::resource('sales_return', 'Sales\SalesReturnController');
+
 });
 
 Route::post('module_select', array('as' => 'ajax.module_select', 'uses' => 'AjaxController@getModules'));
@@ -56,6 +60,7 @@ Route::post('customer_select', array('as' => 'ajax.customer_select', 'uses' => '
 Route::post('supplier_select', array('as' => 'ajax.supplier_select', 'uses' => 'AjaxController@getSuppliers'));
 Route::post('employee_select', array('as' => 'ajax.employee_select', 'uses' => 'AjaxController@getEmployees'));
 Route::post('product_select', array('as' => 'ajax.product_select', 'uses' => 'AjaxController@getProducts'));
+Route::post('get_person_due_amount', array('as' => 'ajax.get_person_due_amount', 'uses' => 'AjaxController@getPersonDueAmount'));
 
 Route::controllers([
     'auth' => 'Auth\AuthController',

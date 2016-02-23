@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use App\Http\Requests\CustomerRequest;
 use App\Models\Customer;
+use App\Models\PersonalAccount;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
 class CustomersController extends Controller
@@ -47,22 +49,38 @@ class CustomersController extends Controller
     public function store(CustomerRequest $request)
     {
         $inputs = $request->input();
-        $file = $request->file('picture');
-        $destinationPath = base_path() . '/public/image/customer/';
-        if ($request->hasFile('picture')) {
-            $file->move($destinationPath, $file->getClientOriginalName());
-            $inputs['picture'] = $file->getClientOriginalName();
+        DB::beginTransaction();
+        try {
+            $file = $request->file('picture');
+            $destinationPath = base_path() . '/public/image/customer/';
+            if ($request->hasFile('picture')) {
+                $file->move($destinationPath, $file->getClientOriginalName());
+                $inputs['picture'] = $file->getClientOriginalName();
+            }
+            $inputs['created_by'] = Auth::user()->id;
+            $inputs['created_at'] = time();
+            $inputs['status'] = 1;
+
+            unset($inputs['_token']);
+            $customer=DB::table('customer')
+                ->insertGetId($inputs);
+
+            //Personal Account Creation
+            $personal= new PersonalAccount();
+            $personal->person_type=Config::get('common.person_type_customer');
+            $personal->person_id=$customer;
+            $personal->created_by=Auth::user()->id;
+            $personal->created_at=time();
+            $personal->save();
+
+            DB::commit();
+            Session::flash('flash_message', 'Customer created successfully');
+            return redirect('customers');
+        } catch (\Exception $e) {
+            DB::rollback();
+            Session::flash('flash_message', 'Failed to create customer. Please Try again.');
+            return Redirect::back();
         }
-        $inputs['created_by'] = Auth::user()->id;
-        $inputs['created_at'] = time();
-        $inputs['status'] = 1;
-
-        unset($inputs['_token']);
-        DB::table('customer')
-            ->insert($inputs);
-
-        Session::flash('flash_message', 'Customer created successfully');
-        return redirect('customers');
     }
 
     public function edit($id = null)
