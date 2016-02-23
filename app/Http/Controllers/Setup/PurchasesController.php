@@ -82,7 +82,7 @@ class PurchasesController extends Controller
             $item['created_by'] = $user_id;
             PurchaseDetail::create($item);
             //update stock info
-            RawStock::where('material_id',$item['material_id'])->increment('quantity',$item['quantity'],['updated_at'=>$time,'updated_by'=>$user_id]);
+            RawStock::where('material_id',$item['material_id'])->increment('quantity',$item['received_quantity'],['updated_at'=>$time,'updated_by'=>$user_id]);
         }
         Session()->flash('flash_message','Purchases has been Completed');
         return redirect('purchases');

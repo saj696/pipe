@@ -30,7 +30,7 @@
                             </table>
                         </div>
                         <div class="col-md-12">
-                            <table class="table table-striped table-hover">
+                            <table class="table table-striped table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th>Material</th>
