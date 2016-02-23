@@ -48,10 +48,11 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('suppliers', 'Setup\SuppliersController');
     Route::resource('purchases', 'Setup\PurchasesController');
     Route::resource('charts', 'Account\ChartOfAccountsController');
+    Route::resource('recorders', 'Account\TransactionRecordersController');
+    Route::resource('initializations', 'Account\InitializationsController');
     Route::post('sales_delivery_details', 'Sales\SalesDeliveryController@save');
     Route::resource('salesDelivery', 'Sales\SalesDeliveryController');
     Route::resource('sales_return', 'Sales\SalesReturnController');
-
 });
 
 Route::post('module_select', array('as' => 'ajax.module_select', 'uses' => 'AjaxController@getModules'));
