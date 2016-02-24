@@ -115,7 +115,7 @@
 <div class="form-group{{ $errors->has('remarks') ? ' has-error' : '' }}">
     {{ Form::label('remarks', 'Remarks', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7">
-        {{ Form::textarea('remarks', null,['class'=>'form-control', 'rows'=>'3']) }}
+        {{ Form::textarea('remarks', null,['class'=>'form-control', 'rows'=>'3','required']) }}
         @if ($errors->has('remarks'))
             <span class="help-block">
                 <strong>{{ $errors->first('remarks') }}</strong>
@@ -231,6 +231,12 @@
         });
 
         $(document).on('change', '#paid', function () {
+            var paid= parseFloat($(this).val());
+            var due= parseFloat($('#due').val());
+            if(paid > due)
+            {
+                $(this).val("");
+            }
             calculateAmount();
         });
 
@@ -249,7 +255,7 @@
         var q = $(ele).closest('.single_product').find('.single_p_quantity').val();
         var r = $(ele).closest('.single_product').find('.single_p_rate').val();
         if (q && r) {
-            $(ele).closest('.single_product').find('.single_p_total').val(parseFloat(q) * parseFloat(r));
+            $(ele).closest('.single_product').find('.single_p_total').val((parseFloat(q) * parseFloat(r)).toFixed(2));
             findTotal();
         }
 
@@ -260,7 +266,7 @@
             if (this.value)
                 total += parseFloat(this.value);
         });
-        $('#total').val(total);
+        $('#total').val(total.toFixed(2));
         calculateAmount();
     }
 
@@ -280,6 +286,6 @@
             paid_amount = 0
         }
         due = (total_amount + t_cost) - (paid_amount + discount);
-        $('#due').val(due);
+        $('#due').val(due.toFixed(2));
     }
 </script>

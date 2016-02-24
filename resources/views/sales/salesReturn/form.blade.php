@@ -226,7 +226,7 @@
         var q = $(ele).closest('.single_product').find('.single_p_quantity').val();
         var r = $(ele).closest('.single_product').find('.single_p_rate').val();
         if (q && r) {
-            $(ele).closest('.single_product').find('.single_p_total').val(parseFloat(q) * parseFloat(r));
+            $(ele).closest('.single_product').find('.single_p_total').val((parseFloat(q) * parseFloat(r)).toFixed(2));
             findTotal();
         }
 
@@ -237,7 +237,7 @@
             if (this.value)
                 total += parseFloat(this.value);
         });
-        $('#total').val(total);
+        $('#total').val(total.toFixed(2));
         calculateAmount();
     }
 

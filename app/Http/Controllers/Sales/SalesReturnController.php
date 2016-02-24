@@ -99,7 +99,7 @@ class SalesReturnController extends Controller
                 $workspace->updated_at = $time;
                 $workspace->save();
 
-                // Update General Ledger
+               /* // Update General Ledger
                 $general = GeneralLedger::where(['account_code' => 11000, 'balance_type' => $balance_type])->first();
                 $general->year = date('Y');
                 $general->balance -= $inputs['total']; //Subtract Cash
@@ -112,7 +112,7 @@ class SalesReturnController extends Controller
                 $general->balance += $inputs['total']; //Add Product Sales Return
                 $general->updated_by = $user_id;
                 $general->updated_at = $time;
-                $general->save();
+                $general->save();*/
 
                 //Insert data into General Journal
 
@@ -159,7 +159,7 @@ class SalesReturnController extends Controller
                 $workspace->updated_at = $time;
                 $workspace->save();
 
-                // Update General Ledger
+                /*// Update General Ledger
                 $general = GeneralLedger::where(['account_code' => 12000, 'balance_type' => $balance_type])->first();
                 $general->year = date('Y');
                 $general->balance -= $inputs['total']; //Subtract Account Receivable
@@ -172,7 +172,7 @@ class SalesReturnController extends Controller
                 $general->balance += $inputs['total']; //Add Product Sales Return
                 $general->updated_by = $user_id;
                 $general->updated_at = $time;
-                $general->save();
+                $general->save();*/
 
                 //Insert data into General Journal
 
@@ -206,7 +206,7 @@ class SalesReturnController extends Controller
                 $personal = PersonalAccount::where('person_id', $inputs['customer_id'])->where('person_type', $inputs['customer_type'])->first();
                 $personal->due -= $inputs['due_paid'];
                 if ($inputs['total'] > $inputs['due_paid']) {
-                    $personal->blance += ($inputs['total'] - $inputs['due_paid']);
+                    $personal->balance += ($inputs['total'] - $inputs['due_paid']);
                 }
                 $personal->updated_by = $user_id;
                 $personal->updated_at = $time;
@@ -228,7 +228,7 @@ class SalesReturnController extends Controller
                 $workspace->updated_at = $time;
                 $workspace->save();
 
-                // Update General Ledger
+                /*// Update General Ledger
                 $general = GeneralLedger::where(['account_code' => 41000, 'balance_type' => $balance_type])->first();
                 $general->year = date('Y');
                 $general->balance += $inputs['total']; //Add Account Payable
@@ -241,7 +241,7 @@ class SalesReturnController extends Controller
                 $general->balance += $inputs['total']; //Add Product Sales Return
                 $general->updated_by = $user_id;
                 $general->updated_at = $time;
-                $general->save();
+                $general->save();*/
 
                 //Insert data into General Journal
 
@@ -273,7 +273,7 @@ class SalesReturnController extends Controller
 
                 //Update Personal Account
                 $personal = PersonalAccount::where('person_id', $inputs['customer_id'])->where('person_type', $inputs['customer_type'])->first();
-                $personal->blance += $inputs['total'];
+                $personal->balance += $inputs['total'];
                 $personal->updated_by = $user_id;
                 $personal->updated_at = $time;
                 $personal->save();
@@ -288,7 +288,7 @@ class SalesReturnController extends Controller
                 $workspace->save();
                 $workspace = WorkspaceLedger::where(['account_code' => 32000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type])->first();
                 $workspace->year = date('Y');
-                $workspace->balance += ($inputs['total'] - $inputs['due_paid']); //Add Product Sales Return
+                $workspace->balance += $inputs['total']; //Add Product Sales Return
                 $workspace->updated_by = $user_id;
                 $workspace->updated_at = $time;
                 $workspace->save();
@@ -300,7 +300,7 @@ class SalesReturnController extends Controller
                 $workspace->updated_at = $time;
                 $workspace->save();
 
-                // Update General Ledger
+                /*// Update General Ledger
                 $general = GeneralLedger::where(['account_code' => 11000, 'balance_type' => $balance_type])->first();
                 $general->year = date('Y');
                 $general->balance -= ($inputs['total'] - $inputs['due_paid']); //Subtract Cash
@@ -320,7 +320,7 @@ class SalesReturnController extends Controller
                 $general->balance -= $inputs['due_paid']; //Subtract Cash
                 $general->updated_by = $user_id;
                 $general->updated_at = $time;
-                $general->save();
+                $general->save();*/
 
                 //Insert data into General Journal
 
@@ -345,7 +345,7 @@ class SalesReturnController extends Controller
                 $journal->account_code = 32000;      //Product Sales Return
                 $journal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
                 $journal->workspace_id = $workspace_id;
-                $journal->amount = ($inputs['total'] - $inputs['due_paid']);
+                $journal->amount = $inputs['total'];
                 $journal->created_by = $user_id;
                 $journal->created_at = $time;
                 $journal->save();
@@ -367,9 +367,6 @@ class SalesReturnController extends Controller
 
                 $personal = PersonalAccount::where('person_id', $inputs['customer_id'])->where('person_type', $inputs['customer_type'])->first();
                 $personal->due -= $inputs['due_paid'];
-                if ($inputs['total'] > $inputs['due_paid']) {
-                    $personal->blance += ($inputs['total'] - $inputs['due_paid']);
-                }
                 $personal->updated_by = $user_id;
                 $personal->updated_at = $time;
                 $personal->save();
