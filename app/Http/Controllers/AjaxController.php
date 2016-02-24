@@ -81,6 +81,21 @@ class AjaxController extends Controller
 
         return response()->json($personal->due);
     }
+    /*
+     * created by mazba
+     * use in [purchase return,]
+     */
+    public function getPersonBalanceAmount(Request $request)
+    {
+        $inputs=$request->input();
+        $personal=PersonalAccount::where('person_type',$inputs['person_type'])
+            ->where('person_id',$inputs['person_id'])
+            ->select('balance')
+            ->first();
+        if($personal)
+        return response()->json($personal->balance);
+        return response()->json(false);
+    }
 
     public function getTransactionRecorderAmount(Request $request)
     {

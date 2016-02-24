@@ -10,14 +10,16 @@
         @endif
     </div>
 </div>
+<div id="supplier_info">
+</div>
 
-<div class="form-group{{ $errors->has('purchase_date') ? ' has-error' : '' }}">
-    {{ Form::label('purchase_date', 'Purchase Date', ['class'=>'col-md-3 control-label']) }}
+<div class="form-group{{ $errors->has('purchase_return_date') ? ' has-error' : '' }}">
+    {{ Form::label('purchase_return_date', 'Purchase Return Date', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7">
-        {{ Form::text('purchase_date', null,['class'=>'form-control datepicker']) }}
-        @if ($errors->has('purchase_date'))
+        {{ Form::text('purchase_return_date', null,['class'=>'form-control datepicker']) }}
+        @if ($errors->has('purchase_return_date'))
             <span class="help-block">
-                <strong>{{ $errors->first('purchase_date') }}</strong>
+                <strong>{{ $errors->first('purchase_return_date') }}</strong>
             </span>
         @endif
     </div>
@@ -33,6 +35,17 @@
         @endif
     </div>
 </div>
+<div class="form-group{{ $errors->has('return_type') ? ' has-error' : '' }}">
+    {{ Form::label('return_type', 'Return Type', ['class'=>'col-md-3 control-label']) }}
+    <div class="col-md-7">
+        {{ Form::select('return_type',Config::get('common.product_return_type') ,null,['class'=>'form-control']) }}
+        @if ($errors->has('return_type'))
+            <span class="help-block">
+                <strong>{{ $errors->first('return_type') }}</strong>
+            </span>
+        @endif
+    </div>
+</div>
 <?php
       $old_items = isset($purchase) ?  $purchase['purchaseDetails'] : false;
 ?>
@@ -40,7 +53,7 @@
     @if($old_items)
         @foreach($old_items as $item)
             <div class="col-md-12 purchase_row">
-                <div class="col-md-3">
+                <div class="col-md-5">
                     <div class="form-group">
                         {{ Form::label('material_id', 'Material', ['class'=>'col-md-4 control-label']) }}
                         <div class="col-md-8">
@@ -53,14 +66,6 @@
                         {{ Form::label('quantity', 'Quantity', ['class'=>'col-md-4 control-label']) }}
                         <div class="col-md-8">
                             {{ Form::text('items['.$item['id'].'][quantity]', $item['quantity'],['class'=>'form-control quantity','id'=>'','required']) }}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        {{ Form::label('received_quantity', 'Received Quantity', ['class'=>'col-md-4 control-label']) }}
-                        <div class="col-md-8">
-                            {{ Form::text('items['.$item['id'].'][received_quantity]', $item['received_quantity'],['class'=>'form-control received_quantity','id'=>'']) }}
                         </div>
                     </div>
                 </div>
@@ -89,23 +94,23 @@
                 <div class="form-group">
                     {{ Form::label('material_id', 'Material', ['class'=>'col-md-4 control-label']) }}
                     <div class="col-md-8">
-                        {{ Form::select('items[0][material_id]',$materials, null,['class'=>'form-control material_id','id'=>'','required']) }}
+                        <select name="items[0][material_id]" required="required" class="form-control material_id">
+                            @foreach($materials as $material_id=>$material)
+                            <option value="{{$material_id}}" data-raw-stock="{{$raw_stock[$material_id]}}">{{$material}}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
+            </div>
+            <div class="col-md-2">
+                <div class="col-md-11">Material in Stock</div>
+                <div class="col-md-1 material_in_stock"> <span class="badge badge-danger"></span></div>
             </div>
             <div class="col-md-2">
                 <div class="form-group">
                     {{ Form::label('quantity', 'Quantity', ['class'=>'col-md-4 control-label']) }}
                     <div class="col-md-8">
                         {{ Form::text('items[0][quantity]', null,['class'=>'form-control quantity','id'=>'','required']) }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    {{ Form::label('received_quantity', 'Received Quantity', ['class'=>'col-md-4 control-label']) }}
-                    <div class="col-md-8">
-                        {{ Form::text('items[0][received_quantity]', null,['class'=>'form-control received_quantity','id'=>'']) }}
                     </div>
                 </div>
             </div>
@@ -137,37 +142,32 @@
         <div class="form-group">
             <label class="col-md-5 control-label" for="paid">Total Amount</label>
             <div class="col-md-7">
-                <input type="text" readonly name="total" class="form-control" id="total_amount">
+                <input type="text" name="total" class="form-control" id="total_amount">
             </div>
         </div>
     </div>
-    <div class="col-md-3 col-md-offset-9">
-        <div class="form-group{{ $errors->has('paid') ? ' has-error' : '' }}">
-            {{ Form::label('paid', 'Paid Amount', ['class'=>'col-md-5 control-label']) }}
-            <div class="col-md-7">
-                {{ Form::text('paid', null,['class'=>'form-control']) }}
-                @if ($errors->has('paid'))
-                    <span class="help-block">
-                <strong>{{ $errors->first('paid') }}</strong>
-            </span>
-                @endif
-            </div>
-        </div>
+    <div id="due_cash_wrp">
+
     </div>
 </div>
 <div class="form-actions">
     <div class="row">
         <div class="col-md-offset-5 col-md-9">
-            {{ Form::submit($submitText, ['class'=>'btn green']) }}
+            {{ Form::submit($submitText, ['class'=>'btn green','id'=>'submit']) }}
         </div>
     </div>
 </div>
 <script type="text/javascript">
+    $('.material_id').val('')
     $(document).on('ready',function(){
         findTotal();
     });
     $(function() {
         $( ".datepicker" ).datepicker();
+    });
+    $(document).on('change','.material_id',function(){
+        var raw_stock = $(this).find(':selected').data('raw-stock');
+        $(this).closest('.purchase_row').find('.material_in_stock .badge').html(raw_stock);
     });
     function addMore()
     {
@@ -198,8 +198,9 @@
         ele.closest('.purchase_row').remove();
         findTotal();
     }
-    $(document).on('change','.quantity',function(){
+    $(document).on('keyup','.quantity',function(){
         findRowTotal(this);
+        checkTheStock(this);
         findTotal();
     });
     $(document).on('change','.unit_price',function(){
@@ -210,6 +211,41 @@
         findRowTotal(this);
         findTotal();
     });
+    $(document).on('change','#return_type',function(){
+        var supplier_id = $('#supplier_id').val();
+        $('#due_cash_wrp').html('');
+        $('#supplier_info').html('');
+        if($(this).val() ==2)
+        {
+            getAndSetBalance(supplier_id);
+        }
+        else if($(this).val() ==3)
+        {
+            getAndSetDue(supplier_id);
+        }
+        else if($(this).val() ==4)
+        {
+            getAndSetBalance(supplier_id);
+            var html = '<div class="col-md-3 col-md-offset-9">'+
+                    '<div class="form-group">'+
+                '<label class="col-md-5 control-label" for="paid">Pay Due Amount</label>'+
+                ' <div class="col-md-7">'+
+                '<input type="text" name="pay_due_amount" class="form-control" id="pay_due_amount">'+
+                '</div>'+
+                '</div>'+
+                '</div>'+
+                '<div class="col-md-3 col-md-offset-9">'+
+                '<div class="form-group">'+
+                '<label class="col-md-5 control-label" for="paid">Cash Return Amount</label>'+
+                '<div class="col-md-7">'+
+                '<input type="text" name="cash_return_amount" class="form-control" id="cash_return_amount">'+
+                '</div>'+
+                '</div>'+
+                '</div>';
+            $('#due_cash_wrp').html(html);
+
+        }
+    });
     $(document).on('change','.material_id',function(){
         var currentMaterial = $(this).val();
         var allMaterials = $('.material_id option:selected[value='+currentMaterial+']');
@@ -219,6 +255,85 @@
             alert('This Material already exists');
         }
     });
+    $(document).on('submit','form',function(ee){
+        var supplierDue = parseFloat($('.supplier_due').html());
+        var total = parseFloat($('#total_amount').val());
+        if($('#return_type').val() == 2 && supplierDue < total)
+        {
+            alert('Total amount can not be grater than due amount. Please select the Return type "Pay Due and Cash Return"');
+            ee.preventDefault();
+        }
+    });
+    function getAndSetBalance(supplier_id){
+        $.ajax({
+            url: '{{ route('ajax.get_person_balance_amount') }}',
+            type: 'POST',
+            dataType: "JSON",
+            data:{
+                person_id:supplier_id,
+                person_type:'{{Config::get('common.person_type_supplier')}}'
+            },
+            success: function (data, status)
+            {
+                var html = '<div class="form-group">'+
+                        '<label class="col-md-3 control-label">Supplier Due(Paid to us)</label>'+
+                        '<div class="col-md-7">'+
+                        '<div class="badge badge-danger supplier_due">'+
+                        data
+                '</div>'+
+                '</div>'+
+                '</div>'
+                $('#supplier_info').html(html);
+            },
+            error: function (xhr, desc, err)
+            {
+                console.log("error");
+            }
+        });
+    }
+    function getAndSetDue(supplier_id){
+        $.ajax({
+            url: '{{ route('ajax.get_person_due_amount') }}',
+            type: 'POST',
+            dataType: "JSON",
+            data:{
+                person_id:supplier_id,
+                person_type:'{{Config::get('common.person_type_supplier')}}'
+            },
+            success: function (data, status)
+            {
+                var html = '<div class="form-group">'+
+                        '<label class="col-md-3 control-label">Supplier Balance(due to us)</label>'+
+                        '<div class="col-md-7">'+
+                        '<div class="badge badge-success supplier_blance">'+
+                        data
+                '</div>'+
+                '</div>'+
+                '</div>'
+                $('#supplier_info').html(html);
+            },
+            error: function (xhr, desc, err)
+            {
+                console.log("error");
+            }
+        });
+    }
+    function checkTheStock(ele)
+    {
+        var rawStock = parseFloat($(ele).closest('.purchase_row').find('.material_id :selected').data('raw-stock'));
+        if(!rawStock)
+        {
+            alert('Select the material first');
+            $(ele).val('');
+        }
+
+        if(rawStock < parseFloat(ele.value))
+        {
+            alert('Quantity can\'t be greater then Stock');
+            $(ele).val('');
+        }
+        console.log(rawStock)
+    }
     function findRowTotal(ele){
         var thisQuantity = parseFloat($(ele).closest('.purchase_row').find('.quantity').val());
         var thisUnitPrice = parseFloat($(ele).closest('.purchase_row').find('.unit_price').val());
