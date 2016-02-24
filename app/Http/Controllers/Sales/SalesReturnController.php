@@ -373,12 +373,10 @@ class SalesReturnController extends Controller
 
         } catch (\Exception $e) {
 
-            DB::rollback();
             Session()->flash('flash_message', 'Sales Returned Failed.');
             return Redirect::back();
         }
 
-        DB::commit();
         Session()->flash('flash_message', 'Sales Returned Successful.');
         return redirect('sales_return');
 
