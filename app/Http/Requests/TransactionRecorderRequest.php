@@ -24,7 +24,6 @@ class TransactionRecorderRequest extends Request
      */
     public function rules()
     {
-
         return [
             'date'=>'required|date',
             'account_code'=>'required|integer',
@@ -32,7 +31,7 @@ class TransactionRecorderRequest extends Request
             'to_whom'=>'required_if:account_code, 41000',
             'from_whom_type'=>'required_if:account_code, 12000, 20000, 30000',
             'from_whom'=>'required_if:account_code, 12000, 20000, 30000',
-            'total_amount'=>'required_without:account_code, 50000, 60000',
+            'total_amount'=>'required_unless:account_code, 50000, 60000',
             'amount'=>'required|numeric',
         ];
     }
