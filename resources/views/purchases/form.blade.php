@@ -25,7 +25,7 @@
 <div class="form-group{{ $errors->has('transportation_cost') ? ' has-error' : '' }}">
     {{ Form::label('transportation_cost', 'Transportation Cost', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7">
-        {{ Form::text('transportation_cost', null,['class'=>'form-control']) }}
+        {{ Form::text('transportation_cost', 0,['class'=>'form-control']) }}
         @if ($errors->has('transportation_cost'))
             <span class="help-block">
                 <strong>{{ $errors->first('transportation_cost') }}</strong>
@@ -209,6 +209,16 @@
     $(document).on('change','#transportation_cost',function(){
         findRowTotal(this);
         findTotal();
+    });
+    $(document).on('submit','form',function(ee){
+        var total = parseFloat($('#total_amount').val());
+        var paid = parseFloat($('#paid').val());
+        if(!total)
+            alert('Total Amount Required');
+        if(total < paid){
+            alert('Paid amount can\'t be Grater than Total Amount ');
+
+        }
     });
     $(document).on('change','.material_id',function(){
         var currentMaterial = $(this).val();

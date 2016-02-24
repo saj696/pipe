@@ -243,7 +243,7 @@ class PurchasesReturnController extends Controller
 
                 //Update Personal Account
                 $personal = PersonalAccount::where('person_id', $inputs['customer_id'])->where('person_type', $inputs['customer_type'])->first();
-                $personal->blance += $inputs['total'];
+                $personal->due += $inputs['total'];
                 $personal->updated_by = $user_id;
                 $personal->updated_at = $time;
                 $personal->save();
