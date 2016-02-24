@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use App\Http\Requests\CustomerRequest;
 use App\Models\Customer;
+use App\Models\GeneralJournal;
 use App\Models\PersonalAccount;
+use App\Models\WorkspaceLedger;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -48,39 +50,101 @@ class CustomersController extends Controller
 
     public function store(CustomerRequest $request)
     {
-        $inputs = $request->input();
-        DB::beginTransaction();
+//        $inputs = $request->input();
+//        dd($inputs);
+
         try {
-            $file = $request->file('picture');
-            $destinationPath = base_path() . '/public/image/customer/';
-            if ($request->hasFile('picture')) {
-                $file->move($destinationPath, $file->getClientOriginalName());
-                $inputs['picture'] = $file->getClientOriginalName();
-            }
-            $inputs['created_by'] = Auth::user()->id;
-            $inputs['created_at'] = time();
-            $inputs['status'] = 1;
 
-            unset($inputs['_token']);
-            $customer=DB::table('customer')
-                ->insertGetId($inputs);
+            DB::transaction(function () use ($request) {
+                $inputs = $request->input();
+                $time = time();
+                $user = Auth::user();
+                $file = $request->file('picture');
+                $customer = new Customer();
 
-            //Personal Account Creation
-            $personal= new PersonalAccount();
-            $personal->person_type=Config::get('common.person_type_customer');
-            $personal->person_id=$customer;
-            $personal->created_by=Auth::user()->id;
-            $personal->created_at=time();
-            $personal->save();
+                $destinationPath = base_path() . '/public/image/customer/';
+                if ($request->hasFile('picture')) {
+                    $file->move($destinationPath, $file->getClientOriginalName());
+                    $customer->picture = $file->getClientOriginalName();
+                }
+                $customer->name = $inputs['name'];
+                $customer->mobile = $inputs['mobile'];
+                $customer->address = $inputs['address'];
+                $customer->type = $inputs['type'];
+                $customer->business_name = $inputs['business_name'];
+                $customer->business_address = $inputs['business_address'];
+                $customer->created_by = $user->id;
+                $customer->created_at = $time;
+                $customer->save();
 
-            DB::commit();
-            Session::flash('flash_message', 'Customer created successfully');
-            return redirect('customers');
+                //Personal Account Creation
+                $personal = new PersonalAccount();
+                $personal->person_type = Config::get('common.person_type_customer');
+                if (!empty($inputs['balance'])) {
+                    $personal->balance = $inputs['balance'];
+                }
+
+                if (!empty($inputs['due'])) {
+                    $personal->due = $inputs['due'];
+                }
+                $personal->person_id = $customer;
+                $personal->created_by = Auth::user()->id;
+                $personal->created_at = $time;
+                $personal->save();
+
+                if (!empty($inputs['balance'])) {
+                    //Update Workspace Ledger
+                    $workspaceLedger = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 41000, 'balance_type' => Config::get('common.balance_type_intermediate')])->first();
+                    $workspaceLedger->balance += $inputs['balance'];
+                    $workspaceLedger->updated_by = $user->id;
+                    $workspaceLedger->updated_by = $time;
+                    $workspaceLedger->save();
+
+                    // Insert into General Journal
+                    $generalJournal = new GeneralJournal();
+                    $generalJournal->date = $time;
+                    $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
+                    $generalJournal->reference_id = $personal->id;
+                    $generalJournal->year = date('Y');
+                    $generalJournal->account_code = 41000;
+                    $generalJournal->workspace_id = $user->workspace_id;
+                    $generalJournal->amount = $inputs['balance'];
+                    $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
+                    $generalJournal->created_by = $user->id;
+                    $generalJournal->created_at = $time;
+                    $generalJournal->save();
+                }
+
+                if (!empty($inputs['due'])) {
+                    //Update Workspace Ledger
+                    $workspaceLedger = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 12000, 'balance_type' => Config::get('common.balance_type_intermediate')])->first();
+                    $workspaceLedger->balance += $inputs['due'];
+                    $workspaceLedger->updated_by = $user->id;
+                    $workspaceLedger->updated_by = $time;
+                    $workspaceLedger->save();
+
+                    // Insert into General Journal
+                    $generalJournal = new GeneralJournal();
+                    $generalJournal->date = $time;
+                    $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
+                    $generalJournal->reference_id = $personal->id;
+                    $generalJournal->year = date('Y');
+                    $generalJournal->account_code = 12000;
+                    $generalJournal->workspace_id = $user->workspace_id;
+                    $generalJournal->amount = $inputs['due'];
+                    $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
+                    $generalJournal->created_by = $user->id;
+                    $generalJournal->created_at = $time;
+                    $generalJournal->save();
+                }
+            });
         } catch (\Exception $e) {
-            DB::rollback();
+            dd($e);
             Session::flash('flash_message', 'Failed to create customer. Please Try again.');
             return Redirect::back();
         }
+        Session::flash('flash_message', 'Customer created successfully');
+        return redirect('customers');
     }
 
     public function edit($id = null)

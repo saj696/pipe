@@ -28,6 +28,8 @@ class CustomerRequest extends Request
             'name' => 'required',
             'mobile' => 'required',
             'type' => 'required',
+            'balance' => 'numeric',
+            'due' => 'numeric',
             'business_name' => 'required_if:type,1',
             'business_address' => 'required_if:type,1',
             'picture' => 'image'

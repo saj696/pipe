@@ -48,6 +48,30 @@
     </div>
 </div>
 
+<div class="form-group{{ $errors->has('balance') ? ' has-error' : '' }}">
+    {{ Form::label('balance', 'Balance', ['class'=>'col-md-3 control-label']) }}
+    <div class="col-md-7">
+        {{ Form::text('balance',null,['class'=>'form-control']) }}
+        @if ($errors->has('balance'))
+            <span class="help-block">
+                <strong>{{ $errors->first('balance') }}</strong>
+            </span>
+        @endif
+    </div>
+</div>
+
+<div class="form-group{{ $errors->has('due') ? ' has-error' : '' }}">
+    {{ Form::label('due', 'Due', ['class'=>'col-md-3 control-label']) }}
+    <div class="col-md-7">
+        {{ Form::text('due',null,['class'=>'form-control']) }}
+        @if ($errors->has('due'))
+            <span class="help-block">
+                <strong>{{ $errors->first('due') }}</strong>
+            </span>
+        @endif
+    </div>
+</div>
+
 <div id="business_info" style="display: none">
     <div class="form-group{{ $errors->has('business_name') ? ' has-error' : '' }}">
         {{ Form::label('business_name', 'Business Name', ['class'=>'col-md-3 control-label']) }}

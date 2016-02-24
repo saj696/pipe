@@ -184,7 +184,7 @@
             rowTotal(this);
         });
 
-        $(document).on('change', '#product_return_type', function () {
+        $(document).on('change', '#product_return_type', function (e) {
             var return_type = $(this).val();
             if (return_type == 2 || return_type == 4) {
                 $.ajax({
@@ -209,12 +209,18 @@
                                 '</div>' +
                                 '</div>';
                         $('.pay_due').html(html);
-                    },
+                        var total_amount = parseFloat($('#total').val());
+                        if (return_type == 2 && total_amount > data)
+                        {
+                            alert('Total amount cannot be greater than Due amount. Please select the Return type "Pay Due & Cash Return"');
+                            e.preventDefault();
+                        }
+                                },
                     error: function (xhr, desc, err) {
 
                     }
                 })
-            }else{
+            } else {
                 $('.pay_due').html("");
             }
         });
@@ -238,7 +244,7 @@
                 total += parseFloat(this.value);
         });
         $('#total').val(total.toFixed(2));
-        calculateAmount();
+//        calculateAmount();
     }
 
 </script>

@@ -4,18 +4,16 @@ namespace App\Http\Controllers\Sales;
 
 use App\Models\Customer;
 use App\Models\GeneralJournal;
-use App\Models\GeneralLedger;
 use App\Models\PersonalAccount;
 use App\Models\Stock;
-use App\Models\Workspace;
 use App\Models\WorkspaceLedger;
-use DB;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Redirect;
+use DB;
 
 class SalesReturnController extends Controller
 {
@@ -45,9 +43,9 @@ class SalesReturnController extends Controller
 //        $workspace = WorkspaceLedger::where(['account_code'=>11000,'workspace_id'=>1,'balance_type'=>1])->first();
 //        dd($workspace);
         $inputs = $request->input();
-        DB::beginTransaction();
 
         try {
+            DB::transaction(function() use ($inputs){
             $user_id = Auth::user()->id;
             $workspace_id = Auth::user()->workspace_id;
             $balance_type = Config::get('common.balance_type_intermediate');
@@ -79,7 +77,7 @@ class SalesReturnController extends Controller
                 $stock->quantity += $product['quantity_returned'];
                 $stock->updated_by = $user_id;
                 $stock->updated_at = $time;
-                $stock->save();
+                $stock->save('d');
             }
 
             if ($inputs['return_type'] == 1) {                  //For Cash
@@ -372,15 +370,18 @@ class SalesReturnController extends Controller
                 $personal->save();
             }
 
-            DB::commit();
-
-            Session()->flash('flash_message', 'Sales Returned Successful.');
-            return redirect('sales_return');
+            });
 
         } catch (\Exception $e) {
-            DB::rollBack();
+
+            DB::rollback();
             Session()->flash('flash_message', 'Sales Returned Failed.');
             return Redirect::back();
         }
+
+        DB::commit();
+        Session()->flash('flash_message', 'Sales Returned Successful.');
+        return redirect('sales_return');
+
     }
 }
