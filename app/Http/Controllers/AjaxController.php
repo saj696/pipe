@@ -81,4 +81,21 @@ class AjaxController extends Controller
 
         return response()->json($personal->due);
     }
+
+    public function getTransactionRecorderAmount(Request $request)
+    {
+        $type = $request->input('type');
+        $slice = $request->input('slice');
+        $person_id = $request->input('person_id');
+
+        $personal = PersonalAccount::where(['person_type'=> $type, 'id'=>$person_id])->first();
+        if($slice==1)
+        {
+            return response()->json($personal->due);
+        }
+        elseif($slice==4)
+        {
+            return response()->json($personal->balance);
+        }
+    }
 }

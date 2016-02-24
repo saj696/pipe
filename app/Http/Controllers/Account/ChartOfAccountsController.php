@@ -46,7 +46,8 @@ class ChartOfAccountsController extends Controller
     public function create()
     {
         $parents = ChartOfAccount::where('status', 1)->lists('name', 'id');
-        return view('chartOfAccounts.create', compact('parents'));
+        $contras = ChartOfAccount::where('status', 1)->lists('name', 'code');
+        return view('chartOfAccounts.create', compact('parents', 'contras'));
     }
 
     public function store(ChartOfAccountRequest $request)
@@ -58,7 +59,7 @@ class ChartOfAccountsController extends Controller
         if($request->input('contra_status'))
         {
             $chart->contra_status = 1;
-            $chart->contra_id = $request->input('contra_id');
+            $chart->contra_code = $request->input('contra_id');
         }
         $chart->save();
 
@@ -69,8 +70,9 @@ class ChartOfAccountsController extends Controller
     public function edit($id)
     {
         $parents = ChartOfAccount::where('status', 1)->lists('name', 'id');
+        $contras = ChartOfAccount::where('status', 1)->lists('name', 'code');
         $chart = ChartOfAccount::findOrFail($id);
-        return view('chartOfAccounts.edit', compact('chart', 'parents'));
+        return view('chartOfAccounts.edit', compact('chart', 'parents', 'contras'));
     }
 
     public function update($id, ChartOfAccountRequest $request)
@@ -83,7 +85,7 @@ class ChartOfAccountsController extends Controller
         if($request->input('contra_status'))
         {
             $chart->contra_status = 1;
-            $chart->contra_id = $request->input('contra_id');
+            $chart->contra_code = $request->input('contra_id');
         }
         $chart->update();
 

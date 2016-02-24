@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Account;
 use App\Http\Requests;
 use App\Models\TransactionRecorder;
 use App\Models\ChartOfAccount;
+use App\Models\WorkspaceLedger;
+use App\Models\GeneralJournal;
 use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\Supplier;
@@ -30,14 +32,14 @@ class TransactionRecordersController extends Controller
     public function index()
     {
         $recorders = TransactionRecorder::paginate(Config::get('common.pagination'));
-        $accounts = ChartOfAccount::whereIn('code', Config::get('common.transaction_accounts'))->lists('name', 'code');
+        $accounts = ChartOfAccount::where('account_type', 1)->whereIn('code', Config::get('common.transaction_accounts'))->lists('name', 'code');
         $status = Config::get('common.status');
         return view('transactionRecorders.index', compact('recorders', 'status', 'accounts'));
     }
 
     public function create()
     {
-        $accounts = ChartOfAccount::whereIn('code', Config::get('common.transaction_accounts'))->lists('name', 'code');
+        $accounts = ChartOfAccount::where('account_type', 1)->whereIn('code', Config::get('common.transaction_accounts'))->lists('name', 'code');
         $types = Config::get('common.sales_customer_type');
         $years = CommonHelper::get_years();
         return view('transactionRecorders.create', compact('accounts', 'types', 'years'));
@@ -77,13 +79,22 @@ class TransactionRecordersController extends Controller
         $recorder->created_at = time();
         $recorder->save();
 
+        // Impacts on accounting tables
+//        $workspaceLedger = New WorkspaceLedger;
+//        $generalJournal = New GeneralJournal;
+//
+//        if($request->account_code==12000)
+//        {
+//
+//        }
+
         Session()->flash('flash_message', 'Transaction Recorder has been created!');
         return redirect('recorders');
     }
 
     public function edit($id)
     {
-        $accounts = ChartOfAccount::whereIn('code', Config::get('common.transaction_accounts'))->lists('name', 'code');
+        $accounts = ChartOfAccount::where('account_type', 1)->whereIn('code', Config::get('common.transaction_accounts'))->lists('name', 'code');
         $types = Config::get('common.sales_customer_type');
         $recorder = TransactionRecorder::findOrFail($id);
         $employees = Employee::where('status', 1)->lists('name', 'id');

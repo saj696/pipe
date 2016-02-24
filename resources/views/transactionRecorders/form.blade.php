@@ -165,6 +165,7 @@
     {
         $(document).on('change', '#account_type', function()
         {
+            $('.total_amount').val('');
             var code = $(this).val();
             var slice = code.substring(0,1);
 
@@ -219,11 +220,11 @@
                 {
                     url = "{{ route('ajax.supplier_select') }}";
                 }
-                else if (type == 3)
+                else if (type == 1)
                 {
                     url = "{{ route('ajax.employee_select') }}";
                 }
-                else
+                else if(type == 3)
                 {
                     url = "{{ route('ajax.customer_select') }}";
                 }
@@ -262,11 +263,11 @@
                 {
                     url = "{{ route('ajax.supplier_select') }}";
                 }
-                else if (type == 3)
+                else if (type == 1)
                 {
                     url = "{{ route('ajax.employee_select') }}";
                 }
-                else
+                else if (type == 3)
                 {
                     url = "{{ route('ajax.customer_select') }}";
                 }
@@ -302,6 +303,60 @@
             var due = total_amount - amount;
 
             $('.due').val(due);
+        });
+
+        $(document).on('change', '#from_whom', function ()
+        {
+            var code = $('#account_type').val();
+            var slice = code.substring(0,1);
+            var type = $('#from_whom_type').val();
+            var person_id = $(this).val();
+
+            if($(this).val()>0 && slice==1)
+            {
+                $('.total_amount').val('');
+                $.ajax({
+                    url: '{{ route('ajax.transaction_recorder_amount') }}',
+                    type: 'POST',
+                    dataType: "JSON",
+                    data: {type: type, slice: slice, person_id: person_id},
+                    success: function (data, status)
+                    {
+                        $('.total_amount').val(data);
+                    },
+                    error: function (xhr, desc, err)
+                    {
+                        console.log("error");
+                    }
+                });
+            }
+        });
+
+        $(document).on('change', '#to_whom', function ()
+        {
+            var code = $('#account_type').val();
+            var slice = code.substring(0,1);
+            var type = $('#to_whom_type').val();
+            var person_id = $(this).val();
+
+            if($(this).val()>0 && slice==4)
+            {
+                $('.total_amount').val('');
+                $.ajax({
+                    url: '{{ route('ajax.transaction_recorder_amount') }}',
+                    type: 'POST',
+                    dataType: "JSON",
+                    data: {type: type, slice: slice, person_id: person_id},
+                    success: function (data, status)
+                    {
+                        $('.total_amount').val(data);
+                    },
+                    error: function (xhr, desc, err)
+                    {
+                        console.log("error");
+                    }
+                });
+            }
         });
     });
 </script>

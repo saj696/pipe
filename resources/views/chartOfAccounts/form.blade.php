@@ -58,7 +58,7 @@
 <div class="form-group contra_id_div" style="display: none;">
     {{ Form::label('contra_id', 'Contra', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7">
-        {{ Form::select('contra_id', $parents, null,['class'=>'form-control contra_id', 'placeholder'=>'Select']) }}
+        {{ Form::select('contra_id', $contras, null,['class'=>'form-control contra_id', 'placeholder'=>'Select']) }}
     </div>
 </div>
 

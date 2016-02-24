@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Employee;
 use App\Http\Requests;
 use App\Models\Employee;
 use App\Models\Designation;
+use App\Models\GeneralJournal;
 use App\Models\PersonalAccount;
+use App\Models\WorkspaceLedger;
+use App\Models\GeneralLedger;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EmployeeRequest;
@@ -65,9 +68,57 @@ class EmployeesController extends Controller
             $personalAccount = New PersonalAccount;
             $personalAccount->person_type = Config::get('common.person_type_employee');
             $personalAccount->person_id = $insertedId;
+            $personalAccount->balance = $request->input('balance');
+            $personalAccount->due = $request->input('due');
             $personalAccount->created_by = Auth::user()->id;
             $personalAccount->created_at = time();
             $personalAccount->save();
+
+            // Impacts on accounting tables
+            if($request->input('balance')>0)
+            {
+                $workspace_id = Auth::user()->workspace_id;
+                $accountPayableCode = 41000;
+                $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$accountPayableCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                $accountPayableWorkspaceData->balance += $request->input('balance');
+                $accountPayableWorkspaceData->update();
+
+                // General Journal Table Impact
+                $generalJournal = New GeneralJournal;
+                $generalJournal->date = time();
+                $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
+                $generalJournal->reference_id = $insertedId;
+                $generalJournal->year = date('Y');
+                $generalJournal->account_code = $accountPayableCode;
+                $generalJournal->workspace_id = $workspace_id;
+                $generalJournal->amount = $request->input('balance');
+                $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
+                $generalJournal->created_by = Auth::user()->id;
+                $generalJournal->created_at = time();
+                $generalJournal->save();
+            }
+
+            if($request->input('due')>0)
+            {
+                $workspace_id = Auth::user()->workspace_id;
+                $accountReceivableCode = 12000;
+                $accountReceivableWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$accountReceivableCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                $accountReceivableWorkspaceData->balance += $request->input('due');
+                $accountReceivableWorkspaceData->update();
+
+                $generalJournal = New GeneralJournal;
+                $generalJournal->date = time();
+                $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
+                $generalJournal->reference_id = $insertedId;
+                $generalJournal->year = date('Y');
+                $generalJournal->account_code = $accountReceivableCode;
+                $generalJournal->workspace_id = $workspace_id;
+                $generalJournal->amount = $request->input('due');
+                $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
+                $generalJournal->created_by = Auth::user()->id;
+                $generalJournal->created_at = time();
+                $generalJournal->save();
+            }
 
             DB::commit();
             Session()->flash('flash_message', 'Employee has been created!');
