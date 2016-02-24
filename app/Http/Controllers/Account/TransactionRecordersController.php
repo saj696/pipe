@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Account;
 
 use App\Http\Requests;
+use App\Models\PersonalAccount;
 use App\Models\TransactionRecorder;
 use App\Models\ChartOfAccount;
 use App\Models\WorkspaceLedger;
@@ -80,13 +81,195 @@ class TransactionRecordersController extends Controller
         $recorder->save();
 
         // Impacts on accounting tables
-//        $workspaceLedger = New WorkspaceLedger;
-//        $generalJournal = New GeneralJournal;
-//
-//        if($request->account_code==12000)
-//        {
-//
-//        }
+
+        $workspace_id = Auth::user()->workspace_id;
+        $cashCode = 11000;
+        $accountReceivableCode = 12000;
+        $accountPayableCode = 41000;
+        $revenueCode = 30000;
+        $expenseCode = 20000;
+        $drawCode = 50000;
+        $investmentCode = 60000;
+
+        if($request->account_code==12000)
+        {
+            // ACCOUNT RECEIVABLE
+            // Workspace Ledger Account Receivable Credit(-)
+            $accountReceivableWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$accountReceivableCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+            $accountReceivableWorkspaceData->balance = $accountReceivableWorkspaceData->balance - $request->amount;
+            $accountReceivableWorkspaceData->update();
+            // Workspace Ledger Cash Debit(+)
+            $cashWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+            $cashWorkspaceData->balance += $request->amount;
+            $cashWorkspaceData->update();
+            // Personal Account Due(-)
+            $person_type = $request->from_whom_type;
+            $person_id = $request->from_whom;
+            $personData = PersonalAccount::where(['person_id'=>$person_id, 'person_type'=>$person_type])->first();
+            $personData->balance = $personData->due - $request->amount;
+            $personData->update();
+            // General Journals Insert
+            $generalJournal = New GeneralJournal;
+            $generalJournal->date = time();
+            $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
+            $generalJournal->reference_id = $person_id;
+            $generalJournal->year = date('Y');
+            $generalJournal->account_code = $accountReceivableCode;
+            $generalJournal->workspace_id = $workspace_id;
+            $generalJournal->amount = $request->amount;
+            $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
+            $generalJournal->created_by = Auth::user()->id;
+            $generalJournal->created_at = time();
+            $generalJournal->save();
+        }
+        elseif($request->account_code==41000)
+        {
+            // ACCOUNT PAYABLE
+            // Workspace Ledger Cash Credit(-)
+            $cashWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+            $cashWorkspaceData->balance = $cashWorkspaceData->balance - $request->amount;
+            $cashWorkspaceData->update();
+            // Account Payable Debit(-)
+            $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$accountPayableCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+            $accountPayableWorkspaceData->balance = $accountPayableWorkspaceData->balance - $request->amount;
+            $accountPayableWorkspaceData->update();
+            // Personal Account Balance(-)
+            $person_type = $request->to_whom_type;
+            $person_id = $request->to_whom;
+            $personData = PersonalAccount::where(['person_id'=>$person_id, 'person_type'=>$person_type])->first();
+            $personData->balance = $personData->balance - $request->amount;
+            $personData->update();
+            // General Journals Insert
+            $generalJournal = New GeneralJournal;
+            $generalJournal->date = time();
+            $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
+            $generalJournal->reference_id = $person_id;
+            $generalJournal->year = date('Y');
+            $generalJournal->account_code = $accountPayableCode;
+            $generalJournal->workspace_id = $workspace_id;
+            $generalJournal->amount = $request->amount;
+            $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
+            $generalJournal->created_by = Auth::user()->id;
+            $generalJournal->created_at = time();
+            $generalJournal->save();
+        }
+        elseif($request->account_code==30000)
+        {
+            // REVENUE
+            // Workspace Ledger Cash Debit(+)
+            $cashWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+            $cashWorkspaceData->balance += $request->amount;
+            $cashWorkspaceData->update();
+            // Revenue Credit(-) with Total Amount
+            $revenueWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$revenueCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+            $revenueWorkspaceData->balance = $revenueWorkspaceData->balance - $request->total_amount;
+            $revenueWorkspaceData->update();
+            // Workspace Ledger Account Receivable Debit(+)
+            $accountReceivableWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$accountReceivableCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+            $accountReceivableWorkspaceData->balance += ($request->total_amount - $request->amount);
+            $accountReceivableWorkspaceData->update();
+            if(($request->total_amount - $request->amount)>0)
+            {
+                // Personal Account Due(+)
+                $person_type = $request->from_whom_type;
+                $person_id = $request->from_whom;
+                $personData = PersonalAccount::where(['person_id'=>$person_id, 'person_type'=>$person_type])->first();
+                $personData->due += ($request->total_amount - $request->amount);
+                $personData->update();
+            }
+            // General Journals Insert
+            $person_id = $request->from_whom;
+            $generalJournal = New GeneralJournal;
+            $generalJournal->date = time();
+            $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
+            $generalJournal->reference_id = $person_id;
+            $generalJournal->year = date('Y');
+            $generalJournal->account_code = $revenueCode;
+            $generalJournal->workspace_id = $workspace_id;
+            $generalJournal->amount = $request->amount;
+            $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
+            $generalJournal->created_by = Auth::user()->id;
+            $generalJournal->created_at = time();
+            $generalJournal->save();
+        }
+        elseif($request->account_code==20000)
+        {
+            // EXPENSE
+            // Workspace Ledger Cash Credit(-)
+            $cashWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+            $cashWorkspaceData->balance = $cashWorkspaceData->balance - $request->amount;
+            $cashWorkspaceData->update();
+            // Workspace Ledger Account Payable Credit with Due(-)
+            $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$accountPayableCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+            $accountPayableWorkspaceData->balance = $accountPayableWorkspaceData->balance-($accountPayableWorkspaceData->balance - $request->amount);
+            $accountPayableWorkspaceData->update();
+            // Workspace Ledger Expense Account Debit(+)
+            $expenseWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$expenseCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+            $expenseWorkspaceData->balance += $request->amount;
+            $expenseWorkspaceData->update();
+            // General Journals Insert
+            $person_id = $request->from_whom;
+            $generalJournal = New GeneralJournal;
+            $generalJournal->date = time();
+            $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
+            $generalJournal->reference_id = $person_id;
+            $generalJournal->year = date('Y');
+            $generalJournal->account_code = $expenseCode;
+            $generalJournal->workspace_id = $workspace_id;
+            $generalJournal->amount = $request->amount;
+            $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
+            $generalJournal->created_by = Auth::user()->id;
+            $generalJournal->created_at = time();
+            $generalJournal->save();
+        }
+        elseif($request->account_code==50000)
+        {
+            //DRAW
+            // Workspace Ledger Cash Credit(-)
+            $cashWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+            $cashWorkspaceData->balance = $cashWorkspaceData->balance - $request->amount;
+            $cashWorkspaceData->update();
+            // Workspace Ledger Draw Account Debit(+)
+            $drawWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$drawCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+            $drawWorkspaceData->balance += $request->amount;
+            $drawWorkspaceData->update();
+            // General Journals Insert
+            $generalJournal = New GeneralJournal;
+            $generalJournal->date = time();
+            $generalJournal->transaction_type = Config::get('common.transaction_type.draw');
+            $generalJournal->year = date('Y');
+            $generalJournal->account_code = $drawCode;
+            $generalJournal->workspace_id = $workspace_id;
+            $generalJournal->amount = $request->amount;
+            $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
+            $generalJournal->created_by = Auth::user()->id;
+            $generalJournal->created_at = time();
+            $generalJournal->save();
+        }
+        elseif($request->account_code==60000)
+        {
+            // OWNERS INVESTMENT
+            // Workspace Ledger Cash Debit(+)
+            $cashWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+            $cashWorkspaceData->balance += $request->amount;
+            $cashWorkspaceData->update();
+            // Workspace Ledger Investment Account Credit(+)
+            $investmentWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$investmentCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+            $investmentWorkspaceData->balance += $request->amount;
+            $investmentWorkspaceData->update();
+            // General Journals Insert
+            $generalJournal = New GeneralJournal;
+            $generalJournal->date = time();
+            $generalJournal->transaction_type = Config::get('common.transaction_type.investment');
+            $generalJournal->year = date('Y');
+            $generalJournal->account_code = $investmentCode;
+            $generalJournal->workspace_id = $workspace_id;
+            $generalJournal->amount = $request->amount;
+            $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
+            $generalJournal->created_by = Auth::user()->id;
+            $generalJournal->created_at = time();
+            $generalJournal->save();
+        }
 
         Session()->flash('flash_message', 'Transaction Recorder has been created!');
         return redirect('recorders');
