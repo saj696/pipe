@@ -11,6 +11,10 @@ use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\Employee;
 use App\Models\Workspace;
+use App\Models\Material;
+use App\Models\RawStock;
+use App\Models\TransactionRecorder;
+use App\Models\PurchaseDetail;
 use App\Article;
 use App\Tag;
 use Carbon\Carbon;
@@ -18,6 +22,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Session;
+use stdClass;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 
@@ -111,6 +116,38 @@ class AjaxController extends Controller
         elseif($slice==4)
         {
             return response()->json($personal->balance);
+        }
+    }
+
+    public function getAdjustmentAmounts(Request $request)
+    {
+        $workspace_id = Auth::user()->workspace_id;
+        $account = $request->input('account');
+
+        if($account==25000)
+        {
+            $purchaseDetail = PurchaseDetail::where('status', 1)->get(['unit_price', 'quantity']);
+            $total_amount = 0;
+            $total_quantity = 0;
+
+            foreach($purchaseDetail as $detail)
+            {
+                $total_amount += $detail->quantity*$detail->unit_price;
+                $total_quantity += $detail->quantity;
+            }
+
+            $unit_price = $total_amount/$total_quantity;
+            $stocks = RawStock::where('status', 1)->sum('quantity');
+            $remaining_amount = $stocks*$unit_price;
+            $return = new stdClass;
+            $return->total_amount = $total_amount;
+            $return->remaining_amount = $remaining_amount;
+            return response()->json($return);
+        }
+        elseif($account==27000)
+        {
+            $supply_amount =  TransactionRecorder::where(['workspace_id'=>$workspace_id, 'account_code'=>$account, 'status'=>1])->sum('total_amount');
+            return response()->json($supply_amount);
         }
     }
 }

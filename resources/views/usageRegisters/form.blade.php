@@ -28,11 +28,11 @@
     <tbody>
         <tr>
             <td>
-                {{ Form::select('material_id[]', $materials, null,['class'=>'form-control', 'id'=>'material_id', 'placeholder'=>'Select']) }}
+                {{ Form::select('material_id[]', $materials, null,['class'=>'form-control', 'id'=>'material_id', 'placeholder'=>'Select', 'required'=>'required']) }}
             </td>
 
             <td>
-                {{ Form::text('usage[]', null,['class'=>'form-control quantity']) }}
+                {{ Form::text('usage[]', null,['class'=>'form-control quantity', 'required'=>'required']) }}
             </td>
             <td style="width: 25px; height: 34px;">
 
@@ -84,14 +84,14 @@
         //alert(row.id);
         var cell1 = row.insertCell(0);
 
-        cell1.innerHTML = "<select name='material_id[]' id='material_id" + ExId + "' class='form-control'>\n\
+        cell1.innerHTML = "<select name='material_id[]' id='material_id" + ExId + "' class='form-control' required='required'>\n\
         <option value=''>Select</option>\n\
         <?php
         foreach ($materials as $id=>$material)
             echo "<option value='" . $id. "'>" . $material . "</option>";
         ?>";
         var cell1 = row.insertCell(1);
-        cell1.innerHTML = "<input type='text' name='usage[]' class='form-control quantity'/>"+
+        cell1.innerHTML = "<input type='text' name='usage[]' class='form-control quantity' required='required' />"+
         "<input type='hidden' id='elmIndex[]' name='elmIndex[]' value='" + ExId + "'/>";
         cell1.style.cursor = "default";
         cell1 = row.insertCell(2);

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-class ChartOfAccountRequest extends Request
+class AdjustmentRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +25,9 @@ class ChartOfAccountRequest extends Request
     public function rules()
     {
         return [
-            'name'=>'required',
-            'code'=>'required|unique:chart_of_accounts|digits:5'
+//            'account_from'=>'required|unique:adjustments,account_from,year,'.date('Y'),
+            'account_from'=>'required|unique:adjustments,account_from,year:'.date('Y'),
+            'amount'=>'required'
         ];
     }
 }

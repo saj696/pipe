@@ -78,6 +78,7 @@ class TransactionRecordersController extends Controller
 
                 $recorder->date = $request->date;
                 $recorder->year = date('Y', strtotime($request->date));
+                $recorder->workspace_id = Auth::user()->workspace_id;
                 $recorder->account_code = $request->account_code;
                 $recorder->created_by = Auth::user()->id;
                 $recorder->created_at = time();
@@ -93,6 +94,7 @@ class TransactionRecordersController extends Controller
                 $expenseCode = 20000;
                 $drawCode = 50000;
                 $investmentCode = 60000;
+                $officeSuppliesCode = 27000;
 
                 if($request->account_code==12000)
                 {
@@ -273,6 +275,36 @@ class TransactionRecordersController extends Controller
                     $generalJournal->created_at = time();
                     $generalJournal->save();
                 }
+                elseif($request->account_code==27000)
+                {
+                    // OFFICE SUPPLIES
+                    // Workspace Ledger Cash Credit(-)
+                    $cashWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $cashWorkspaceData->balance = $cashWorkspaceData->balance - $request->amount;
+                    $cashWorkspaceData->update();
+                    // Workspace Ledger Account Payable Credit with Due(-)
+                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$accountPayableCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $accountPayableWorkspaceData->balance = $accountPayableWorkspaceData->balance - ($request->total_amount - $request->amount);
+                    $accountPayableWorkspaceData->update();
+                    // Workspace Ledger Office Supplies Account Debit(+)
+                    $ofcSuppliesWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$officeSuppliesCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $ofcSuppliesWorkspaceData->balance += $request->amount;
+                    $ofcSuppliesWorkspaceData->update();
+                    // General Journals Insert
+                    $person_id = $request->from_whom;
+                    $generalJournal = New GeneralJournal;
+                    $generalJournal->date = time();
+                    $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
+                    $generalJournal->reference_id = $person_id;
+                    $generalJournal->year = date('Y');
+                    $generalJournal->account_code = $officeSuppliesCode;
+                    $generalJournal->workspace_id = $workspace_id;
+                    $generalJournal->amount = $request->amount;
+                    $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
+                    $generalJournal->created_by = Auth::user()->id;
+                    $generalJournal->created_at = time();
+                    $generalJournal->save();
+                }
             });
         }
         catch (\Exception $e)
@@ -328,6 +360,7 @@ class TransactionRecordersController extends Controller
 
         $recorder->date = $request->date;
         $recorder->year = date('Y', strtotime($request->date));
+        $recorder->workspace_id = Auth::user()->workspace_id;
         $recorder->account_code = $request->account_code;
         $recorder->updated_by = Auth::user()->id;
         $recorder->updated_at = time();
