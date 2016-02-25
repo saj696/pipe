@@ -13,7 +13,6 @@
         <div class="portlet-body form">
             <div class="form-horizontal" role="form">
                 <div class="form-body">
-
                     {{ Form::model($purchase, ['method'=>'PATCH','action'=>['Setup\PurchasesController@update', $purchase->id]]) }}
                     @include('purchases.form', ['submitText'=>'Update'])
                     {{ Form::close() }}

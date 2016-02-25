@@ -14,7 +14,7 @@
 <div class="form-group{{ $errors->has('purchase_date') ? ' has-error' : '' }}">
     {{ Form::label('purchase_date', 'Purchase Date', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7">
-        {{ Form::text('purchase_date', null,['class'=>'form-control datepicker']) }}
+        {{ Form::text('purchase_date', null,['class'=>'form-control datepicker','required']) }}
         @if ($errors->has('purchase_date'))
             <span class="help-block">
                 <strong>{{ $errors->first('purchase_date') }}</strong>
@@ -105,7 +105,7 @@
                 <div class="form-group">
                     {{ Form::label('received_quantity', 'Received Quantity', ['class'=>'col-md-4 control-label']) }}
                     <div class="col-md-8">
-                        {{ Form::text('items[0][received_quantity]', null,['class'=>'form-control received_quantity','id'=>'']) }}
+                        {{ Form::text('items[0][received_quantity]', null,['class'=>'form-control received_quantity','required','id'=>'']) }}
                     </div>
                 </div>
             </div>
@@ -137,7 +137,7 @@
         <div class="form-group">
             <label class="col-md-5 control-label" for="paid">Total Amount</label>
             <div class="col-md-7">
-                <input type="text" readonly name="total" class="form-control" id="total_amount">
+                {{ Form::text('total', null,['class'=>'form-control unit_price','readonly'=>'readonly','id'=>'total_amount','required']) }}
             </div>
         </div>
     </div>
