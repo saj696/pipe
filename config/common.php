@@ -27,7 +27,7 @@ return [
     'balance_type_opening'=>0,
     'balance_type_intermediate'=>1,
     'balance_type_closing'=>2,
-    'transaction_type'=> ['general'=>1,'sales'=>2,'sales_return'=>3,'purchase'=>4,'purchase_return'=>5,'wages'=>6, 'personal'=>7, 'draw'=>8, 'investment'=>9],
+    'transaction_type'=> ['general'=>1,'sales'=>2,'sales_return'=>3,'purchase'=>4,'purchase_return'=>5,'wages'=>6, 'personal'=>7, 'draw'=>8, 'investment'=>9, 'office_supply'=>10],
     'debit_credit_indicator'=>['debit'=>1,'credit'=>2],
     'month' => [
         'January' => '01',
@@ -47,6 +47,6 @@ return [
         'Regular'=>1,
         'Daily Worker'=>2
     ],
-
-
+    'adjustment_account_from'=>['25000', '27000'],
+    'adjustment_account_to'=>['13000', '14000'],
 ];
