@@ -7,10 +7,9 @@
  */
 
 
-
 return [
 
-    'workspace_type' => ['1'=>'Showroom', '2'=>'Delivery Center', '3'=>'Factory'],
+    'workspace_type' => ['1' => 'Showroom', '2' => 'Delivery Center', '3' => 'Factory'],
     'pagination' => 10,
     'status' => ['1'=>'Active','0'=>'Inactive'],
     'material_type' => ['1'=>'Normal', '2'=>'Color', '3'=>'Mixer'],
@@ -30,4 +29,24 @@ return [
     'balance_type_closing'=>2,
     'transaction_type'=> ['general'=>1,'sales'=>2,'sales_return'=>3,'purchase'=>4,'purchase_return'=>5,'wages'=>6, 'personal'=>7, 'draw'=>8, 'investment'=>9],
     'debit_credit_indicator'=>['debit'=>1,'credit'=>2],
+    'month' => [
+        'January' => '01',
+        'February' => '02',
+        'March' => '03',
+        'April' => '04',
+        'May' => '05',
+        'June' => '06',
+        'July' => '07',
+        'August' => '08',
+        'September' => '09',
+        'October' => '10',
+        'November' => '11',
+        'December' => '12',
+    ],
+    'employee_type'=>[
+        'Regular'=>1,
+        'Daily Worker'=>2
+    ],
+
+
 ];
