@@ -123,10 +123,11 @@ class AjaxController extends Controller
     {
         $workspace_id = Auth::user()->workspace_id;
         $account = $request->input('account');
+        $year_str = strtotime(date('Y'));
 
         if($account==25000)
         {
-            $purchaseDetail = PurchaseDetail::where('status', 1)->get(['unit_price', 'quantity']);
+            $purchaseDetail = PurchaseDetail::where(['status'=> 1], ['created_at', '>', $year_str])->get(['unit_price', 'quantity']);
             $total_amount = 0;
             $total_quantity = 0;
 
@@ -146,7 +147,7 @@ class AjaxController extends Controller
         }
         elseif($account==27000)
         {
-            $supply_amount =  TransactionRecorder::where(['workspace_id'=>$workspace_id, 'account_code'=>$account, 'status'=>1])->sum('total_amount');
+            $supply_amount =  TransactionRecorder::where(['workspace_id'=>$workspace_id, 'account_code'=>$account, 'status'=>1, 'year'=>date('Y')])->sum('total_amount');
             return response()->json($supply_amount);
         }
     }

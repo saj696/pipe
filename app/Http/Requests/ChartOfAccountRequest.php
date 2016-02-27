@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
+use App\Models\ChartOfAccount;
 
 class ChartOfAccountRequest extends Request
 {
@@ -24,9 +25,31 @@ class ChartOfAccountRequest extends Request
      */
     public function rules()
     {
-        return [
-            'name'=>'required',
-            'code'=>'required|unique:chart_of_accounts|digits:5'
-        ];
+        $account = ChartOfAccount::find($this->charts); // charts = route
+
+        switch($this->method())
+        {
+            case 'GET':
+            case 'DELETE':
+            {
+                return [];
+            }
+            case 'POST':
+            {
+                return [
+                    'name'=>'required',
+                    'code'=>'required|unique:chart_of_accounts|digits:5'
+                ];
+            }
+            case 'PUT':
+            case 'PATCH':
+            {
+                return [
+                    'name'=>'required',
+                    'code'=>'required|digits:5|unique:chart_of_accounts,code,'.$account->id
+                ];
+            }
+            default:break;
+        }
     }
 }
