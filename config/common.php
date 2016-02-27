@@ -9,6 +9,7 @@
 
 return [
 
+    'chart_of_account_level_max'=>4,
     'workspace_type' => ['1' => 'Showroom', '2' => 'Delivery Center', '3' => 'Factory'],
     'pagination' => 10,
     'status' => ['1'=>'Active','0'=>'Inactive'],
