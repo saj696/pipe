@@ -115,11 +115,11 @@ class WorkspaceClosingController extends Controller
         }
         catch (\Exception $e)
         {
-            Session()->flash('flash_message', 'Workspace Account Closed!');
+            Session()->flash('flash_message', 'Workspace Account Closing Not Done!');
             return redirect('workspace_closing');
         }
 
-        Session()->flash('flash_message', 'Workspace Account Closing Not Done!');
+        Session()->flash('flash_message', 'Workspace Account Closed Successfully!');
         return redirect('workspace_closing');
     }
 }
