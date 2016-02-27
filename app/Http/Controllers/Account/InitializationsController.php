@@ -94,32 +94,32 @@ class InitializationsController extends Controller
                     $GeneralLedger->save();
                 }
 
-                // General Intermediate Data Insert/ Update
-                $GeneralLedger = New GeneralLedger;
-                $existingGeneralIntermediateData = GeneralLedger::where(['account_code' => $code, 'balance_type' => Config::get('common.balance_type_intermediate')])->first();
-
-                if($existingGeneralIntermediateData)
-                {
-                    $existingGeneralIntermediate = GeneralLedger::firstOrNew(['account_code' => $code, 'balance_type' => Config::get('common.balance_type_intermediate')]);
-
-                    $existingGeneralIntermediate->year = date('Y');
-                    $existingGeneralIntermediate->account_code = $code;
-                    $existingGeneralIntermediate->balance_type = Config::get('common.balance_type_intermediate');
-                    $existingGeneralIntermediate->balance = $existingGeneralData->balance + $amount;
-                    $existingGeneralIntermediate->updated_by = Auth::user()->id;
-                    $existingGeneralIntermediate->updated_at = time();
-                    $existingGeneralIntermediate->update();
-                }
-                else
-                {
-                    $GeneralLedger->year = date('Y');
-                    $GeneralLedger->account_code = $code;
-                    $GeneralLedger->balance_type = Config::get('common.balance_type_intermediate');
-                    $GeneralLedger->balance = $amount;
-                    $GeneralLedger->created_by = Auth::user()->id;
-                    $GeneralLedger->created_at = time();
-                    $GeneralLedger->save();
-                }
+//                // General Intermediate Data Insert/ Update
+//                $GeneralLedger = New GeneralLedger;
+//                $existingGeneralIntermediateData = GeneralLedger::where(['account_code' => $code, 'balance_type' => Config::get('common.balance_type_intermediate')])->first();
+//
+//                if($existingGeneralIntermediateData)
+//                {
+//                    $existingGeneralIntermediate = GeneralLedger::firstOrNew(['account_code' => $code, 'balance_type' => Config::get('common.balance_type_intermediate')]);
+//
+//                    $existingGeneralIntermediate->year = date('Y');
+//                    $existingGeneralIntermediate->account_code = $code;
+//                    $existingGeneralIntermediate->balance_type = Config::get('common.balance_type_intermediate');
+//                    $existingGeneralIntermediate->balance = $existingGeneralData->balance + $amount;
+//                    $existingGeneralIntermediate->updated_by = Auth::user()->id;
+//                    $existingGeneralIntermediate->updated_at = time();
+//                    $existingGeneralIntermediate->update();
+//                }
+//                else
+//                {
+//                    $GeneralLedger->year = date('Y');
+//                    $GeneralLedger->account_code = $code;
+//                    $GeneralLedger->balance_type = Config::get('common.balance_type_intermediate');
+//                    $GeneralLedger->balance = $amount;
+//                    $GeneralLedger->created_by = Auth::user()->id;
+//                    $GeneralLedger->created_at = time();
+//                    $GeneralLedger->save();
+//                }
             }
 
             DB::commit();
