@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Session;
 
 class CustomersController extends Controller
 {
+
     /**
      * Create a new controller instance.
      *

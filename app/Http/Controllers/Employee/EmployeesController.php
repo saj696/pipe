@@ -7,6 +7,7 @@ use App\Models\Employee;
 use App\Models\Designation;
 use App\Models\GeneralJournal;
 use App\Models\PersonalAccount;
+use App\Models\Workspace;
 use App\Models\WorkspaceLedger;
 use App\Models\GeneralLedger;
 use Carbon\Carbon;
@@ -43,7 +44,8 @@ class EmployeesController extends Controller
     public function create()
     {
         $designations = Designation::lists('name', 'id');
-        return view('employees.create', compact('designations'));
+        $workspaces= Workspace::lists('name','id');
+        return view('employees.create', compact('designations','workspaces'));
     }
 
     public function store(EmployeeRequest $request)
@@ -59,6 +61,8 @@ class EmployeesController extends Controller
             $employee->permanent_address = $request->input('permanent_address');
             $employee->dob = $request->input('dob');
             $employee->designation_id = $request->input('designation_id');
+            $employee->workspace_id = $request->input('workspace_id');
+            $employee->employee_type = $request->input('employee_type');
             $employee->joining_date = $request->input('joining_date');
             $employee->created_by = Auth::user()->id;
             $employee->created_at = time();
@@ -136,7 +140,8 @@ class EmployeesController extends Controller
     {
         $employee = Employee::findOrFail($id);
         $designations = Designation::lists('name', 'id');
-        return view('employees.edit', compact('employee', 'designations'));
+        $workspaces= Workspace::lists('name','id');
+        return view('employees.edit', compact('employee', 'designations','workspaces'));
     }
 
     public function update($id, EmployeeRequest $request)
@@ -149,6 +154,8 @@ class EmployeesController extends Controller
         $employee->permanent_address = $request->input('permanent_address');
         $employee->dob = $request->input('dob');
         $employee->designation_id = $request->input('designation_id');
+        $employee->workspace_id = $request->input('workspace_id');
+        $employee->employee_type = $request->input('employee_type');
         $employee->joining_date = $request->input('joining_date');
         $employee->updated_by = Auth::user()->id;
         $employee->updated_at = time();

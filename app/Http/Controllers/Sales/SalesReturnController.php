@@ -17,6 +17,12 @@ use DB;
 
 class SalesReturnController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+
     public function index()
     {
         $salesReturns = DB::table('sales_return')->select('sales_return.*', 'sales.*')->join('sales_return_details as sales', 'sales_return.id', '=', 'sales.sales_return_id')->get();

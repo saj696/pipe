@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-class EmployeeRequest extends Request
+class WageRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,7 +16,6 @@ class EmployeeRequest extends Request
         return true;
     }
 
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -25,13 +24,8 @@ class EmployeeRequest extends Request
     public function rules()
     {
         return [
-            'name' => 'required',
-            'mobile' => 'required|min:11',
-            'email' => 'email',
-            'joining_date' => 'required|date',
-            'designation_id' => 'required|integer',
-            'workspace_id' => 'required|integer',
-            'employee_type' => 'required|integer'
+            'month' => 'required|numeric',
+            'employee_type' => 'required|numeric',
         ];
     }
 }

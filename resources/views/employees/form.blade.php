@@ -72,6 +72,30 @@
     </div>
 </div>
 
+<div class="form-group{{ $errors->has('workspace_id') ? ' has-error' : '' }}">
+    {{ Form::label('workspace_id', 'Workspace', ['class'=>'col-md-3 control-label']) }}
+    <div class="col-md-7">
+        {{ Form::select('workspace_id', $workspaces, null,['class'=>'form-control', 'placeholder'=>'Select','required']) }}
+        @if ($errors->has('workspace_id'))
+            <span class="help-block">
+                <strong>{{ $errors->first('workspace_id') }}</strong>
+            </span>
+        @endif
+    </div>
+</div>
+
+<div class="form-group{{ $errors->has('employee_type') ? ' has-error' : '' }}">
+    {{ Form::label('employee_type', 'Employee Type', ['class'=>'col-md-3 control-label']) }}
+    <div class="col-md-7">
+        {{ Form::select('employee_type', array_flip(Config::get('common.employee_type')), null,['class'=>'form-control', 'placeholder'=>'Select','required']) }}
+        @if ($errors->has('employee_type'))
+            <span class="help-block">
+                <strong>{{ $errors->first('employee_type') }}</strong>
+            </span>
+        @endif
+    </div>
+</div>
+
 <div class="form-group{{ $errors->has('present_address') ? ' has-error' : '' }}">
     {{ Form::label('present_address', 'Present Address', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7">

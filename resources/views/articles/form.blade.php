@@ -36,12 +36,6 @@
     </div>
 </div>
 
-<div class="form-group">
-    {{ Form::label('tag_list', 'Tags', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
-        {{ Form::select('tag_list[]', $tags, null,['class'=>'form-control', 'multiple']) }}
-    </div>
-</div>
 
 <div class="form-actions">
     <div class="row">

@@ -50,4 +50,11 @@ class CommonHelper
         }
         return $years;
     }
+
+    public static function get_current_financial_year()
+    {
+        $year=DB::table('financial_years')->where('status','=',1)->first();
+        return $year->year;
+    }
+
 }

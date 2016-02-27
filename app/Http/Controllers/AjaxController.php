@@ -10,21 +10,18 @@ use App\Models\PersonalAccount;
 use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\Employee;
+use App\Models\Wage;
 use App\Models\Workspace;
-use App\Models\Material;
 use App\Models\RawStock;
 use App\Models\TransactionRecorder;
 use App\Models\PurchaseDetail;
 use App\Article;
 use App\Tag;
-use Carbon\Carbon;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Session;
 use stdClass;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 
 class AjaxController extends Controller
 {
@@ -117,6 +114,22 @@ class AjaxController extends Controller
         {
             return response()->json($personal->balance);
         }
+    }
+
+    //Only Applicable For Generate Wages
+    public function getEmployeeList(Request $request)
+    {
+        $inputs=$request->input();
+        $user=Auth::user();
+        if($inputs['employee_type']==Config::get('common.employee_type.Regular'))
+        {
+            $wages=Wage::where(['month'=>$inputs['month'],'employee_type'=>Config::get('common.employee_type.Regular')])->get(['employee_id']);
+            $employees =Employee::whereNotIn('id',$wages )->where(['status'=>1,'employee_type'=>Config::get('common.employee_type.Regular')])->with('designation')->get();
+            $list= view('ajaxView.employeeGenerateSalaryList')->with('employees',$employees)->render();
+            return response()->json($list);
+        }
+
+        //TODO:: Get Daily worker list and generate salary
     }
 
     public function getAdjustmentAmounts(Request $request)
