@@ -3,24 +3,22 @@
 namespace App\Http\Controllers;
 
 
+use App\Helpers\CommonHelper;
 use App\Http\Requests;
 use App\Models\Customer;
 use App\Models\Module;
 use App\Models\PersonalAccount;
 use App\Models\Product;
+use App\Models\Salary;
 use App\Models\Supplier;
 use App\Models\Employee;
-use App\Models\Wage;
 use App\Models\Workspace;
 use App\Models\RawStock;
 use App\Models\TransactionRecorder;
 use App\Models\PurchaseDetail;
-use App\Article;
-use App\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Session;
 use stdClass;
 
 class AjaxController extends Controller
@@ -47,55 +45,57 @@ class AjaxController extends Controller
 
     public function getCustomers()
     {
-        $customers=Customer::where('status',1)->lists('name','id');
-        $dropdown= view('ajaxView.customerDropDown')->with('customers',$customers)->render();
+        $customers = Customer::where('status', 1)->lists('name', 'id');
+        $dropdown = view('ajaxView.customerDropDown')->with('customers', $customers)->render();
         return response()->json($dropdown);
     }
+
     public function getSuppliers()
     {
-        $suppliers=Supplier::where('status',1)->lists('company_name','id');
-        $dropdown= view('ajaxView.supplierDropDown')->with('suppliers',$suppliers)->render();
+        $suppliers = Supplier::where('status', 1)->lists('company_name', 'id');
+        $dropdown = view('ajaxView.supplierDropDown')->with('suppliers', $suppliers)->render();
         return response()->json($dropdown);
     }
 
     public function getEmployees()
     {
-        $employees=Employee::where('status',1)->lists('name','id');
-        $dropdown= view('ajaxView.employeeDropDown')->with('employees',$employees)->render();
+        $employees = Employee::where('status', 1)->lists('name', 'id');
+        $dropdown = view('ajaxView.employeeDropDown')->with('employees', $employees)->render();
         return response()->json($dropdown);
     }
 
     public function getProducts(Request $request)
     {
-        $title=$request->input('q');
-        $suppliers=Product::select('id as value','title as label','retail_price','wholesale_price')->where('status',1)->where('title','like', $title.'%')->get();
+        $title = $request->input('q');
+        $suppliers = Product::select('id as value', 'title as label', 'retail_price', 'wholesale_price')->where('status', 1)->where('title', 'like', $title . '%')->get();
 //        dd($suppliers);
         return response()->json($suppliers);
     }
 
     public function getPersonDueAmount(Request $request)
     {
-        $inputs=$request->input();
-        $personal=PersonalAccount::where('person_type',$inputs['person_type'])
-            ->where('person_id',$inputs['person_id'])
+        $inputs = $request->input();
+        $personal = PersonalAccount::where('person_type', $inputs['person_type'])
+            ->where('person_id', $inputs['person_id'])
             ->select('due')
             ->first();
 
         return response()->json($personal->due);
     }
+
     /*
      * created by mazba
      * use in [purchase return,]
      */
     public function getPersonBalanceAmount(Request $request)
     {
-        $inputs=$request->input();
-        $personal=PersonalAccount::where('person_type',$inputs['person_type'])
-            ->where('person_id',$inputs['person_id'])
+        $inputs = $request->input();
+        $personal = PersonalAccount::where('person_type', $inputs['person_type'])
+            ->where('person_id', $inputs['person_id'])
             ->select('balance')
             ->first();
-        if($personal)
-        return response()->json($personal->balance);
+        if ($personal)
+            return response()->json($personal->balance);
         return response()->json(false);
     }
 
@@ -105,31 +105,23 @@ class AjaxController extends Controller
         $slice = $request->input('slice');
         $person_id = $request->input('person_id');
 
-        $personal = PersonalAccount::where(['person_type'=> $type, 'id'=>$person_id])->first();
-        if($slice==1)
-        {
+        $personal = PersonalAccount::where(['person_type' => $type, 'id' => $person_id])->first();
+        if ($slice == 1) {
             return response()->json($personal->due);
-        }
-        elseif($slice==4)
-        {
+        } elseif ($slice == 4) {
             return response()->json($personal->balance);
         }
     }
 
-    //Only Applicable For Generate Wages
+    //Only Applicable For Generate Payroll
     public function getEmployeeList(Request $request)
     {
-        $inputs=$request->input();
-        $user=Auth::user();
-        if($inputs['employee_type']==Config::get('common.employee_type.Regular'))
-        {
-            $wages=Wage::where(['month'=>$inputs['month'],'employee_type'=>Config::get('common.employee_type.Regular')])->get(['employee_id']);
-            $employees =Employee::whereNotIn('id',$wages )->where(['status'=>1,'employee_type'=>Config::get('common.employee_type.Regular')])->with('designation')->get();
-            $list= view('ajaxView.employeeGenerateSalaryList')->with('employees',$employees)->render();
-            return response()->json($list);
-        }
-
-        //TODO:: Get Daily worker list and generate salary
+        $workspace_id = Auth::user()->workspace_id;
+        $inputs = $request->input();
+        $salaries = Salary::where(['workspace_id' => $workspace_id, 'month' => $inputs['month'], 'employee_type' => Config::get('common.employee_type.Regular')])->get(['employee_id']);
+        $employees = Employee::whereNotIn('id', $salaries)->where(['workspace_id' => $workspace_id, 'status' => 1, 'employee_type' => Config::get('common.employee_type.Regular')])->with('designation')->get();
+        $list = view('ajaxView.employeeGenerateSalaryList')->with('employees', $employees)->render();
+        return response()->json($list);
     }
 
     public function getAdjustmentAmounts(Request $request)
@@ -138,30 +130,36 @@ class AjaxController extends Controller
         $account = $request->input('account');
         $year_str = strtotime(date('Y'));
 
-        if($account==25000)
-        {
-            $purchaseDetail = PurchaseDetail::where(['status'=> 1], ['created_at', '>', $year_str])->get(['unit_price', 'quantity']);
+        if ($account == 25000) {
+            $purchaseDetail = PurchaseDetail::where(['status' => 1], ['created_at', '>', $year_str])->get(['unit_price', 'quantity']);
             $total_amount = 0;
             $total_quantity = 0;
 
-            foreach($purchaseDetail as $detail)
-            {
-                $total_amount += $detail->quantity*$detail->unit_price;
+            foreach ($purchaseDetail as $detail) {
+                $total_amount += $detail->quantity * $detail->unit_price;
                 $total_quantity += $detail->quantity;
             }
 
-            $unit_price = $total_amount/$total_quantity;
+            $unit_price = $total_amount / $total_quantity;
             $stocks = RawStock::where('status', 1)->sum('quantity');
-            $remaining_amount = $stocks*$unit_price;
+            $remaining_amount = $stocks * $unit_price;
             $return = new stdClass;
             $return->total_amount = $total_amount;
             $return->remaining_amount = $remaining_amount;
             return response()->json($return);
-        }
-        elseif($account==27000)
-        {
-            $supply_amount =  TransactionRecorder::where(['workspace_id'=>$workspace_id, 'account_code'=>$account, 'status'=>1, 'year'=>date('Y')])->sum('total_amount');
+        } elseif ($account == 27000) {
+            $supply_amount = TransactionRecorder::where(['workspace_id' => $workspace_id, 'account_code' => $account, 'status' => 1, 'year' => date('Y')])->sum('total_amount');
             return response()->json($supply_amount);
         }
+    }
+
+    public function getEmployeePaymentList(Request $request)
+    {
+        $inputs = $request->input();
+        $workspace_id = Auth::user()->workspace_id;
+        $salaries = Salary::where(['workspace_id' => $workspace_id, 'month' => $inputs['month'], 'employee_type' => Config::get('common.employee_type.Regular'), 'year' => CommonHelper::get_current_financial_year()])->where('due','>',0)->with('employee')->get();
+        $list = view('ajaxView.employeeSalaryPaymentList')->with('salaries', $salaries)->render();
+        return response()->json($list);
+
     }
 }
