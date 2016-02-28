@@ -4,7 +4,7 @@
     <tr>
         <td>
             <div class="form-group{{ $errors->has('date') ? ' has-error' : '' }}">
-                {{ Form::label('date', 'Date', ['class'=>'col-md-4 control-label']) }}
+                {{ Form::label('date', 'Date', ['class'=>'col-md-4 control-label input_date']) }}
                 <div class="col-md-4">
                     {{ Form::text('date', null,['class'=>'form-control col-md-2']) }}
                     @if ($errors->has('date'))
@@ -60,7 +60,7 @@
 <script type="text/javascript">
 
     $(function() {
-        $( "#date" ).datepicker();
+        $( "#date" ).datepicker({ maxDate: new Date });
     });
 
     jQuery(document).ready(function()

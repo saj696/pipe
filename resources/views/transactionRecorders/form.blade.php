@@ -158,7 +158,7 @@
 <script type="text/javascript">
 
     $(function() {
-        $( ".transaction_date" ).datepicker();
+        $( ".transaction_date" ).datepicker({ maxDate: new Date });
     });
 
     $(document).ready(function ()

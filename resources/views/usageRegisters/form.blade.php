@@ -60,7 +60,7 @@
 <script type="text/javascript">
 
     $(function() {
-        $( "#date" ).datepicker();
+        $( "#date" ).datepicker({ maxDate: new Date });
     });
 
     jQuery(document).ready(function()
