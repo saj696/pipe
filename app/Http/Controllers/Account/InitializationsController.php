@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Account;
 
+use App\Helpers\CommonHelper;
 use App\Http\Requests;
 use App\Models\GeneralLedger;
 use App\Models\WorkspaceLedger;
@@ -43,6 +44,7 @@ class InitializationsController extends Controller
         DB::beginTransaction();
         try
         {
+            $currentYear = CommonHelper::get_current_financial_year();
             $balanceInput = $request->input('balance');
             foreach ($balanceInput as $code => $amount)
             {
@@ -50,7 +52,7 @@ class InitializationsController extends Controller
                 $GeneralLedger = New GeneralLedger;
 
                 $WorkspaceLedger->workspace_id = $id;
-                $WorkspaceLedger->year = date('Y');
+                $WorkspaceLedger->year = $currentYear;
                 $WorkspaceLedger->account_code = $code;
                 $WorkspaceLedger->balance_type = Config::get('common.balance_type_opening');
                 $WorkspaceLedger->balance = $amount;
@@ -61,7 +63,7 @@ class InitializationsController extends Controller
                 $WorkspaceLedger = New WorkspaceLedger; // Intermediate row insert
 
                 $WorkspaceLedger->workspace_id = $id;
-                $WorkspaceLedger->year = date('Y');
+                $WorkspaceLedger->year = $currentYear;
                 $WorkspaceLedger->account_code = $code;
                 $WorkspaceLedger->balance_type = Config::get('common.balance_type_intermediate');
                 $WorkspaceLedger->balance = $amount;
@@ -69,13 +71,13 @@ class InitializationsController extends Controller
                 $WorkspaceLedger->created_at = time();
                 $WorkspaceLedger->save();
 
-                $existingGeneralData = GeneralLedger::where(['account_code' => $code, 'balance_type' => Config::get('common.balance_type_opening')])->first();
+                $existingGeneralData = GeneralLedger::where(['account_code' => $code, 'balance_type' => Config::get('common.balance_type_opening'),'year'=>$currentYear])->first();
 
                 if($existingGeneralData)
                 {
-                    $existingGeneral = GeneralLedger::firstOrNew(['account_code' => $code, 'balance_type' => Config::get('common.balance_type_opening')]);
+                    $existingGeneral = GeneralLedger::firstOrNew(['account_code' => $code, 'balance_type' => Config::get('common.balance_type_opening'),'year'=>$currentYear]);
 
-                    $existingGeneral->year = date('Y');
+                    $existingGeneral->year = $currentYear;
                     $existingGeneral->account_code = $code;
                     $existingGeneral->balance_type = Config::get('common.balance_type_opening');
                     $existingGeneral->balance = $existingGeneralData->balance + $amount;
@@ -85,7 +87,7 @@ class InitializationsController extends Controller
                 }
                 else
                 {
-                    $GeneralLedger->year = date('Y');
+                    $GeneralLedger->year = $currentYear;
                     $GeneralLedger->account_code = $code;
                     $GeneralLedger->balance_type = Config::get('common.balance_type_opening');
                     $GeneralLedger->balance = $amount;

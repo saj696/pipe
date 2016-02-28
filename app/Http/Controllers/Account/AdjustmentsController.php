@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Account;
 
+use App\Helpers\CommonHelper;
 use App\Http\Requests;
 use App\Models\Adjustment;
 use App\Models\ChartOfAccount;
@@ -44,9 +45,10 @@ class AdjustmentsController extends Controller
         {
             DB::transaction(function () use ($request)
             {
+                $currentYear = CommonHelper::get_current_financial_year();
                 $workspace_id = Auth::user()->workspace_id;
                 $adjustment = New Adjustment;
-                $adjustment->year = date('Y');
+                $adjustment->year = $currentYear;
                 $adjustment->account_from = $request->account_from;
                 $adjustment->amount = $request->amount;
 
@@ -67,20 +69,20 @@ class AdjustmentsController extends Controller
                 {
                     // Workspace_id hardcoded for head office
                     // Workspace Ledger Purchase Credit(-)
-                    $purchaseWorkspaceData = WorkspaceLedger::where(['workspace_id'=>1, 'account_code'=>25000,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $purchaseWorkspaceData = WorkspaceLedger::where(['workspace_id'=>1, 'account_code'=>25000,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
                     $purchaseWorkspaceData->balance = $purchaseWorkspaceData->balance - $request->amount;
                     $purchaseWorkspaceData->update();
                     // Workspace Ledger Inventory Raw Material Account Debit(+)
-                    $assetWorkspaceData = WorkspaceLedger::where(['workspace_id'=>1, 'account_code'=>14000,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $assetWorkspaceData = WorkspaceLedger::where(['workspace_id'=>1, 'account_code'=>14000,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
                     $assetWorkspaceData->balance += $request->amount;
                     $assetWorkspaceData->update();
                     // General Journals Insert
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.purchase');
-                    $generalJournal->year = date('Y');
+                    $generalJournal->year = $currentYear;
                     $generalJournal->account_code = 14000;
-                    $generalJournal->workspace_id = 1;
+                    $generalJournal->workspace_id = 1; // Hard Coded 1 For Head Office (Raw Material)
                     $generalJournal->amount = $request->amount;
                     $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
                     $generalJournal->created_by = Auth::user()->id;
@@ -90,18 +92,18 @@ class AdjustmentsController extends Controller
                 elseif($request->account_from==27000)
                 {
                     // Workspace Ledger Office Supply Credit(-)
-                    $officeWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>27000,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $officeWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>27000,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
                     $officeWorkspaceData->balance = $officeWorkspaceData->balance - $request->amount;
                     $officeWorkspaceData->update();
                     // Workspace Ledger Inventory Office Supplies Account Debit(+)
-                    $assetWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>13000,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $assetWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>13000,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
                     $assetWorkspaceData->balance += $request->amount;
                     $assetWorkspaceData->update();
                     // General Journals Insert
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.office_supply');
-                    $generalJournal->year = date('Y');
+                    $generalJournal->year = $currentYear;
                     $generalJournal->account_code = 13000;
                     $generalJournal->workspace_id = $workspace_id;
                     $generalJournal->amount = $request->amount;

@@ -54,6 +54,7 @@ class TransactionRecordersController extends Controller
             {
                 $recorder = New TransactionRecorder;
                 $slice = substr($request->account_code, 0,1);
+                $currentYear = CommonHelper::get_current_financial_year();
 
                 if($slice==1 || $slice==2 || $slice==3)
                 {
@@ -77,7 +78,7 @@ class TransactionRecordersController extends Controller
                 }
 
                 $recorder->date = $request->date;
-                $recorder->year = date('Y', strtotime($request->date));
+                $recorder->year = $currentYear;
                 $recorder->workspace_id = Auth::user()->workspace_id;
                 $recorder->account_code = $request->account_code;
                 $recorder->created_by = Auth::user()->id;
@@ -100,11 +101,11 @@ class TransactionRecordersController extends Controller
                 {
                     // ACCOUNT RECEIVABLE
                     // Workspace Ledger Account Receivable Credit(-)
-                    $accountReceivableWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$accountReceivableCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $accountReceivableWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$accountReceivableCode,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
                     $accountReceivableWorkspaceData->balance = $accountReceivableWorkspaceData->balance - $request->amount;
                     $accountReceivableWorkspaceData->update();
                     // Workspace Ledger Cash Debit(+)
-                    $cashWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $cashWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
                     $cashWorkspaceData->balance += $request->amount;
                     $cashWorkspaceData->update();
                     // Personal Account Due(-)
@@ -118,7 +119,7 @@ class TransactionRecordersController extends Controller
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
                     $generalJournal->reference_id = $person_id;
-                    $generalJournal->year = date('Y');
+                    $generalJournal->year = $currentYear;
                     $generalJournal->account_code = $accountReceivableCode;
                     $generalJournal->workspace_id = $workspace_id;
                     $generalJournal->amount = $request->amount;
@@ -131,11 +132,11 @@ class TransactionRecordersController extends Controller
                 {
                     // ACCOUNT PAYABLE
                     // Workspace Ledger Cash Credit(-)
-                    $cashWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $cashWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
                     $cashWorkspaceData->balance = $cashWorkspaceData->balance - $request->amount;
                     $cashWorkspaceData->update();
                     // Account Payable Debit(-)
-                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$accountPayableCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$accountPayableCode,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
                     $accountPayableWorkspaceData->balance = $accountPayableWorkspaceData->balance - $request->amount;
                     $accountPayableWorkspaceData->update();
                     // Personal Account Balance(-)
@@ -149,7 +150,7 @@ class TransactionRecordersController extends Controller
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
                     $generalJournal->reference_id = $person_id;
-                    $generalJournal->year = date('Y');
+                    $generalJournal->year = $currentYear;
                     $generalJournal->account_code = $accountPayableCode;
                     $generalJournal->workspace_id = $workspace_id;
                     $generalJournal->amount = $request->amount;
@@ -162,15 +163,15 @@ class TransactionRecordersController extends Controller
                 {
                     // REVENUE
                     // Workspace Ledger Cash Debit(+)
-                    $cashWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $cashWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
                     $cashWorkspaceData->balance += $request->amount;
                     $cashWorkspaceData->update();
                     // Revenue Credit(-) with Total Amount
-                    $revenueWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$revenueCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $revenueWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$revenueCode,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
                     $revenueWorkspaceData->balance = $revenueWorkspaceData->balance - $request->total_amount;
                     $revenueWorkspaceData->update();
                     // Workspace Ledger Account Receivable Debit(+)
-                    $accountReceivableWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$accountReceivableCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $accountReceivableWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$accountReceivableCode,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
                     $accountReceivableWorkspaceData->balance += ($request->total_amount - $request->amount);
                     $accountReceivableWorkspaceData->update();
                     if(($request->total_amount - $request->amount)>0)
@@ -188,7 +189,7 @@ class TransactionRecordersController extends Controller
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
                     $generalJournal->reference_id = $person_id;
-                    $generalJournal->year = date('Y');
+                    $generalJournal->year = $currentYear;
                     $generalJournal->account_code = $revenueCode;
                     $generalJournal->workspace_id = $workspace_id;
                     $generalJournal->amount = $request->amount;
@@ -201,15 +202,15 @@ class TransactionRecordersController extends Controller
                 {
                     // EXPENSE
                     // Workspace Ledger Cash Credit(-)
-                    $cashWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $cashWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
                     $cashWorkspaceData->balance = $cashWorkspaceData->balance - $request->amount;
                     $cashWorkspaceData->update();
                     // Workspace Ledger Account Payable Credit with Due(-)
-                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$accountPayableCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$accountPayableCode,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
                     $accountPayableWorkspaceData->balance = $accountPayableWorkspaceData->balance - ($request->total_amount - $request->amount);
                     $accountPayableWorkspaceData->update();
                     // Workspace Ledger Expense Account Debit(+)
-                    $expenseWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$expenseCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $expenseWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$expenseCode,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
                     $expenseWorkspaceData->balance += $request->amount;
                     $expenseWorkspaceData->update();
                     // General Journals Insert
@@ -218,7 +219,7 @@ class TransactionRecordersController extends Controller
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
                     $generalJournal->reference_id = $person_id;
-                    $generalJournal->year = date('Y');
+                    $generalJournal->year = $currentYear;
                     $generalJournal->account_code = $expenseCode;
                     $generalJournal->workspace_id = $workspace_id;
                     $generalJournal->amount = $request->amount;
@@ -231,18 +232,18 @@ class TransactionRecordersController extends Controller
                 {
                     // DRAW
                     // Workspace Ledger Cash Credit(-)
-                    $cashWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $cashWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
                     $cashWorkspaceData->balance = $cashWorkspaceData->balance - $request->amount;
                     $cashWorkspaceData->update();
                     // Workspace Ledger Draw Account Debit(+)
-                    $drawWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$drawCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $drawWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$drawCode,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
                     $drawWorkspaceData->balance += $request->amount;
                     $drawWorkspaceData->update();
                     // General Journals Insert
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.draw');
-                    $generalJournal->year = date('Y');
+                    $generalJournal->year = $currentYear;
                     $generalJournal->account_code = $drawCode;
                     $generalJournal->workspace_id = $workspace_id;
                     $generalJournal->amount = $request->amount;
@@ -255,18 +256,18 @@ class TransactionRecordersController extends Controller
                 {
                     // OWNERS INVESTMENT
                     // Workspace Ledger Cash Debit(+)
-                    $cashWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $cashWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
                     $cashWorkspaceData->balance += $request->amount;
                     $cashWorkspaceData->update();
                     // Workspace Ledger Investment Account Credit(+)
-                    $investmentWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$investmentCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $investmentWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$investmentCode,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
                     $investmentWorkspaceData->balance += $request->amount;
                     $investmentWorkspaceData->update();
                     // General Journals Insert
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.investment');
-                    $generalJournal->year = date('Y');
+                    $generalJournal->year = $currentYear;
                     $generalJournal->account_code = $investmentCode;
                     $generalJournal->workspace_id = $workspace_id;
                     $generalJournal->amount = $request->amount;
@@ -279,15 +280,15 @@ class TransactionRecordersController extends Controller
                 {
                     // OFFICE SUPPLIES
                     // Workspace Ledger Cash Credit(-)
-                    $cashWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $cashWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
                     $cashWorkspaceData->balance = $cashWorkspaceData->balance - $request->amount;
                     $cashWorkspaceData->update();
                     // Workspace Ledger Account Payable Credit with Due(-)
-                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$accountPayableCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$accountPayableCode,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
                     $accountPayableWorkspaceData->balance = $accountPayableWorkspaceData->balance - ($request->total_amount - $request->amount);
                     $accountPayableWorkspaceData->update();
                     // Workspace Ledger Office Supplies Account Debit(+)
-                    $ofcSuppliesWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$officeSuppliesCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $ofcSuppliesWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$officeSuppliesCode,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
                     $ofcSuppliesWorkspaceData->balance += $request->amount;
                     $ofcSuppliesWorkspaceData->update();
                     // General Journals Insert
@@ -296,7 +297,7 @@ class TransactionRecordersController extends Controller
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
                     $generalJournal->reference_id = $person_id;
-                    $generalJournal->year = date('Y');
+                    $generalJournal->year = $currentYear;
                     $generalJournal->account_code = $officeSuppliesCode;
                     $generalJournal->workspace_id = $workspace_id;
                     $generalJournal->amount = $request->amount;
@@ -334,7 +335,7 @@ class TransactionRecordersController extends Controller
     public function update($id, TransactionRecorderRequest $request)
     {
         $recorder = TransactionRecorder::findOrFail($id);
-
+        $currentYear = CommonHelper::get_current_financial_year();
         $slice = substr($request->account_code, 0,1);
 
         if($slice==1 || $slice==2 || $slice==3)
@@ -359,7 +360,7 @@ class TransactionRecordersController extends Controller
         }
 
         $recorder->date = $request->date;
-        $recorder->year = date('Y', strtotime($request->date));
+        $recorder->year = $currentYear;
         $recorder->workspace_id = Auth::user()->workspace_id;
         $recorder->account_code = $request->account_code;
         $recorder->updated_by = Auth::user()->id;
