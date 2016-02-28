@@ -41,60 +41,61 @@ class InitializationsController extends Controller
 
     public function update($id, InitializationRequest $request)
     {
-        DB::beginTransaction();
         try
         {
-            $currentYear = CommonHelper::get_current_financial_year();
-            $balanceInput = $request->input('balance');
-            foreach ($balanceInput as $code => $amount)
+            DB::transaction(function () use ($request, $id)
             {
-                $WorkspaceLedger = New WorkspaceLedger;
-                $GeneralLedger = New GeneralLedger;
-
-                $WorkspaceLedger->workspace_id = $id;
-                $WorkspaceLedger->year = $currentYear;
-                $WorkspaceLedger->account_code = $code;
-                $WorkspaceLedger->balance_type = Config::get('common.balance_type_opening');
-                $WorkspaceLedger->balance = $amount;
-                $WorkspaceLedger->created_by = Auth::user()->id;
-                $WorkspaceLedger->created_at = time();
-                $WorkspaceLedger->save();
-
-                $WorkspaceLedger = New WorkspaceLedger; // Intermediate row insert
-
-                $WorkspaceLedger->workspace_id = $id;
-                $WorkspaceLedger->year = $currentYear;
-                $WorkspaceLedger->account_code = $code;
-                $WorkspaceLedger->balance_type = Config::get('common.balance_type_intermediate');
-                $WorkspaceLedger->balance = $amount;
-                $WorkspaceLedger->created_by = Auth::user()->id;
-                $WorkspaceLedger->created_at = time();
-                $WorkspaceLedger->save();
-
-                $existingGeneralData = GeneralLedger::where(['account_code' => $code, 'balance_type' => Config::get('common.balance_type_opening'),'year'=>$currentYear])->first();
-
-                if($existingGeneralData)
+                $currentYear = CommonHelper::get_current_financial_year();
+                $balanceInput = $request->input('balance');
+                foreach ($balanceInput as $code => $amount)
                 {
-                    $existingGeneral = GeneralLedger::firstOrNew(['account_code' => $code, 'balance_type' => Config::get('common.balance_type_opening'),'year'=>$currentYear]);
+                    $WorkspaceLedger = New WorkspaceLedger;
+                    $GeneralLedger = New GeneralLedger;
 
-                    $existingGeneral->year = $currentYear;
-                    $existingGeneral->account_code = $code;
-                    $existingGeneral->balance_type = Config::get('common.balance_type_opening');
-                    $existingGeneral->balance = $existingGeneralData->balance + $amount;
-                    $existingGeneral->updated_by = Auth::user()->id;
-                    $existingGeneral->updated_at = time();
-                    $existingGeneral->update();
-                }
-                else
-                {
-                    $GeneralLedger->year = $currentYear;
-                    $GeneralLedger->account_code = $code;
-                    $GeneralLedger->balance_type = Config::get('common.balance_type_opening');
-                    $GeneralLedger->balance = $amount;
-                    $GeneralLedger->created_by = Auth::user()->id;
-                    $GeneralLedger->created_at = time();
-                    $GeneralLedger->save();
-                }
+                    $WorkspaceLedger->workspace_id = $id;
+                    $WorkspaceLedger->year = $currentYear;
+                    $WorkspaceLedger->account_code = $code;
+                    $WorkspaceLedger->balance_type = Config::get('common.balance_type_opening');
+                    $WorkspaceLedger->balance = $amount;
+                    $WorkspaceLedger->created_by = Auth::user()->id;
+                    $WorkspaceLedger->created_at = time();
+                    $WorkspaceLedger->save();
+
+                    $WorkspaceLedger = New WorkspaceLedger; // Intermediate row insert
+
+                    $WorkspaceLedger->workspace_id = $id;
+                    $WorkspaceLedger->year = $currentYear;
+                    $WorkspaceLedger->account_code = $code;
+                    $WorkspaceLedger->balance_type = Config::get('common.balance_type_intermediate');
+                    $WorkspaceLedger->balance = $amount;
+                    $WorkspaceLedger->created_by = Auth::user()->id;
+                    $WorkspaceLedger->created_at = time();
+                    $WorkspaceLedger->save();
+
+                    $existingGeneralData = GeneralLedger::where(['account_code' => $code, 'balance_type' => Config::get('common.balance_type_opening'),'year'=>$currentYear])->first();
+
+                    if($existingGeneralData)
+                    {
+                        $existingGeneral = GeneralLedger::firstOrNew(['account_code' => $code, 'balance_type' => Config::get('common.balance_type_opening'),'year'=>$currentYear]);
+
+                        $existingGeneral->year = $currentYear;
+                        $existingGeneral->account_code = $code;
+                        $existingGeneral->balance_type = Config::get('common.balance_type_opening');
+                        $existingGeneral->balance = $existingGeneralData->balance + $amount;
+                        $existingGeneral->updated_by = Auth::user()->id;
+                        $existingGeneral->updated_at = time();
+                        $existingGeneral->update();
+                    }
+                    else
+                    {
+                        $GeneralLedger->year = $currentYear;
+                        $GeneralLedger->account_code = $code;
+                        $GeneralLedger->balance_type = Config::get('common.balance_type_opening');
+                        $GeneralLedger->balance = $amount;
+                        $GeneralLedger->created_by = Auth::user()->id;
+                        $GeneralLedger->created_at = time();
+                        $GeneralLedger->save();
+                    }
 
 //                // General Intermediate Data Insert/ Update
 //                $GeneralLedger = New GeneralLedger;
@@ -122,16 +123,16 @@ class InitializationsController extends Controller
 //                    $GeneralLedger->created_at = time();
 //                    $GeneralLedger->save();
 //                }
-            }
-
-            DB::commit();
-            Session()->flash('flash_message', 'Accounts Initialized!');
+                }
+            });
         }
         catch (\Exception $e)
         {
-            DB::rollBack();
             Session()->flash('flash_message', 'Accounts not Initialized!');
+            return redirect('initializations');
         }
+
+        Session()->flash('flash_message', 'Accounts Initialized!');
         return redirect('initializations');
     }
 }
