@@ -25,10 +25,10 @@
             <th>Usage</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="main_body">
         <tr>
             <td>
-                {{ Form::select('material_id[]', $materials, null,['class'=>'form-control', 'id'=>'material_id', 'placeholder'=>'Select', 'required'=>'required']) }}
+                {{ Form::select('material_id[]', $materials, null,['class'=>'form-control material_id', 'id'=>'material_id', 'placeholder'=>'Select', 'required'=>'required']) }}
             </td>
 
             <td>
@@ -69,7 +69,34 @@
         {
             this.value = this.value.replace(/[^0-9\.]/g,'');
         });
+
+        $(document).on("change", ".material_id", function()
+        {
+            var mat_attr = $(this).closest('#main_body').find('.material_id');
+            var arr = [];
+            mat_attr.each(function ()
+            {
+                arr.push($(this).val());
+            });
+
+            if(arr.length != arrUnique(arr).length)
+            {
+                $(this).val('');
+                alert('Duplicate Material!');
+            }
+            //console.log(arrUnique(arr));
+        });
     });
+
+    function arrUnique(a)
+    {
+        var t = [];
+        for(var x = 0; x < a.length; x++)
+        {
+            if(t.indexOf(a[x]) == -1)t.push(a[x]);
+        }
+        return t;
+    }
 
     var ExId = 0;
     function RowIncrement()
@@ -84,7 +111,7 @@
         //alert(row.id);
         var cell1 = row.insertCell(0);
 
-        cell1.innerHTML = "<select name='material_id[]' id='material_id" + ExId + "' class='form-control' required='required'>\n\
+        cell1.innerHTML = "<select name='material_id[]' id='material_id" + ExId + "' class='form-control material_id' required='required'>\n\
         <option value=''>Select</option>\n\
         <?php
         foreach ($materials as $id=>$material)
