@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Account;
 use App\Http\Requests;
 use App\Models\ChartOfAccount;
 use App\Models\GeneralLedger;
+use App\Models\Stock;
 use App\Models\Workspace;
 use App\Models\WorkspaceLedger;
 use App\Models\GeneralJournal;

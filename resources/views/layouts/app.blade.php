@@ -118,7 +118,11 @@
             <ul class="nav navbar-nav pull-right">
                 <li class="dropdown dropdown-user">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                        <img alt="" class="img-circle" src="{{ URL::asset('public/image/jr_small.jpg') }}"/>
+                        @if(Auth::user()->photo)
+                            <img alt="" class="img-circle" src="{{ URL::asset('public/image/user/'.Auth::user()->photo) }}" alt="logo" class="logo-default" style="width: 30px; height: 30px;"/>
+                        @else
+                            <img alt="" class="img-circle" src="{{ URL::asset('public/image/jr_small.jpg') }}"/>
+                        @endif
 					<span class="username username-hide-on-mobile">
 					@if (Auth::check())	{{ Auth::user()->username }} @else {{ 'Guest' }}@endif</span>
                         <i class="fa fa-angle-down"></i>
@@ -126,7 +130,6 @@
                     <ul class="dropdown-menu dropdown-menu-default">
                         @if (Auth::guest())
                             <li><a href="{{ url('/login') }}">Login</a></li>
-                            <li><a href="{{ url('/register') }}">Register</a></li>
                         @else
                             <li><a href="{{ url('/logout') }}"><i class="icon-key"></i></i>Logout</a></li>
                         @endif

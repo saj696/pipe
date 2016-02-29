@@ -39,7 +39,7 @@ class UserRequest extends Request
             {
                 return [
                     'name_en'=>'required',
-                    'username'=>'required|min:3|unique:users',
+                    'username'=>'required|alpha_dash|min:3|unique:users',
                     'email'=>'required|email|unique:users',
                     'password'=>'required|min:6',
                     'user_group_id'=>'required'
@@ -50,7 +50,7 @@ class UserRequest extends Request
             {
                 return [
                     'name_en'=>'required',
-                    'username'=>'required|min:3|unique:users,username,'.$user->id,
+                    'username'=>'required|alpha_dash|min:3|unique:users,username,'.$user->id,
                     'email'=>'required|email|unique:users,email,'.$user->id,
                     'password'=>'required|min:6',
                     'user_group_id'=>'required'
