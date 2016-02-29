@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Setup;
 use App\Http\Requests;
 use App\Models\Workspace;
 use App\Models\Component;
+use App\Models\WorkspaceLedger;
+use App\Models\ChartOfAccount;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\WorkspaceRequest;
@@ -53,7 +55,6 @@ class WorkspacesController extends Controller
         $workspace->status = $request->input('status');
         $workspace->created_by = Auth::user()->id;
         $workspace->created_at = time();
-
         $workspace->save();
 
         Session()->flash('flash_message', 'Workspace has been created!');

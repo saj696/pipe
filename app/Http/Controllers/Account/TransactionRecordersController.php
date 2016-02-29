@@ -33,14 +33,14 @@ class TransactionRecordersController extends Controller
     public function index()
     {
         $recorders = TransactionRecorder::paginate(Config::get('common.pagination'));
-        $accounts = ChartOfAccount::where('account_type', 1)->whereIn('code', Config::get('common.transaction_accounts'))->lists('name', 'code');
+        $accounts = ChartOfAccount::where('account_type', 1)->lists('name', 'code');
         $status = Config::get('common.status');
         return view('transactionRecorders.index', compact('recorders', 'status', 'accounts'));
     }
 
     public function create()
     {
-        $accounts = ChartOfAccount::where('account_type', 1)->whereIn('code', Config::get('common.transaction_accounts'))->lists('name', 'code');
+        $accounts = ChartOfAccount::where('account_type', 1)->lists('name', 'code');
         $types = Config::get('common.sales_customer_type');
         $years = CommonHelper::get_years();
         return view('transactionRecorders.create', compact('accounts', 'types', 'years'));
@@ -310,7 +310,7 @@ class TransactionRecordersController extends Controller
         }
         catch (\Exception $e)
         {
-            Session()->flash('flash_message', 'Transaction Recorder Creation Failed.');
+            Session()->flash('error_message', 'Transaction Recorder Creation Failed.');
             return redirect('recorders');
         }
 

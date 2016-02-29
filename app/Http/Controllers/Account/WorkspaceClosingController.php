@@ -8,6 +8,7 @@ use App\Models\ChartOfAccount;
 use App\Models\WorkspaceLedger;
 use App\Models\GeneralJournal;
 use App\Models\AccountClosing;
+use App\Models\Stock;
 use Carbon\Carbon;
 use App\Helpers\CommonHelper;
 use App\Http\Controllers\Controller;
@@ -109,6 +110,44 @@ class WorkspaceClosingController extends Controller
                     $accountClosing->workspace_id = $workspace_id;
                     $accountClosing->year = CommonHelper::get_current_financial_year();
                     $accountClosing->save();
+                    // Workspace Stock Closing
+                    $existingStocks = Stock::where(['stock_type'=>Config::get('common.balance_type_intermediate'), 'workspace_id'=> $workspace_id, 'year'=>CommonHelper::get_current_financial_year()])->get();
+                    if(sizeof($existingStocks)>0)
+                    {
+                        foreach($existingStocks as $existingStock)
+                        {
+                            // Current Year Closing Balance
+                            $stock = New Stock;
+                            $stock->year = CommonHelper::get_current_financial_year();
+                            $stock->stock_type = Config::get('common.balance_type_closing');
+                            $stock->workspace_id = $workspace_id;
+                            $stock->product_id = $existingStock->product_id;
+                            $stock->quantity = $existingStock->quantity;
+                            $stock->created_by = Auth::user()->id;
+                            $stock->created_at = time();
+                            $stock->save();
+                            // Next Year Opening Balance
+                            $stock = New Stock;
+                            $stock->year = CommonHelper::get_current_financial_year()+1;
+                            $stock->stock_type = Config::get('common.balance_type_opening');
+                            $stock->workspace_id = $workspace_id;
+                            $stock->product_id = $existingStock->product_id;
+                            $stock->quantity = $existingStock->quantity;
+                            $stock->created_by = Auth::user()->id;
+                            $stock->created_at = time();
+                            $stock->save();
+                            // Next Year Intermediate Balance
+                            $stock = New Stock;
+                            $stock->year = CommonHelper::get_current_financial_year()+1;
+                            $stock->stock_type = Config::get('common.balance_type_intermediate');
+                            $stock->workspace_id = $workspace_id;
+                            $stock->product_id = $existingStock->product_id;
+                            $stock->quantity = $existingStock->quantity;
+                            $stock->created_by = Auth::user()->id;
+                            $stock->created_at = time();
+                            $stock->save();
+                        }
+                    }
                 });
             }
             catch (\Exception $e)

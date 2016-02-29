@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Register;
 
+use App\Helpers\CommonHelper;
 use App\Http\Requests;
 use App\Models\ProductionRegister;
 use App\Models\Product;
@@ -33,7 +34,7 @@ class ProductionRegistersController extends Controller
 
     public function show($id)
     {
-//        $UsageRegister = UsageRegister::findOrFail($id);
+//        $productionRegister = UsageRegister::findOrFail($id);
 //        return view('usageRegisters.show', compact('UsageRegister'));
     }
 
@@ -49,6 +50,8 @@ class ProductionRegistersController extends Controller
         {
             DB::transaction(function () use ($request)
             {
+                $currentYear = CommonHelper::get_current_financial_year();
+                $workspace_id = Auth::user()->workspace_id;
                 $count = sizeof($request->input('product_id'));
                 $productInput = $request->input('product_id');
                 $productionInput = $request->input('production');
@@ -57,13 +60,14 @@ class ProductionRegistersController extends Controller
                 {
                     $productionRegister = New ProductionRegister;
                     $productionRegister->date = $request->input('date');
+                    $productionRegister->year = $currentYear;
                     $productionRegister->product_id = $productInput[$i];
                     $productionRegister->production = $productionInput[$i];
                     $productionRegister->created_by = Auth::user()->id;
                     $productionRegister->created_at = time();
                     $productionRegister->save();
 
-                    $existingStock = DB::table('stocks')->where(['workspace_id' => 1, 'product_id' => $productInput[$i]])->first();
+                    $existingStock = DB::table('stocks')->where(['stock_type'=>Config::get('common.balance_type_intermediate'), 'year'=>$currentYear, 'workspace_id' => 1, 'product_id' => $productInput[$i]])->first();
 
                     if ($existingStock)
                     {
@@ -75,8 +79,21 @@ class ProductionRegistersController extends Controller
                     }
                     else
                     {
+                        // Opening Stock Entry
                         $stock = New Stock;
-                        $stock->workspace_id = 1;
+                        $stock->year = $currentYear;
+                        $stock->stock_type = Config::get('common.balance_type_opening');
+                        $stock->workspace_id = $workspace_id;
+                        $stock->product_id = $productInput[$i];
+                        $stock->quantity = $productionInput[$i];
+                        $stock->created_by = Auth::user()->id;
+                        $stock->created_at = time();
+                        $stock->save();
+                        // Intermediate Stock Entry
+                        $stock = New Stock;
+                        $stock->year = $currentYear;
+                        $stock->stock_type = Config::get('common.balance_type_intermediate');
+                        $stock->workspace_id = $workspace_id;
                         $stock->product_id = $productInput[$i];
                         $stock->quantity = $productionInput[$i];
                         $stock->created_by = Auth::user()->id;
@@ -110,14 +127,14 @@ class ProductionRegistersController extends Controller
             DB::transaction(function () use ($request, $id)
             {
                 $existingRegister = DB::table('production_registers')->where('id', $id)->first();
-                $UsageRegister = ProductionRegister::findOrFail($id);
-                $UsageRegister->date = $request->input('date');
-                $UsageRegister->production = $request->input('production');
-                $UsageRegister->updated_by = Auth::user()->id;
-                $UsageRegister->updated_at = time();
-                $UsageRegister->update();
+                $productionRegister = ProductionRegister::findOrFail($id);
+                $productionRegister->date = $request->input('date');
+                $productionRegister->production = $request->input('production');
+                $productionRegister->updated_by = Auth::user()->id;
+                $productionRegister->updated_at = time();
+                $productionRegister->update();
 
-                $existingStock = DB::table('stocks')->where(['workspace_id' => 1, 'product_id' => $existingRegister->product_id])->first();
+                $existingStock = DB::table('stocks')->where(['stock_type'=>Config::get('common.balance_type_intermediate'), 'workspace_id' => 1, 'product_id' => $existingRegister->product_id])->first();
 
                 if ($existingRegister->production != $request->input('production'))
                 {

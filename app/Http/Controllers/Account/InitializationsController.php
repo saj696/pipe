@@ -35,7 +35,7 @@ class InitializationsController extends Controller
     public function edit($id)
     {
         $initializations = WorkspaceLedger::where('workspace_id', $id)->get();
-        $accounts = ChartOfAccount::whereIn('code', Config::get('common.transaction_accounts'))->select('name', 'code')->get();
+        $accounts = ChartOfAccount::where('status', 1)->select('name', 'code')->get();
         return view('initializations.edit', compact('accounts', 'initializations', 'id'));
     }
 
@@ -128,7 +128,7 @@ class InitializationsController extends Controller
         }
         catch (\Exception $e)
         {
-            Session()->flash('flash_message', 'Accounts not Initialized!');
+            Session()->flash('error_message', 'Accounts not Initialized!');
             return redirect('initializations');
         }
 
