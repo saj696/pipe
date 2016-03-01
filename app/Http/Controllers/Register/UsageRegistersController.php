@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Register;
 
+use App\Helpers\CommonHelper;
 use App\Http\Requests;
+use App\Models\RawStock;
 use App\Models\UsageRegister;
 use App\Models\Material;
 use Carbon\Carbon;
@@ -12,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Session;
+use DB;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 
@@ -44,20 +47,46 @@ class UsageRegistersController extends Controller
 
     public function store(UsageRegisterRequest $request)
     {
-        $count = sizeof($request->input('material_id'));
-        $materialInput = $request->input('material_id');
-        $usageInput = $request->input('usage');
-
-        for($i=0; $i<$count; $i++)
+        try
         {
-            $UsageRegister = New UsageRegister;
-            $UsageRegister->date = $request->input('date');
-            $UsageRegister->material_id = $materialInput[$i];
-            $UsageRegister->usage = $usageInput[$i];
-            $UsageRegister->created_by = Auth::user()->id;
-            $UsageRegister->created_at = time();
+            DB::transaction(function () use ($request)
+            {
+                $count = sizeof($request->input('material_id'));
+                $materialInput = $request->input('material_id');
+                $usageInput = $request->input('usage');
 
-            $UsageRegister->save();
+                for($i=0; $i<$count; $i++)
+                {
+                    $rawStock = RawStock::where(['material_id'=> $materialInput[$i], 'year'=>CommonHelper::get_current_financial_year(), 'stock_type'=>Config::get('common.balance_type_intermediate')])->first();
+
+                    if($rawStock->quantity >= $usageInput[$i])
+                    {
+                        $UsageRegister = New UsageRegister;
+                        $UsageRegister->date = $request->input('date');
+                        $UsageRegister->material_id = $materialInput[$i];
+                        $UsageRegister->usage = $usageInput[$i];
+                        $UsageRegister->created_by = Auth::user()->id;
+                        $UsageRegister->created_at = time();
+                        $UsageRegister->save();
+
+                        // Raw Stock Update
+                        $rawStock->quantity -= $usageInput[$i];
+                        $rawStock->updated_by = Auth::user()->id;
+                        $rawStock->updated_at = time();
+                        $rawStock->update();
+                    }
+                    else
+                    {
+                        Session()->flash('warning_message','Alert: Not Enough Stock! Usage Quantity '.$usageInput[$i].' is greater than Raw Material Stock '.$rawStock->quantity.'');
+                        throw new \Exception('error');
+                    }
+                }
+            });
+        }
+        catch (\Exception $e)
+        {
+            Session()->flash('flash_message', 'Usage Register not done!');
+            return redirect('usageRegisters');
         }
 
         Session()->flash('flash_message', 'Usage Register has been created!');

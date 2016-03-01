@@ -7,6 +7,7 @@ use App\Models\ChartOfAccount;
 use App\Models\GeneralLedger;
 use App\Models\Stock;
 use App\Models\Workspace;
+use App\Models\RawStock;
 use App\Models\WorkspaceLedger;
 use App\Models\GeneralJournal;
 use App\Models\AccountClosing;
@@ -74,17 +75,47 @@ class YearClosingController extends Controller
                             $generalLedger->save();
                         }
 
-                        // Next Fiscal Year Entry
-                        DB::table('financial_years')->where('year', $currentYear)->update(['status' => 0]);
-                        DB::table('financial_years')->insert(
-                            ['year' => $currentYear+1]
-                        );
-
                         // Account Closing table Impact
                         $accountClosing = New AccountClosing;
                         $accountClosing->type = 2; // Year Closing type=2 and Workspace Closing type=1;
                         $accountClosing->year = $currentYear;
                         $accountClosing->save();
+
+                        // Raw Stock Table Impact
+                        $rawMaterials = RawStock::where(['year'=>CommonHelper::get_current_financial_year(), 'stock_type'=>Config::get('common.balance_type_intermediate')])->get();
+                        foreach($rawMaterials as $rawMaterial)
+                        {
+                            // Current Year Opening Balance
+                            $rawStock = New RawStock;
+                            $rawStock->year = $currentYear;
+                            $rawStock->stock_type = Config::get('common.balance_type_closing');
+                            $rawStock->material_id = $rawMaterial->material_id;
+                            $rawStock->quantity = $rawMaterial->quantity;
+                            $rawStock->created_by = Auth::user()->id;
+                            $rawStock->created_at = time();
+                            // Next Year Opening Balance
+                            $rawStock = New RawStock;
+                            $rawStock->year = $currentYear+1;
+                            $rawStock->stock_type = Config::get('common.balance_type_opening');
+                            $rawStock->material_id = $rawMaterial->material_id;
+                            $rawStock->quantity = $rawMaterial->quantity;
+                            $rawStock->created_by = Auth::user()->id;
+                            $rawStock->created_at = time();
+                            // Next Year Intermediate Balance
+                            $rawStock = New RawStock;
+                            $rawStock->year = $currentYear+1;
+                            $rawStock->stock_type = Config::get('common.balance_type_intermediate');
+                            $rawStock->material_id = $rawMaterial->material_id;
+                            $rawStock->quantity = $rawMaterial->quantity;
+                            $rawStock->created_by = Auth::user()->id;
+                            $rawStock->created_at = time();
+                        }
+
+                        // Next Fiscal Year Entry
+                        DB::table('financial_years')->where('year', $currentYear)->update(['status' => 0]);
+                        DB::table('financial_years')->insert(
+                            ['year' => $currentYear+1]
+                        );
                     });
                 }
                 catch (\Exception $e)
