@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Setup;
 
+use App\Helpers\CommonHelper;
 use App\Http\Requests;
 use App\Models\Material;
 use App\Models\RawStock;
@@ -45,33 +46,45 @@ class MaterialsController extends Controller
 
     public function store(MaterialRequest $request)
     {
-        DB::beginTransaction();
         try
         {
-            $material = New Material;
-            $material->name = $request->input('name');
-            $material->type = $request->input('type');
-            $material->status = $request->input('status');
-            $material->created_by = Auth::user()->id;
-            $material->created_at = time();
-            $material->save();
-            $insertedId = $material->id;
+            DB::transaction(function () use ($request)
+            {
+                $material = New Material;
+                $material->name = $request->input('name');
+                $material->type = $request->input('type');
+                $material->status = $request->input('status');
+                $material->created_by = Auth::user()->id;
+                $material->created_at = time();
+                $material->save();
+                $insertedId = $material->id;
 
-            $rawStock = New RawStock;
-            $rawStock->material_id = $insertedId;
-            $rawStock->created_by = Auth::user()->id;
-            $rawStock->created_at = time();
-            $rawStock->save();
+                // Current Year Opening Stock
+                $rawStock = New RawStock;
+                $rawStock->material_id = $insertedId;
+                $rawStock->year = CommonHelper::get_current_financial_year();
+                $rawStock->stock_type = Config::get('common.balance_type_opening');
+                $rawStock->created_by = Auth::user()->id;
+                $rawStock->created_at = time();
+                $rawStock->save();
 
-            DB::commit();
-            Session()->flash('flash_message', 'Material has been created!');
+                // Current Year Intermediate Stock
+                $rawStock = New RawStock;
+                $rawStock->material_id = $insertedId;
+                $rawStock->year = CommonHelper::get_current_financial_year();
+                $rawStock->stock_type = Config::get('common.balance_type_intermediate');
+                $rawStock->created_by = Auth::user()->id;
+                $rawStock->created_at = time();
+                $rawStock->save();
+            });
         }
         catch (\Exception $e)
         {
-            DB::rollback();
-            Session()->flash('flash_message', 'Material not created!');
+            Session()->flash('error_message', 'Material not created!');
+            return redirect('materials');
         }
 
+        Session()->flash('flash_message', 'Material has been created!');
         return redirect('materials');
     }
 
