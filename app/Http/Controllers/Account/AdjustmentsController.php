@@ -116,7 +116,7 @@ class AdjustmentsController extends Controller
         }
         catch (\Exception $e)
         {
-            Session()->flash('flash_message', 'Adjustment not done!');
+            Session()->flash('error_message', 'Adjustment not done!');
             return redirect('adjustments');
         }
 

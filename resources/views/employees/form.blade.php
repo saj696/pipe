@@ -120,6 +120,25 @@
     </div>
 </div>
 
+<div class="form-group{{ $errors->has('photo') ? ' has-error' : '' }}">
+    {{ Form::label('photo', 'Photo', ['class'=>'col-md-3 control-label']) }}
+    <div class="col-md-3">
+        {{ Form::file('photo', null,['class'=>'form-control']) }}
+        @if ($errors->has('photo'))
+            <span class="help-block">
+                <strong>{{ $errors->first('photo') }}</strong>
+            </span>
+        @endif
+    </div>
+    <div class="col-md-2">
+        @if(isset($employee->photo))
+            <img width="80" height="80" src="{{URL::to('/public')}}/image/employee/{{ $employee->photo }}" alt="picture">
+        @else
+            <img width="80" height="80" src="{{URL::to('/public')}}/image/employee/no_image.jpg" alt="picture">
+        @endif
+    </div>
+</div>
+
 @if(!isset($employee))
 <div class="form-group{{ $errors->has('balance') ? ' has-error' : '' }}">
     {{ Form::label('balance', 'Balance', ['class'=>'col-md-3 control-label']) }}
@@ -140,6 +159,49 @@
         @if ($errors->has('due'))
             <span class="help-block">
                 <strong>{{ $errors->first('due') }}</strong>
+            </span>
+        @endif
+    </div>
+</div>
+
+<div class="form-group">
+    {{ Form::label('as_user', 'Create As User', ['class'=>'col-md-3 control-label']) }}
+    <div class="col-md-1">
+        {{ Form::checkbox('as_user', 1, null, ['class' => 'form-control col-md-1 as_user']) }}
+    </div>
+</div>
+
+<div class="form-group{{ $errors->has('username') ? ' has-error' : '' }} for_user" style="display: {{ $errors->has('username') ? ' show' : 'none' }};">
+    {{ Form::label('username', 'Username', ['class'=>'col-md-3 control-label']) }}
+    <div class="col-md-7">
+        {{ Form::text('username', null,['class'=>'form-control username']) }}
+        @if ($errors->has('username'))
+            <span class="help-block">
+                <strong>{{ $errors->first('username') }}</strong>
+            </span>
+        @endif
+    </div>
+</div>
+
+<div class="form-group{{ $errors->has('password') ? ' has-error' : '' }} for_user" style="display: {{ $errors->has('password') ? ' show' : 'none' }};">
+    {{ Form::label('password', 'Password', ['class'=>'col-md-3 control-label']) }}
+    <div class="col-md-7">
+        {{ Form::password('password', ['class'=>'form-control password']) }}
+        @if ($errors->has('password'))
+            <span class="help-block">
+                <strong>{{ $errors->first('password') }}</strong>
+            </span>
+        @endif
+    </div>
+</div>
+
+<div class="form-group{{ $errors->has('user_group_id') ? ' has-error' : '' }} for_user" style="display: {{ $errors->has('user_group_id') ? ' show' : 'none' }};">
+    {{ Form::label('user_group_id', 'User Group', ['class'=>'col-md-3 control-label']) }}
+    <div class="col-md-7">
+        {{ Form::select('user_group_id', $userGroups, null,['class'=>'form-control user_group_id', 'placeholder'=>'Select']) }}
+        @if ($errors->has('user_group_id'))
+            <span class="help-block">
+                <strong>{{ $errors->first('user_group_id') }}</strong>
             </span>
         @endif
     </div>
@@ -178,6 +240,21 @@
         $(document).on("keyup", ".quantity", function()
         {
             this.value = this.value.replace(/[^0-9\.]/g,'');
+        });
+
+        $(document).on("click", ".as_user", function()
+        {
+            if($('.as_user').prop('checked'))
+            {
+                $('.for_user').show();
+            }
+            else
+            {
+                $('.for_user').hide();
+                $('.user_group_id').val('');
+                $('.username').val('');
+                $('.password').val('');
+            }
         });
     });
 </script>

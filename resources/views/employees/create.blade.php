@@ -13,7 +13,7 @@
         <div class="portlet-body form">
             <div class="form-horizontal" role="form">
                 <div class="form-body">
-                    {{ Form::open(['url'=>'employees']) }}
+                    {{ Form::open(['url'=>'employees', 'files' => true]) }}
                     @include('employees.form', ['submitText'=>'Add'])
                     {{ Form::close() }}
                 </div>
