@@ -102,15 +102,58 @@ class UsageRegistersController extends Controller
 
     public function update($id, UsageRegisterRequest $request)
     {
-        $UsageRegister = UsageRegister::findOrFail($id);
+        try
+        {
+            DB::transaction(function () use ($request, $id)
+            {
+                $existingRegister = UsageRegister::where('id', $id)->first();
+                $UsageRegister = UsageRegister::findOrFail($id);
+                $existingStock = RawStock::where(['year'=>CommonHelper::get_current_financial_year(),'stock_type'=>Config::get('common.balance_type_intermediate'), 'material_id' => $existingRegister->material_id])->first();
 
-        $UsageRegister->date = $request->input('date');
-        $UsageRegister->material_id = $request->input('material_id');
-        $UsageRegister->usage = $request->input('usage');
-        $UsageRegister->status = $request->input('status');
-        $UsageRegister->updated_by = Auth::user()->id;
-        $UsageRegister->updated_at = time();
-        $UsageRegister->update();
+                if($existingStock->quantity+$existingRegister->usage >= $request->input('usage'))
+                {
+                    $UsageRegister->date = $request->input('date');
+                    $UsageRegister->material_id = $request->input('material_id');
+                    $UsageRegister->usage = $request->input('usage');
+                    $UsageRegister->status = $request->input('status');
+                    $UsageRegister->updated_by = Auth::user()->id;
+                    $UsageRegister->updated_at = time();
+                    $UsageRegister->update();
+
+                    if ($existingRegister->usage != $request->input('usage'))
+                    {
+                        if ($existingRegister->usage > $request->input('usage'))
+                        {
+                            $difference = $existingRegister->usage - $request->input('usage');
+                            $stock = RawStock::findOrFail($existingStock->id);
+                            $stock->quantity = $existingStock->quantity + $difference;
+                            $stock->updated_by = Auth::user()->id;
+                            $stock->updated_at = time();
+                            $stock->update();
+                        }
+                        elseif ($existingRegister->usage < $request->input('usage'))
+                        {
+                            $difference = $request->input('usage') - $existingRegister->usage;
+                            $stock = RawStock::findOrFail($existingStock->id);
+                            $stock->quantity = $existingStock->quantity - $difference;
+                            $stock->updated_by = Auth::user()->id;
+                            $stock->updated_at = time();
+                            $stock->update();
+                        }
+                    }
+                }
+                else
+                {
+                    Session()->flash('warning_message','Alert: Not Enough Stock! Usage Quantity '.$request->input('usage').' is greater than Raw Material Stock '.($existingStock->quantity+$existingRegister->usage).'');
+                    throw new \Exception('error');
+                }
+            });
+        }
+        catch (\Exception $e)
+        {
+            Session()->flash('error_message', 'Usage Register not updated!');
+            return redirect('usageRegisters');
+        }
 
         Session()->flash('flash_message', 'Usage Register has been updated!');
         return redirect('usageRegisters');

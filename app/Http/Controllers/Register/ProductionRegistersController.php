@@ -126,6 +126,7 @@ class ProductionRegistersController extends Controller
         {
             DB::transaction(function () use ($request, $id)
             {
+                $user = Auth::user();
                 $existingRegister = DB::table('production_registers')->where('id', $id)->first();
                 $productionRegister = ProductionRegister::findOrFail($id);
                 $productionRegister->date = $request->input('date');
@@ -134,7 +135,7 @@ class ProductionRegistersController extends Controller
                 $productionRegister->updated_at = time();
                 $productionRegister->update();
 
-                $existingStock = DB::table('stocks')->where(['stock_type'=>Config::get('common.balance_type_intermediate'), 'workspace_id' => 1, 'product_id' => $existingRegister->product_id])->first();
+                $existingStock = DB::table('stocks')->where(['year'=>CommonHelper::get_current_financial_year(), 'stock_type'=>Config::get('common.balance_type_intermediate'), 'workspace_id' => $user->workspace_id, 'product_id' => $existingRegister->product_id])->first();
 
                 if ($existingRegister->production != $request->input('production'))
                 {
@@ -161,7 +162,7 @@ class ProductionRegistersController extends Controller
         }
         catch (\Exception $e)
         {
-            Session()->flash('flash_message', 'Production Register not updated!');
+            Session()->flash('error_message', 'Production Register not updated!');
             return redirect('productionRegisters');
         }
 
