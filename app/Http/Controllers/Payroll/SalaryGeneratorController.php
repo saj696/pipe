@@ -42,13 +42,16 @@ class SalaryGeneratorController extends Controller
                 $inputs = $request->input();
                 $user = Auth::user();
                 $time = time();
+                $transaction_type=Config::get('common.transaction_type.salary');
+                $balance_type=Config::get('common.balance_type_intermediate');
+                $year=CommonHelper::get_current_financial_year();
                 $total = 0;
                 foreach ($inputs['selected'] as $employee_id) {
                     $salary = new Salary();
                     $salary->employee_id = $employee_id;
                     $salary->employee_type = $inputs['employee'][$employee_id]['employee_type'];
                     $salary->workspace_id = $inputs['employee'][$employee_id]['workspace_id'];
-                    $salary->year = CommonHelper::get_current_financial_year();
+                    $salary->year = $year;
                     $salary->month = $inputs['month'];
                     $salary->salary = $inputs['employee'][$employee_id]['salary'];
                     $salary->extra_hours = $inputs['employee'][$employee_id]['overtime'];
@@ -67,13 +70,13 @@ class SalaryGeneratorController extends Controller
                     $personalAccount->save();
 
                     //Update Workspace Ledger
-                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 42000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => CommonHelper::get_current_financial_year()])->first();
+                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 42000, 'balance_type' => $balance_type, 'year' => $year])->first();
                     $accountPayableWorkspaceData->balance += $inputs['employee'][$employee_id]['net']; //Add Salary Payable
                     $accountPayableWorkspaceData->updated_by = $user->id;
                     $accountPayableWorkspaceData->updated_at = $time;
                     $accountPayableWorkspaceData->update();
 
-                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 22000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => CommonHelper::get_current_financial_year()])->first();
+                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 22000, 'balance_type' => $balance_type, 'year' => $year])->first();
                     $accountPayableWorkspaceData->balance += $inputs['employee'][$employee_id]['net']; //Add Salary Expense
                     $accountPayableWorkspaceData->updated_by = $user->id;
                     $accountPayableWorkspaceData->updated_at = $time;
@@ -82,9 +85,9 @@ class SalaryGeneratorController extends Controller
                     // General Journal Table Impact
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = $time;
-                    $generalJournal->transaction_type = Config::get('common.transaction_type.salary');
+                    $generalJournal->transaction_type = $transaction_type;
                     $generalJournal->reference_id = $salary->id;
-                    $generalJournal->year = CommonHelper::get_current_financial_year();
+                    $generalJournal->year = $year;
                     $generalJournal->account_code = 42000;
                     $generalJournal->workspace_id = $user->workspace_id;
                     $generalJournal->amount = $inputs['employee'][$employee_id]['net'];
@@ -95,9 +98,9 @@ class SalaryGeneratorController extends Controller
 
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = $time;
-                    $generalJournal->transaction_type = Config::get('common.transaction_type.salary');
+                    $generalJournal->transaction_type = $transaction_type;
                     $generalJournal->reference_id = $salary->id;
-                    $generalJournal->year = CommonHelper::get_current_financial_year();
+                    $generalJournal->year = $year;
                     $generalJournal->account_code = 22000;
                     $generalJournal->workspace_id = $user->workspace_id;
                     $generalJournal->amount = $inputs['employee'][$employee_id]['net'];
@@ -136,6 +139,9 @@ class SalaryGeneratorController extends Controller
             DB::transaction(function () use ($request,$id) {
                 $user = Auth::user();
                 $time = time();
+                $year=CommonHelper::get_current_financial_year();
+                $transaction_type=Config::get('common.transaction_type.salary');
+                $balance_type=Config::get('common.balance_type_intermediate');
                 $inputs = $request->input();
                 $salary = Salary::find($id);
                 $copy = clone $salary;
@@ -156,26 +162,26 @@ class SalaryGeneratorController extends Controller
                     $personalAccount->save();
 
                     //Update Workspace Ledger
-                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 42000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => CommonHelper::get_current_financial_year()])->first();
+                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 42000, 'balance_type' => $balance_type, 'year' => $year])->first();
                     $accountPayableWorkspaceData->balance += $balance; //Add Salary Payable
                     $accountPayableWorkspaceData->updated_by = $user->id;
                     $accountPayableWorkspaceData->updated_at = $time;
                     $accountPayableWorkspaceData->update();
 
-                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 22000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => CommonHelper::get_current_financial_year()])->first();
+                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 22000, 'balance_type' => $balance_type, 'year' => $year])->first();
                     $accountPayableWorkspaceData->balance += $balance; //Add Salary Expense
                     $accountPayableWorkspaceData->updated_by = $user->id;
                     $accountPayableWorkspaceData->updated_at = $time;
                     $accountPayableWorkspaceData->update();
 
                     // General Journal Table Impact
-                    $generalJournal = GeneralJournal::where(['transaction_type' => Config::get('common.transaction_type.salary'), 'reference_id' => $id, 'account_code' => 42000])->first();
+                    $generalJournal = GeneralJournal::where(['transaction_type' => $transaction_type, 'reference_id' => $id, 'account_code' => 42000,'year'=>$year,'workspace_id'=>$user->workspace_id])->first();
                     $generalJournal->amount += $balance;
                     $generalJournal->updated_by = $user->id;
                     $generalJournal->updated_at = $time;
                     $generalJournal->save();
 
-                    $generalJournal = GeneralJournal::where(['transaction_type' => Config::get('common.transaction_type.salary'), 'reference_id' => $id, 'account_code' => 22000])->first();
+                    $generalJournal = GeneralJournal::where(['transaction_type' => $transaction_type, 'reference_id' => $id, 'account_code' => 22000,'year'=>$year,'workspace_id'=>$user->workspace_id])->first();
                     $generalJournal->amount += $balance;
                     $generalJournal->updated_by = $user->id;
                     $generalJournal->updated_at = $time;
@@ -190,26 +196,26 @@ class SalaryGeneratorController extends Controller
                     $personalAccount->save();
 
                     //Update Workspace Ledger
-                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 42000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => CommonHelper::get_current_financial_year()])->first();
+                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 42000, 'balance_type' => $balance_type, 'year' => $year])->first();
                     $accountPayableWorkspaceData->balance -= $balance; //Add Salary Payable
                     $accountPayableWorkspaceData->updated_by = $user->id;
                     $accountPayableWorkspaceData->updated_at = $time;
                     $accountPayableWorkspaceData->update();
 
-                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 22000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => CommonHelper::get_current_financial_year()])->first();
+                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 22000, 'balance_type' => $balance_type, 'year' => $year])->first();
                     $accountPayableWorkspaceData->balance -= $balance; //Add Salary Expense
                     $accountPayableWorkspaceData->updated_by = $user->id;
                     $accountPayableWorkspaceData->updated_at = $time;
                     $accountPayableWorkspaceData->update();
 
                     // General Journal Table Impact
-                    $generalJournal = GeneralJournal::where(['transaction_type' => Config::get('common.transaction_type.salary'), 'reference_id' => $id, 'account_code' => 42000])->first();
+                    $generalJournal = GeneralJournal::where(['transaction_type' => $transaction_type, 'reference_id' => $id, 'account_code' => 42000,'year'=>$year,'workspace_id'=>$user->workspace_id])->first();
                     $generalJournal->amount -= $balance;
                     $generalJournal->updated_by = $user->id;
                     $generalJournal->updated_at = $time;
                     $generalJournal->save();
 
-                    $generalJournal = GeneralJournal::where(['transaction_type' => Config::get('common.transaction_type.salary'), 'reference_id' => $id, 'account_code' => 22000])->first();
+                    $generalJournal = GeneralJournal::where(['transaction_type' => $transaction_type, 'reference_id' => $id, 'account_code' => 22000,'year'=>$year,'workspace_id'=>$user->workspace_id])->first();
                     $generalJournal->amount -= $balance;
                     $generalJournal->updated_by = $user->id;
                     $generalJournal->updated_at = $time;

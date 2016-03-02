@@ -153,6 +153,8 @@ class SalaryPaymentController extends Controller
                 $inputs = $request->input();
                 $user = Auth::user();
                 $time = time();
+                $balance_type = Config::get('common.balance_type_intermediate');
+                $year = CommonHelper::get_current_financial_year();
                 $salaryPayment = SalaryPayment::find($id);
                 $salary = Salary::where(['id' => $salaryPayment->salary_id, 'employee_id' => $salaryPayment->employee_id, 'workspace_id' => $salaryPayment->workspace_id])->first();
                 if ($salary->net > $inputs['salary'] && $salaryPayment->amount > $inputs['salary']) {
@@ -176,26 +178,26 @@ class SalaryPaymentController extends Controller
                     $personalAccount->save();
 
                     //Update Workspace Ledger
-                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 42000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => CommonHelper::get_current_financial_year()])->first();
+                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 42000, 'balance_type' => $balance_type, 'year' => $year])->first();
                     $accountPayableWorkspaceData->balance += $salaryPayment->amount - $inputs['salary']; //Add Wage Payable
                     $accountPayableWorkspaceData->updated_by = $user->id;
                     $accountPayableWorkspaceData->updated_at = $time;
                     $accountPayableWorkspaceData->update();
 
-                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 11000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => CommonHelper::get_current_financial_year()])->first();
+                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 11000, 'balance_type' => $balance_type, 'year' => $year])->first();
                     $accountPayableWorkspaceData->balance += $salaryPayment->amount - $inputs['salary']; //Add Cash
                     $accountPayableWorkspaceData->updated_by = $user->id;
                     $accountPayableWorkspaceData->updated_at = $time;
                     $accountPayableWorkspaceData->update();
 
                     // General Journal Table Impact
-                    $generalJournal = GeneralJournal::where(['transaction_type' => Config::get('common.transaction_type.salary_payment'), 'reference_id' => $id, 'account_code' => 42000])->first();
+                    $generalJournal = GeneralJournal::where(['transaction_type' => Config::get('common.transaction_type.salary_payment'), 'reference_id' => $id, 'account_code' => 42000, 'workspace_id' => $user->workspace_id, 'year' => $year])->first();
                     $generalJournal->amount -= $salaryPayment->amount - $inputs['salary'];
                     $generalJournal->updated_by = $user->id;
                     $generalJournal->updated_at = $time;
                     $generalJournal->save();
 
-                    $generalJournal = GeneralJournal::where(['transaction_type' => Config::get('common.transaction_type.salary_payment'), 'reference_id' => $id, 'account_code' => 11000])->first();
+                    $generalJournal = GeneralJournal::where(['transaction_type' => Config::get('common.transaction_type.salary_payment'), 'reference_id' => $id, 'account_code' => 11000, 'workspace_id' => $user->workspace_id, 'year' => $year])->first();
                     $generalJournal->amount -= $salaryPayment->amount - $inputs['salary'];
                     $generalJournal->updated_by = $user->id;
                     $generalJournal->updated_at = $time;
@@ -204,7 +206,6 @@ class SalaryPaymentController extends Controller
 
             });
         } catch (\Exception $e) {
-            dd($e);
             Session()->flash('error_message', 'Salary payment update cannot successful. Please Try again.');
             return Redirect::back();
         }

@@ -23,10 +23,28 @@ class SalesOrderRequest extends Request
      */
     public function rules()
     {
-        return  [
-            'customer_id' => 'required',
-            'total' => 'required',
-            'product' => 'required|array',
-        ];
+        switch ($this->method()) {
+            case 'GET':
+            case 'DELETE': {
+                return [];
+            }
+            case 'POST': {
+                return [
+                    'customer_id' => 'required',
+                    'total' => 'required',
+                    'product' => 'required|array',
+                ];
+            }
+            case 'PUT':
+            case 'PATCH': {
+                return [
+                    'total' => 'required',
+                    'product' => 'required|array',
+                ];
+            }
+            default:
+                break;
+        }
+
     }
 }

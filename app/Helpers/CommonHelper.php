@@ -8,11 +8,12 @@
 
 namespace App\Helpers;
 
+use App\Models\SalesDeliveryDetail;
 use DB;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Facade;
 
 
-class CommonHelper
+class CommonHelper extends Facade
 {
     /* Get Customer name for Sales Order */
     public static function getCustomerName($id, $type)
@@ -55,6 +56,12 @@ class CommonHelper
     {
         $year=DB::table('financial_years')->where('status','=',1)->first();
         return $year->year;
+    }
+
+    public static function get_delivered_quantity($sales_order_id,$product_id)
+    {
+        $result=SalesDeliveryDetail::where(['sales_order_id'=>$sales_order_id,'product_id'=>$product_id])->first();
+        return $result->delivered_quantity;
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Customer;
 
+use App\Helpers\CommonHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use App\Http\Requests\CustomerRequest;
@@ -60,6 +61,7 @@ class CustomersController extends Controller
                 $inputs = $request->input();
                 $time = time();
                 $user = Auth::user();
+                $year=CommonHelper::get_current_financial_year();
                 $file = $request->file('picture');
                 $customer = new Customer();
 
@@ -95,7 +97,7 @@ class CustomersController extends Controller
 
                 if (!empty($inputs['balance'])) {
                     //Update Workspace Ledger
-                    $workspaceLedger = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 41000, 'balance_type' => Config::get('common.balance_type_intermediate')])->first();
+                    $workspaceLedger = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 41000, 'balance_type' => Config::get('common.balance_type_intermediate'),'year'=>$year])->first();
                     $workspaceLedger->balance += $inputs['balance'];
                     $workspaceLedger->updated_by = $user->id;
                     $workspaceLedger->updated_by = $time;
@@ -106,7 +108,7 @@ class CustomersController extends Controller
                     $generalJournal->date = $time;
                     $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
                     $generalJournal->reference_id = $personal->id;
-                    $generalJournal->year = date('Y');
+                    $generalJournal->year = $year;
                     $generalJournal->account_code = 41000;
                     $generalJournal->workspace_id = $user->workspace_id;
                     $generalJournal->amount = $inputs['balance'];
@@ -118,7 +120,7 @@ class CustomersController extends Controller
 
                 if (!empty($inputs['due'])) {
                     //Update Workspace Ledger
-                    $workspaceLedger = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 12000, 'balance_type' => Config::get('common.balance_type_intermediate')])->first();
+                    $workspaceLedger = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 12000, 'balance_type' => Config::get('common.balance_type_intermediate'),'year'=>$year])->first();
                     $workspaceLedger->balance += $inputs['due'];
                     $workspaceLedger->updated_by = $user->id;
                     $workspaceLedger->updated_by = $time;
@@ -129,7 +131,7 @@ class CustomersController extends Controller
                     $generalJournal->date = $time;
                     $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
                     $generalJournal->reference_id = $personal->id;
-                    $generalJournal->year = date('Y');
+                    $generalJournal->year = $year;
                     $generalJournal->account_code = 12000;
                     $generalJournal->workspace_id = $user->workspace_id;
                     $generalJournal->amount = $inputs['due'];

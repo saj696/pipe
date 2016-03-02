@@ -3,7 +3,7 @@
 <div class="form-group{{ $errors->has('customer_type') ? ' has-error' : '' }}">
     {{ Form::label('customer_type', 'Customer Type', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7">
-        {{ Form::select('customer_type', Config::get('common.sales_customer_type'), Config::get('common.person_type_customer'),['class'=>'form-control','id'=>'sales_customer_type']) }}
+        {{ Form::select('customer_type', Config::get('common.sales_customer_type'), Config::get('common.person_type_customer'),['class'=>'form-control','id'=>'sales_customer_type','disabled']) }}
         @if ($errors->has('customer_type'))
             <span class="help-block">
                 <strong>{{ $errors->first('customer_type') }}</strong>
@@ -16,7 +16,7 @@
     <div class="form-group{{ $errors->has('customer_id') ? ' has-error' : '' }}">
         {{ Form::label('customer_id', 'Customer', ['class'=>'col-md-3 control-label']) }}
         <div class="col-md-7">
-            {{ Form::select('customer_id', $customers, null,['class'=>'form-control','placeholder'=>'Select']) }}
+            {{ Form::select('customer_id', $customers, null,['class'=>'form-control','placeholder'=>'Select','disabled']) }}
             @if ($errors->has('customer_id'))
                 <span class="help-block">
                 <strong>{{ $errors->first('customer_id') }}</strong>
@@ -38,12 +38,12 @@
 
 </div>
 
-<div class="product_list" data-product-id="0">
+<div class="product_list" data-product-id="{{sizeof($salesOrder->salesOrderItems)}}">
     <div class='col-md-offset-3 col-md-2'>
         <label for="">Product Name</label>
     </div>
     <div class='col-md-2'>
-        <label for="">Sales Quantity</label>
+        <label for="">Quantity</label>
     </div>
     <div class='col-md-2'>
         <label for="">Unit Price</label>
@@ -51,6 +51,84 @@
     <div class='col-md-2'>
         <label for="">Total</label>
     </div>
+    @foreach($salesOrder->salesOrderItems as $key=>$item)
+        @if($item->status==4)
+            <div class='form-group single_product'>
+                <div class='col-md-offset-3 col-md-2'>
+                    <input type='text' class='form-control' value='{{ $item->product->title }}' disabled>
+
+                </div>
+                <div class='col-md-2'>
+                    <input disabled type='text' class='form-control pcal single_p_quantity'
+                           name='product[{{ $key }}][sales_quantity]' value="{{ $item->sales_quantity }}"
+                           placeholder='Sales Quantity'>
+                </div>
+                <div class='col-md-2'>
+                    <input disabled
+                           title='W: "{{ $item->product->wholesale_price }}", R: "{{ $item->product->retail_price }}"'
+                           type='text' class='form-control pcal single_p_rate' value="{{ $item->unit_price }}"
+                           name='product[{{ $key }}][unit_price]' placeholder='Unit Price'>
+                </div>
+                <div class='col-md-2'>
+                    <input type='text' class='form-control single_p_total' disabled
+                           value="{{ $item->unit_price*$item->sales_quantity }}">
+                </div>
+            </div>
+        @elseif($item->status==2)
+            <div class='form-group single_product'>
+                <div class='col-md-offset-3 col-md-2'>
+                    <input type='text' class='form-control' value='{{ $item->product->title }}' disabled>
+                    <input class='product_id' type='hidden' value='{{ $item->product_id }}'
+                           name='product[{{ $key }}][product_id]'>
+                </div>
+                <div class='col-md-2'>
+                    <input required
+                           data-delivered="{{ App\Helpers\CommonHelper::get_delivered_quantity($salesOrder->id,$item->product_id) }}"
+                           title="Delivered Quantity: {{ App\Helpers\CommonHelper::get_delivered_quantity($salesOrder->id,$item->product_id) }}"
+                           type='text' class='form-control pcal single_p_quantity'
+                           name='product[{{ $key }}][sales_quantity]' value="{{ $item->sales_quantity }}"
+                           placeholder='Sales Quantity'>
+                </div>
+                <div class='col-md-2'>
+                    <input required
+                           title='W: "{{ $item->product->wholesale_price }}", R: "{{ $item->product->retail_price }}"'
+                           type='text' class='form-control pcal single_p_rate' value="{{ $item->unit_price }}"
+                           name='product[{{ $key }}][unit_price]' placeholder='Unit Price'>
+                </div>
+                <div class='col-md-2'>
+                    <input type='text' class='form-control single_p_total'
+                           value="{{ $item->unit_price*$item->sales_quantity }}">
+                </div>
+            </div>
+        @else
+            <div class='form-group single_product'>
+                <div class='col-md-offset-3 col-md-2'>
+                    <input type='text' class='form-control' value='{{ $item->product->title }}' disabled>
+                    <input class='product_id' type='hidden' value='{{ $item->product_id }}'
+                           name='product[{{ $key }}][product_id]'>
+                </div>
+                <div class='col-md-2'>
+                    <input required type='text' class='form-control pcal single_p_quantity'
+                           name='product[{{ $key }}][sales_quantity]' value="{{ $item->sales_quantity }}"
+                           placeholder='Sales Quantity'>
+                </div>
+                <div class='col-md-2'>
+                    <input required
+                           title='W: "{{ $item->product->wholesale_price }}", R: "{{ $item->product->retail_price }}"'
+                           type='text' class='form-control pcal single_p_rate' value="{{ $item->unit_price }}"
+                           name='product[{{ $key }}][unit_price]' placeholder='Unit Price'>
+                </div>
+                <div class='col-md-2'>
+                    <input type='text' class='form-control single_p_total'
+                           value="{{ $item->unit_price*$item->sales_quantity }}">
+                </div>
+                <div class='col-md-1'>
+                    <span class='btn btn-danger remove_product'>X</span>
+                </div>
+            </div>
+        @endif
+
+    @endforeach
 </div>
 
 <div class="form-group{{ $errors->has('total') ? ' has-error' : '' }}">
@@ -228,14 +306,20 @@
         });
 
         $(document).on('change', '.pcal', function () {
+            var delivered= parseFloat($(this).data('delivered'));
+            var quantity= parseFloat($(this).val());
+            if(quantity < delivered)
+            {
+                alert('Minimum Quantity: '+ delivered);
+                $(this).val("");
+            }
             rowTotal(this);
         });
 
         $(document).on('change', '#paid', function () {
-            var paid= parseFloat($(this).val());
-            var due= parseFloat($('#due').val());
-            if(paid > due)
-            {
+            var paid = parseFloat($(this).val());
+            var due = parseFloat($('#due').val());
+            if (paid > due) {
                 $(this).val("");
             }
             calculateAmount();
