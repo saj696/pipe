@@ -129,13 +129,13 @@ class YearClosingController extends Controller
             }
             else
             {
-                Session()->flash('warning_message', 'All Workspace Account Not Closed Yet!');
+                Session()->flash('warning_message', 'Warning: All Workspace Account Not Closed Yet!');
                 return redirect('year_closing');
             }
         }
         else
         {
-            Session()->flash('warning_message', 'Year Closing Done For This Year!');
+            Session()->flash('warning_message', 'Warning: Year Closing Done For This Year!');
             return redirect('year_closing');
         }
     }

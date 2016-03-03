@@ -56,7 +56,7 @@
                                             {{ $transaction->amount }}
                                         </td>
                                         <td>
-                                            {{ (strtotime($transaction->receiving_date) > strtotime($transaction->sending_date))?$transaction->receiving_date:'Not Yet' }}
+                                            {{ (strtotime($transaction->receiving_date) >= strtotime($transaction->sending_date))?$transaction->receiving_date:'Not Yet' }}
                                         </td>
                                         <td class="text-center">
                                             @if($transaction->workspace_from==Auth::user()->workspace_id && $transaction->received==0)

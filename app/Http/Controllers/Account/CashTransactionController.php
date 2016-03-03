@@ -96,10 +96,10 @@ class CashTransactionController extends Controller
                 $cashWorkspaceDataReceiver->update();
 
                 // General Journal Impact
-                // Sender Cash Amount Credit
+                // Sender Cash Account Credit
                 $generalJournal = New GeneralJournal;
                 $generalJournal->date = time();
-                $generalJournal->transaction_type = Config::get('common.transaction_type.cash_transaction');
+                $generalJournal->transaction_type = Config::get('common.transaction_type.cash_transfer');
                 $generalJournal->year = $currentYear;
                 $generalJournal->account_code = $cashCode;
                 $generalJournal->workspace_id = $cashTransaction->workspace_from;
@@ -108,10 +108,10 @@ class CashTransactionController extends Controller
                 $generalJournal->created_by = Auth::user()->id;
                 $generalJournal->created_at = time();
                 $generalJournal->save();
-                // Receiver Cash Amount Debit
+                // Receiver Cash Account Debit
                 $generalJournal = New GeneralJournal;
                 $generalJournal->date = time();
-                $generalJournal->transaction_type = Config::get('common.transaction_type.cash_transaction');
+                $generalJournal->transaction_type = Config::get('common.transaction_type.cash_transfer');
                 $generalJournal->year = $currentYear;
                 $generalJournal->account_code = $cashCode;
                 $generalJournal->workspace_id = $workspace_id;
@@ -124,6 +124,7 @@ class CashTransactionController extends Controller
         }
         catch (\Exception $e)
         {
+            dd($e);
             Session()->flash('error_message', 'Cash Not Received!');
             return redirect('cash_transaction');
         }

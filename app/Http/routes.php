@@ -53,6 +53,13 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('sales_delivery_details', 'Sales\SalesDeliveryController@save');
     Route::resource('salesDelivery', 'Sales\SalesDeliveryController');
     Route::resource('sales_return', 'Sales\SalesReturnController');
+    Route::resource('adjustments', 'Account\AdjustmentsController');
+    Route::resource('workspace_closing', 'Account\WorkspaceClosingController');
+    Route::resource('year_closing', 'Account\YearClosingController');
+    Route::resource('profile_update', 'User\ProfileUpdateController');
+    Route::resource('cash_transaction', 'Account\CashTransactionController');
+
+    Route::post('adjustment_amounts', array('as' => 'ajax.adjustment_amounts', 'uses' => 'AjaxController@getAdjustmentAmounts'));
 });
 
 Route::post('module_select', array('as' => 'ajax.module_select', 'uses' => 'AjaxController@getModules'));
@@ -62,6 +69,7 @@ Route::post('supplier_select', array('as' => 'ajax.supplier_select', 'uses' => '
 Route::post('employee_select', array('as' => 'ajax.employee_select', 'uses' => 'AjaxController@getEmployees'));
 Route::post('product_select', array('as' => 'ajax.product_select', 'uses' => 'AjaxController@getProducts'));
 Route::post('get_person_due_amount', array('as' => 'ajax.get_person_due_amount', 'uses' => 'AjaxController@getPersonDueAmount'));
+Route::post('transaction_recorder_amount', array('as' => 'ajax.transaction_recorder_amount', 'uses' => 'AjaxController@getTransactionRecorderAmount'));
 
 Route::controllers([
     'auth' => 'Auth\AuthController',
