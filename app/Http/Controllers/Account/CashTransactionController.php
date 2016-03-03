@@ -75,11 +75,51 @@ class CashTransactionController extends Controller
         {
             DB::transaction(function () use ($id)
             {
+                $cashCode = 11000;
+                $currentYear = CommonHelper::get_current_financial_year();
+                $workspace_id = Auth::user()->workspace_id;
                 $cashTransaction = CashTransaction::findOrFail($id);
                 $cashTransaction->received = 1;
                 $cashTransaction->receiving_date = date('d-m-Y');
+                $cashTransaction->updated_by = Auth::user()->id;
+                $cashTransaction->updated_at = time();
                 $cashTransaction->update();
-                // Cash Account Impact
+
+                // Workspace Ledger Impact
+                // Workspace Ledger Cash Credit(-)
+                $cashWorkspaceDataSender = WorkspaceLedger::where(['workspace_id'=>$cashTransaction->workspace_from, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
+                $cashWorkspaceDataSender->balance -= $cashTransaction->amount;
+                $cashWorkspaceDataSender->update();
+                // Workspace Ledger Cash Debit(+)
+                $cashWorkspaceDataReceiver = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$cashCode,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
+                $cashWorkspaceDataReceiver->balance += $cashTransaction->amount;
+                $cashWorkspaceDataReceiver->update();
+
+                // General Journal Impact
+                // Sender Cash Amount Credit
+                $generalJournal = New GeneralJournal;
+                $generalJournal->date = time();
+                $generalJournal->transaction_type = Config::get('common.transaction_type.cash_transaction');
+                $generalJournal->year = $currentYear;
+                $generalJournal->account_code = $cashCode;
+                $generalJournal->workspace_id = $cashTransaction->workspace_from;
+                $generalJournal->amount = $cashTransaction->amount;
+                $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
+                $generalJournal->created_by = Auth::user()->id;
+                $generalJournal->created_at = time();
+                $generalJournal->save();
+                // Receiver Cash Amount Debit
+                $generalJournal = New GeneralJournal;
+                $generalJournal->date = time();
+                $generalJournal->transaction_type = Config::get('common.transaction_type.cash_transaction');
+                $generalJournal->year = $currentYear;
+                $generalJournal->account_code = $cashCode;
+                $generalJournal->workspace_id = $workspace_id;
+                $generalJournal->amount = $cashTransaction->amount;
+                $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
+                $generalJournal->created_by = Auth::user()->id;
+                $generalJournal->created_at = time();
+                $generalJournal->save();
             });
         }
         catch (\Exception $e)
@@ -88,15 +128,7 @@ class CashTransactionController extends Controller
             return redirect('cash_transaction');
         }
 
-        Session()->flash('flash_message', 'Cash Received!');
+        Session()->flash('flash_message', 'Cash Received & Account Debited Successfully!');
         return redirect('cash_transaction');
-    }
-
-    public function update($id, CashTransactionRequest $request)
-    {
-        dd(0);
-
-        Session()->flash('flash_message', 'Transaction Recorder has been updated!');
-        return redirect('recorders');
     }
 }
