@@ -107,9 +107,9 @@ class AjaxController extends Controller
 
         $personal = PersonalAccount::where(['person_type' => $type, 'id' => $person_id])->first();
         if ($slice == 1) {
-            return response()->json($personal->due);
+            return response()->json(isset($personal->due)?$personal->due:0);
         } elseif ($slice == 4) {
-            return response()->json($personal->balance);
+            return response()->json(isset($personal->balance)?$personal->balance:0);
         }
     }
 

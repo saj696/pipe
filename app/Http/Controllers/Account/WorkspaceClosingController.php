@@ -70,7 +70,15 @@ class WorkspaceClosingController extends Controller
                     {
                         if(isset($a[$a[$ci][2]][3]))
                         {
-                            $a[$a[$ci][2]][3] += $a[$ci][3];
+                            $contra = ChartOfAccount::where(['contra_status'=> 1, 'id'=>$a[$ci][0]])->first();
+                            if($contra)
+                            {
+                                $a[$a[$ci][2]][3] -= $a[$ci][3];
+                            }
+                            else
+                            {
+                                $a[$a[$ci][2]][3] += $a[$ci][3];
+                            }
                         }
 
                         // Closing Balance
