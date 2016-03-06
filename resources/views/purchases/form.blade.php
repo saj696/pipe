@@ -22,7 +22,7 @@
         @endif
     </div>
 </div>
-<div class="form-group">
+<div class="form-group" style="margin-bottom: 40px">
     {{ Form::label('transportation_cost', 'Transportation Cost', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('transportation_cost') ? ' has-error' : '' }}">
         {{ Form::text('transportation_cost', 0,['class'=>'form-control']) }}
@@ -87,56 +87,47 @@ $old_items = isset($purchase) ? $purchase['purchaseDetails'] : false;
             </div>
         @endforeach
     @else
-        <div class="col-md-12 purchase_row">
-            <div class="col-md-3">
-                <div class="form-group">
-                    {{ Form::label('material_id', 'Material', ['class'=>'col-md-4 control-label']) }}
-                    <div class="col-md-8">
-                        {{ Form::select('items[0][material_id]',$materials, null,['class'=>'form-control material_id','id'=>'','required']) }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    {{ Form::label('quantity', 'Quantity', ['class'=>'col-md-4 control-label']) }}
-                    <div class="col-md-8">
-                        {{ Form::text('items[0][quantity]', null,['class'=>'form-control quantity','id'=>'','required']) }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    {{ Form::label('received_quantity', 'Received Quantity', ['class'=>'col-md-4 control-label']) }}
-                    <div class="col-md-8">
-                        {{ Form::text('items[0][received_quantity]', null,['class'=>'form-control received_quantity','required','id'=>'']) }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    {{ Form::label('unit_price', 'Unit Price', ['class'=>'col-md-4 control-label']) }}
-                    <div class="col-md-8">
-                        {{ Form::text('items[0][unit_price]', null,['class'=>'form-control unit_price','id'=>'','required']) }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <label for="quantity" class="col-md-4 control-label">Total</label>
-                <div class="col-md-4">
-                    <span class="badge badge-info row_total" style="margin-top: 10px">0</span>
-                </div>
-                <div class="col-md-4">
-                    <i class="fa fa-close" onclick="closeIt(this)"
-                       style="color: red;margin-top: 10px; cursor: pointer"></i>
-                </div>
-            </div>
+        <div class="col-md-offset-1 col-md-10 purchase_row">
+            <table class="table table-bordered">
+                {{--<tr>
+                    <th class="text-center">Material</th>
+                    <th class="text-center">Quantity</th>
+                    <th class="text-center">Received Quantity</th>
+                    <th class="text-center">Unit Price</th>
+                    <th class="text-center">Total</th>
+                    <th class="text-center">&nbsp;</th>
+                </tr>--}}
+                <tr>
+                    <td width="25%">
+                        {{ Form::select('items[0][material_id]',$materials, null,['class'=>'form-control material_id','id'=>'','required','placeholder'=>'Select Material']) }}
+                    </td>
+                    <td>
+                        {{ Form::text('items[0][quantity]', null,['class'=>'form-control quantity','id'=>'','required','placeholder'=>'Quantity']) }}
+                    </td>
+                    <td>
+                        {{ Form::text('items[0][received_quantity]', null,['class'=>'form-control received_quantity','required','id'=>'','placeholder'=>'Received Quantity']) }}
+                    </td>
+                    <td>
+                        {{ Form::text('items[0][unit_price]', null,['class'=>'form-control unit_price','id'=>'','required','placeholder'=>'Unit Price']) }}
+                    </td>
+                    <td width="15%" class="text-center">
+                        <span class="badge badge-info row_total" style="margin-top: 10px">0</span>
+                    </td>
+                    <td>
+                        <i class="fa fa-close" onclick="closeIt(this)"
+                           style="color: red;margin-top: 10px; cursor: pointer"></i>
+                    </td>
+                </tr>
+            </table>
         </div>
     @endif
 
 </div>
-<button type="button" onclick="addMore()" class="btn-circle btn btn-success pull-right" style="margin: 10px 0">Add
-    more
-</button>
+<div class="col-md-12 text-center">
+    <button type="button" onclick="addMore()" class="btn-circle btn btn-success" style="margin: 10px 0">Add
+        more
+    </button>
+</div>
 
 <div class="row">
     <div class="col-md-3 col-md-offset-9">
