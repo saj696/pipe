@@ -58,7 +58,7 @@
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.2.3/css/simple-line-icons.css" rel="stylesheet" type="text/css"/>
-{{--    <link href="{{ URL::asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css"/>--}}
+    {{--    <link href="{{ URL::asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css"/>--}}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
     <link href="{{ URL::asset('css/simple-line-icons.min.css') }}" rel="stylesheet" type="text/css"/>
@@ -123,7 +123,7 @@
                         @else
                             <img alt="" class="img-circle" src="{{ URL::asset('public/image/jr_small.jpg') }}"/>
                         @endif
-					<span class="username username-hide-on-mobile">
+                        <span class="username username-hide-on-mobile">
 					@if (Auth::check())	{{ Auth::user()->username }} @else {{ 'Guest' }}@endif</span>
                         <i class="fa fa-angle-down"></i>
                     </a>
@@ -149,58 +149,62 @@
     <!-- BEGIN SIDEBAR -->
     @if (Auth::check())
         <?php
-//        $components = App\Helpers\UserHelper::get_task_module_component('position_left_01');
+        //        $components = App\Helpers\UserHelper::get_task_module_component('position_left_01');
         $menus = Cache::get('menu');
         ?>
-    <div class="page-sidebar-wrapper">
-        <div class="page-sidebar navbar-collapse collapse">
-            <ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
-                <li class="sidebar-toggler-wrapper">
-                    <div class="sidebar-toggler">
-                    </div>
-                </li>
+        <div class="page-sidebar-wrapper">
+            <div class="page-sidebar navbar-collapse collapse">
+                <ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
+                    <li class="sidebar-toggler-wrapper">
+                        <div class="sidebar-toggler">
+                        </div>
+                    </li>
 
-                <?php
-                if(is_array($menus) && sizeof($menus)>0)
-                {
+                    <?php
+                    $route_uri = Route::getCurrentRoute()->getName();
+                    $routeName = strstr($route_uri, '.', true);
+                    $activeModuleId = App\Helpers\UserHelper::get_module_name($routeName);
+
+                    if(is_array($menus) && sizeof($menus)>0)
+                    {
                     foreach($menus as $key1=>$component)
                     {
-                        foreach($component['modules'] as $key2=>$module)
-                        {
-                        ?>
-                            <li class="{{ ($key2==0)?'start active open':'' }}">
-                                <a href="javascript:;">
-                                    <i class="{{ $module['module_icon'] }}"></i>
-                                    <span class="title">{{ $module['module_name'] }}</span>
-                                    <span class="selected"></span>
-                                    <span class="arrow open"></span>
+                    foreach($component['modules'] as $key2=>$module)
+                    {
+                    ?>
+                    <li class="{{ (isset($activeModuleId) && $activeModuleId==$module['id'])?'active open':''}} module">
+                        <a href="javascript:;">
+                            <i class="{{ $module['module_icon'] }}"></i>
+                            <span class="title">{{ $module['module_name'] }}</span>
+                            <span class="selected"></span>
+                            <span class="arrow open"></span>
+                        </a>
+                        <ul class="sub-menu">
+                            <?php
+                            foreach($module['tasks'] as $task)
+                            {
+                            ?>
+                            <li class="active open task">
+                                <a href="{{ url('/'.$task->route) }}" style="color:{{ $task->route==$routeName? '#1caf9a':''}}">
+                                    <i class="{{ $task->task_icon }}"></i>
+                                    {{ $task->task_name }}
                                 </a>
-                                <ul class="sub-menu">
-                                    <?php
-                                    foreach($module['tasks'] as $task)
-                                    {
-                                    ?>
-                                    <li class="active">
-                                        <a href="{{ url('/'.$task->route) }}">
-                                            <i class="{{ $task->task_icon }}"></i>
-                                            {{ $task->task_name }}
-                                        </a>
-                                    </li>
-                                    <?php
-                                    }
-                                    ?>
-                                </ul>
                             </li>
-                        <?php
-                        }
-                        ?>
+                            <?php
+                            }
+                            ?>
+                        </ul>
+                    </li>
                     <?php
                     }
-                }
-                ?>
-            </ul>
+                    ?>
+                    <?php
+                    }
+                    }
+                    ?>
+                </ul>
+            </div>
         </div>
-    </div>
     @endif
 
     <div class="page-content-wrapper">
@@ -223,9 +227,9 @@
                 </div>
             </div>
 
-            {{--<h3 class="page-title">
+            <h3 class="page-title">
                 Dashboard
-            </h3>--}}
+            </h3>
             <div class="page-bar">
                 <ul class="page-breadcrumb">
                     <li>
@@ -237,13 +241,13 @@
                         <a href="{{ url('/')}}">Dashboard</a>
                     </li>
                 </ul>
-                {{--<div class="page-toolbar">
+                <div class="page-toolbar">
                     <div id="dashboard-report-range" class="pull-right tooltips btn btn-fit-height grey-salt" data-placement="top" data-original-title="Change dashboard date range">
                         <i class="icon-calendar"></i>&nbsp;
                         <span class="thin uppercase visible-lg-inline-block">&nbsp;</span>&nbsp;
                         <i class="fa fa-angle-down"></i>
                     </div>
-                </div>--}}
+                </div>
             </div>
             <div class="clearfix">
             </div>
@@ -292,7 +296,9 @@
     </div>
 </div>
 
-
+<style>
+    .activeTask {color: #ffb848;}
+</style>
 <!-- END FOOTER -->
 <!-- BEGIN JAVASCRIPTS(Load javascripts at bottom, this will reduce page load time) -->
 <!-- BEGIN CORE PLUGINS -->
@@ -317,6 +323,21 @@
         Tasks.initDashboardWidget();
         TableAdvanced.init();
         UIToastr.init();
+    });
+
+    $(document).ready(function ()
+    {
+        $(document).on("click",".module",function()
+        {
+            $('.module').removeClass('active open');
+            $(this).addClass('active open');
+        });
+
+        $(document).on("click",".task",function()
+        {
+            $('.task').removeClass('active');
+            $(this).addClass('active');
+        });
     });
 </script>
 <!-- END JAVASCRIPTS -->

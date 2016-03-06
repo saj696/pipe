@@ -164,7 +164,9 @@ trait AuthenticatesUsers
     {
         Auth::logout();
         Cache::forget('menu');
-        return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : '/');
+        Session::flush();
+        return redirect(\URL::previous());
+//        return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : '/');
     }
 
     /**

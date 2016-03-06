@@ -95,4 +95,10 @@ class UserHelper
             ->first();
         return $perm;
     }
+
+    public static function get_module_name($route)
+    {
+        $module_id = Task::where('route', $route)->value('module_id');
+        return $module_id;
+    }
 }
