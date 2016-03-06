@@ -24,9 +24,9 @@ class LogEntriesHandler extends SocketHandler
     protected $logToken;
 
     /**
-     * @param string  $token  Log token supplied by LogEntries
+     * @param string $token Log token supplied by LogEntries
      * @param boolean $useSSL Whether or not SSL encryption should be used.
-     * @param int     $level  The minimum logging level to trigger this handler
+     * @param int $level The minimum logging level to trigger this handler
      * @param boolean $bubble Whether or not messages that are handled should bubble up the stack.
      *
      * @throws MissingExtensionException If SSL encryption is set to true and OpenSSL is missing
@@ -45,7 +45,7 @@ class LogEntriesHandler extends SocketHandler
     /**
      * {@inheritdoc}
      *
-     * @param  array  $record
+     * @param  array $record
      * @return string
      */
     protected function generateDataStream($record)

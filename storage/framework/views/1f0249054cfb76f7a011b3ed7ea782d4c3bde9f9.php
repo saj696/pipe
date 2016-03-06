@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 
-<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
 <html lang="en">
 <!--<![endif]-->
@@ -49,8 +51,10 @@
     <script src="<?php echo e(URL::asset('js/tasks.js')); ?>" type="text/javascript"></script>
     <script src="<?php echo e(URL::asset('js/login.js')); ?>" type="text/javascript"></script>
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.2.3/css/simple-line-icons.css" rel="stylesheet" type="text/css"/>
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet"
+          type="text/css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.2.3/css/simple-line-icons.css"
+          rel="stylesheet" type="text/css"/>
     <?php /*    <link href="<?php echo e(URL::asset('css/font-awesome.min.css')); ?>" rel="stylesheet" type="text/css"/>*/ ?>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
@@ -71,7 +75,8 @@
     <!-- END PAGE STYLES -->
     <!-- BEGIN THEME STYLES -->
     <!-- DOC: To use 'rounded corners' style just load 'components-rounded.css' stylesheet instead of 'components.css' in the below style tag -->
-    <link href="<?php echo e(URL::asset('css/components.css')); ?>" id="style_components" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo e(URL::asset('css/components.css')); ?>" id="style_components" rel="stylesheet"
+          type="text/css"/>
     <link href="<?php echo e(URL::asset('css/plugins.css')); ?>" rel="stylesheet" type="text/css"/>
     <link href="<?php echo e(URL::asset('css/layout.css')); ?>" rel="stylesheet" type="text/css"/>
     <link href="<?php echo e(URL::asset('css/darkblue.css')); ?>" rel="stylesheet" type="text/css" id="style_color"/>
@@ -98,37 +103,37 @@
 <?php echo $__env->yieldContent('content'); ?>
 
 <?php /*<div class="content">*/ ?>
-    <?php /*<!-- BEGIN LOGIN FORM -->*/ ?>
-    <?php /*<form class="login-form" action="index.html" method="post">*/ ?>
-        <?php /*<h3 class="form-title">Sign In</h3>*/ ?>
-        <?php /*<div class="alert alert-danger display-hide">*/ ?>
-            <?php /*<button class="close" data-close="alert"></button>*/ ?>
-			<?php /*<span>*/ ?>
-			<?php /*Enter any username and password. </span>*/ ?>
-        <?php /*</div>*/ ?>
-        <?php /*<div class="form-group">*/ ?>
-            <?php /*<!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->*/ ?>
-            <?php /*<label class="control-label visible-ie8 visible-ie9">Username</label>*/ ?>
-            <?php /*<input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off" placeholder="Username" name="username"/>*/ ?>
-        <?php /*</div>*/ ?>
-        <?php /*<div class="form-group">*/ ?>
-            <?php /*<label class="control-label visible-ie8 visible-ie9">Password</label>*/ ?>
-            <?php /*<input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="password"/>*/ ?>
-        <?php /*</div>*/ ?>
-        <?php /*<div class="form-actions">*/ ?>
-            <?php /*<button type="submit" class="btn btn-success uppercase">Login</button>*/ ?>
-            <?php /*<label class="rememberme check">*/ ?>
-                <?php /*<input type="checkbox" name="remember" value="1"/>Remember </label>*/ ?>
-            <?php /*<a href="javascript:;" id="forget-password" class="forget-password">Forgot Password?</a>*/ ?>
-        <?php /*</div>*/ ?>
-    <?php /*</form>*/ ?>
+<?php /*<!-- BEGIN LOGIN FORM -->*/ ?>
+<?php /*<form class="login-form" action="index.html" method="post">*/ ?>
+<?php /*<h3 class="form-title">Sign In</h3>*/ ?>
+<?php /*<div class="alert alert-danger display-hide">*/ ?>
+<?php /*<button class="close" data-close="alert"></button>*/ ?>
+<?php /*<span>*/ ?>
+<?php /*Enter any username and password. </span>*/ ?>
+<?php /*</div>*/ ?>
+<?php /*<div class="form-group">*/ ?>
+<?php /*<!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->*/ ?>
+<?php /*<label class="control-label visible-ie8 visible-ie9">Username</label>*/ ?>
+<?php /*<input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off" placeholder="Username" name="username"/>*/ ?>
+<?php /*</div>*/ ?>
+<?php /*<div class="form-group">*/ ?>
+<?php /*<label class="control-label visible-ie8 visible-ie9">Password</label>*/ ?>
+<?php /*<input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="password"/>*/ ?>
+<?php /*</div>*/ ?>
+<?php /*<div class="form-actions">*/ ?>
+<?php /*<button type="submit" class="btn btn-success uppercase">Login</button>*/ ?>
+<?php /*<label class="rememberme check">*/ ?>
+<?php /*<input type="checkbox" name="remember" value="1"/>Remember </label>*/ ?>
+<?php /*<a href="javascript:;" id="forget-password" class="forget-password">Forgot Password?</a>*/ ?>
+<?php /*</div>*/ ?>
+<?php /*</form>*/ ?>
 <?php /*</div>*/ ?>
 <div class="copyright">
     2016 © Soft-BD Ltd.
 </div>
 
 <script>
-    jQuery(document).ready(function() {
+    jQuery(document).ready(function () {
         Metronic.init(); // init metronic core components
         Layout.init(); // init current layout
         Login.init();

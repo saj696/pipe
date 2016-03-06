@@ -11,9 +11,9 @@
 
 namespace Monolog\Handler;
 
-use RollbarNotifier;
 use Exception;
 use Monolog\Logger;
+use RollbarNotifier;
 
 /**
  * Sends errors to Rollbar
@@ -38,8 +38,8 @@ class RollbarHandler extends AbstractProcessingHandler
 
     /**
      * @param RollbarNotifier $rollbarNotifier RollbarNotifier object constructed with valid token
-     * @param integer         $level           The minimum logging level at which this handler will be triggered
-     * @param boolean         $bubble          Whether the messages that are handled can bubble up the stack or not
+     * @param integer $level The minimum logging level at which this handler will be triggered
+     * @param boolean $bubble Whether the messages that are handled can bubble up the stack or not
      */
     public function __construct(RollbarNotifier $rollbarNotifier, $level = Logger::ERROR, $bubble = true)
     {

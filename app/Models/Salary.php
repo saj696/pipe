@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Salary extends Model
 {
-    public $timestamps=false;
+    public $timestamps = false;
 
     protected $fillable = [
         'extra_hours',

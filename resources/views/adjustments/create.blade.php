@@ -7,7 +7,8 @@
                 <i class="fa fa-gift"></i> New Adjustment
             </div>
             <div>
-                <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="{{ url('/adjustments' )}}">Back</a>
+                <a style="margin: 12px; padding: 5px;" class="label label-success pull-right"
+                   href="{{ url('/adjustments' )}}">Back</a>
             </div>
         </div>
         <div class="portlet-body form">

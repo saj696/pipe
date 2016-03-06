@@ -37,7 +37,8 @@
         @endforeach
     @else
         <tr>
-            <td colspan="8" style="text-align: center;color: #ff0000">Already ready generated salary or no data found.</td>
+            <td colspan="8" style="text-align: center;color: #ff0000">Already ready generated salary or no data found.
+            </td>
         </tr>
     @endif
 </table>

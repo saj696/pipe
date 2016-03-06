@@ -3,8 +3,8 @@
 namespace Illuminate\Routing\Middleware;
 
 use Closure;
-use Illuminate\Http\Response;
 use Illuminate\Cache\RateLimiter;
+use Illuminate\Http\Response;
 
 class ThrottleRequests
 {
@@ -18,7 +18,7 @@ class ThrottleRequests
     /**
      * Create a new request throttler.
      *
-     * @param  \Illuminate\Cache\RateLimiter  $limiter
+     * @param  \Illuminate\Cache\RateLimiter $limiter
      * @return void
      */
     public function __construct(RateLimiter $limiter)
@@ -29,10 +29,10 @@ class ThrottleRequests
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @param  int  $maxAttempts
-     * @param  int  $decayMinutes
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Closure $next
+     * @param  int $maxAttempts
+     * @param  int $decayMinutes
      * @return mixed
      */
     public function handle($request, Closure $next, $maxAttempts = 60, $decayMinutes = 1)
@@ -62,7 +62,7 @@ class ThrottleRequests
     /**
      * Resolve request signature.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return string
      */
     protected function resolveRequestSignature($request)

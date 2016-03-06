@@ -2,17 +2,12 @@
 
 namespace App\Http\Controllers\Account;
 
-use App\Http\Requests;
-use App\Models\ChartOfAccount;
-use Carbon\Carbon;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\Http\Requests\ChartOfAccountRequest;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
-use Session;
+use App\Models\ChartOfAccount;
 use DB;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
+use Session;
 
 class ChartOfAccountsController extends Controller
 {
@@ -25,10 +20,9 @@ class ChartOfAccountsController extends Controller
     {
         $charts = ChartOfAccount::where('status', 1)->get();
 
-        $accounts = ['cid'=>[], 'parent'=>[]];
+        $accounts = ['cid' => [], 'parent' => []];
 
-        foreach($charts as $chart)
-        {
+        foreach ($charts as $chart) {
             $accounts['cid'][$chart->id] = $chart;
             $accounts['parent'][$chart->parent][] = $chart->id;
         }
@@ -56,8 +50,7 @@ class ChartOfAccountsController extends Controller
         $chart->parent = $request->input('parent');
         $chart->name = $request->input('name');
         $chart->code = $request->input('code');
-        if($request->input('contra_status'))
-        {
+        if ($request->input('contra_status')) {
             $chart->contra_status = 1;
             $chart->contra_code = $request->input('contra_id');
         }
@@ -82,8 +75,7 @@ class ChartOfAccountsController extends Controller
         $chart->name = $request->input('name');
         $chart->code = $request->input('code');
         $chart->status = $request->input('status');
-        if($request->input('contra_status'))
-        {
+        if ($request->input('contra_status')) {
             $chart->contra_status = 1;
             $chart->contra_code = $request->input('contra_id');
         }
@@ -96,18 +88,14 @@ class ChartOfAccountsController extends Controller
     public function buildChartTree($parent, $accounts)
     {
         $html = "";
-        if(isset($accounts['parent'][$parent]))
-        {
+        if (isset($accounts['parent'][$parent])) {
             $html .= "<ul>";
-            foreach($accounts['parent'][$parent] as $ca)
-            {
-                if(!isset($accounts['parent'][$ca]))
-                {
-                    $html .= "<li style='margin: 5px;'>" . "<label style='padding: 2px 8px 2px 8px;' class='btn btn-circle red'><a style='color:white;' href='".url('/charts/'.$accounts['cid'][$ca]->id.'/edit' )."'>". $accounts['cid'][$ca]->name . "</a></label>". "</li>";
+            foreach ($accounts['parent'][$parent] as $ca) {
+                if (!isset($accounts['parent'][$ca])) {
+                    $html .= "<li style='margin: 5px;'>" . "<label style='padding: 2px 8px 2px 8px;' class='btn btn-circle red'><a style='color:white;' href='" . url('/charts/' . $accounts['cid'][$ca]->id . '/edit') . "'>" . $accounts['cid'][$ca]->name . "</a></label>" . "</li>";
                 }
-                if(isset($accounts['parent'][$ca]))
-                {
-                    $html .= "<li style='margin: 5px;'>" . "<label style='padding: 2px 8px 2px 8px;' class='btn btn-circle green'><a style='color:white;' href='".url('/charts/'.$accounts['cid'][$ca]->id.'/edit' )."'>" . $accounts['cid'][$ca]->name . "</a></label>";
+                if (isset($accounts['parent'][$ca])) {
+                    $html .= "<li style='margin: 5px;'>" . "<label style='padding: 2px 8px 2px 8px;' class='btn btn-circle green'><a style='color:white;' href='" . url('/charts/' . $accounts['cid'][$ca]->id . '/edit') . "'>" . $accounts['cid'][$ca]->name . "</a></label>";
                     $html .= $this->buildChartTree($ca, $accounts);
                     $html .= "</li>";
                 }

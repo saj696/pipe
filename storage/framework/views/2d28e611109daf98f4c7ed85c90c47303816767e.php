@@ -8,7 +8,8 @@
                         <i class="fa fa-coffee"></i>Module Detail
                     </div>
                     <div>
-                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="<?php echo e(url('/modules' )); ?>">Back</a>
+                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right"
+                           href="<?php echo e(url('/modules')); ?>">Back</a>
                     </div>
                 </div>
                 <div class="portlet-body">
@@ -34,26 +35,26 @@
                             </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <?php echo e($module->name_en); ?>
+                            <tr>
+                                <td>
+                                    <?php echo e($module->name_en); ?>
 
-                                    </td>
-                                    <td>
-                                        <p><?php echo e($module->component->name_en); ?></p>
-                                    </td>
-                                    <td>
-                                        <p><?php echo e($module->description); ?></p>
-                                    </td>
-                                    <td>
-                                        <?php echo e($module->icon); ?>
+                                </td>
+                                <td>
+                                    <p><?php echo e($module->component->name_en); ?></p>
+                                </td>
+                                <td>
+                                    <p><?php echo e($module->description); ?></p>
+                                </td>
+                                <td>
+                                    <?php echo e($module->icon); ?>
 
-                                    </td>
-                                    <td>
-                                        <?php echo e($module->ordering); ?>
+                                </td>
+                                <td>
+                                    <?php echo e($module->ordering); ?>
 
-                                    </td>
-                                </tr>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>

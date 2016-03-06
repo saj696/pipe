@@ -2,8 +2,8 @@
 
 namespace Illuminate\Foundation\Testing\Concerns;
 
-use Mockery;
 use Exception;
+use Mockery;
 
 trait MocksApplicationServices
 {
@@ -12,7 +12,7 @@ trait MocksApplicationServices
      *
      * These events will be mocked, so that handlers will not actually be executed.
      *
-     * @param  array|string  $events
+     * @param  array|string $events
      * @return $this
      */
     public function expectsEvents($events)
@@ -25,7 +25,8 @@ trait MocksApplicationServices
             foreach ($events as $key => $event) {
                 if ((is_string($called) && $called === $event) ||
                     (is_string($called) && is_subclass_of($called, $event)) ||
-                    (is_object($called) && $called instanceof $event)) {
+                    (is_object($called) && $called instanceof $event)
+                ) {
                     unset($events[$key]);
                 }
             }
@@ -34,7 +35,7 @@ trait MocksApplicationServices
         $this->beforeApplicationDestroyed(function () use (&$events) {
             if ($events) {
                 throw new Exception(
-                    'The following events were not fired: ['.implode(', ', $events).']'
+                    'The following events were not fired: [' . implode(', ', $events) . ']'
                 );
             }
         });
@@ -65,7 +66,7 @@ trait MocksApplicationServices
      *
      * These jobs will be mocked, so that handlers will not actually be executed.
      *
-     * @param  array|string  $jobs
+     * @param  array|string $jobs
      * @return $this
      */
     protected function expectsJobs($jobs)

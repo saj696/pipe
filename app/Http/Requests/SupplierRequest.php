@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
 
 class SupplierRequest extends Request
 {
@@ -24,9 +23,20 @@ class SupplierRequest extends Request
     public function rules()
     {
         return [
-            'suppliers_type'=>'required',
-            'company_name'=>'required',
-            'company_office_phone'=>'required',
+            'suppliers_type' => 'required',
+            'company_name' => 'required',
+            'company_office_phone' => 'required|min:8',
+            'company_office_fax' => 'min:8',
+            'contact_person_phone' => 'min:8'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'company_office_phone.min' => 'The company office phone must be at least 8 digits.',
+            'company_office_fax.min' => 'The company office fax must be at least 8 digits.',
+            'contact_person_phone.min' => 'The contact person phone must be at least 8 digits.',
         ];
     }
 }

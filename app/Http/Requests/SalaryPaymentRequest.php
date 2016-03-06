@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-
 class SalaryPaymentRequest extends Request
 {
     /**
@@ -23,26 +21,23 @@ class SalaryPaymentRequest extends Request
      */
     public function rules()
     {
-        switch($this->method())
-        {
+        switch ($this->method()) {
             case 'GET':
-            case 'DELETE':
-            {
+            case 'DELETE': {
                 return [];
             }
-            case 'POST':
-            {
+            case 'POST': {
                 return [
-                    'employee.*.due' =>'required',
-                    'employee.*.pay_now'=>'required'
+                    'employee.*.due' => 'required',
+                    'employee.*.pay_now' => 'required'
                 ];
             }
             case 'PUT':
-            case 'PATCH':
-            {
+            case 'PATCH': {
                 return [];
             }
-            default:break;
+            default:
+                break;
         }
 
     }

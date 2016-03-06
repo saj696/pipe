@@ -29,7 +29,7 @@ class ImplicitReturnPass extends CodeCleanerPass
         if ($last instanceof Expr) {
             $nodes[count($nodes) - 1] = new ReturnStmt($last, array(
                 'startLine' => $last->getLine(),
-                'endLine'   => $last->getLine(),
+                'endLine' => $last->getLine(),
             ));
         }
 

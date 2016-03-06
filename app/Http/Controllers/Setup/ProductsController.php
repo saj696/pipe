@@ -2,16 +2,14 @@
 
 namespace App\Http\Controllers\Setup;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests;
+use App\Http\Requests\ProductRequest;
+use App\Models\Material;
 use App\Models\Product;
 use App\Models\ProductType;
-use App\Models\Material;
-use Illuminate\Http\Request;
-use App\Http\Requests\ProductRequest;
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 
 class ProductsController extends Controller
 {
@@ -19,6 +17,7 @@ class ProductsController extends Controller
     {
         $this->middleware('perm');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -26,8 +25,8 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        $products = Product::with('productTypes','materials')->paginate(Config::get('common.pagination'));
-        return view('products/index')->with('products',$products);
+        $products = Product::with('productTypes', 'materials')->paginate(Config::get('common.pagination'));
+        return view('products/index')->with('products', $products);
     }
 
     /**
@@ -37,16 +36,15 @@ class ProductsController extends Controller
      */
     public function create()
     {
-        $product_types = ProductType::lists('title','id');
-        $color = Material::where('type',3)->lists('name','id');
-
-        return view('products/create',compact('product_types','color'));
+        $product_types = ProductType::lists('title', 'id');
+        $color = Material::where('type', 2)->lists('name', 'id');
+        return view('products/create', compact('product_types', 'color'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(ProductRequest $request)
@@ -57,10 +55,9 @@ class ProductsController extends Controller
         $product->length = $request->input('length');
         $product->diameter = $request->input('diameter');
         $product->weight = $weight = $request->input('weight');
-        if(!is_numeric($weight))
-        {
-            $nmub = explode('/',$weight);
-            $product->weight = $nmub[1]/$nmub[0];
+        if (!is_numeric($weight)) {
+            $nmub = explode('/', $weight);
+            $product->weight = $nmub[1] / $nmub[0];
         }
         $product->color = $request->input('color');
         $product->wholesale_price = $request->input('wholesale_price');
@@ -76,7 +73,7 @@ class ProductsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
 //    public function show($id)
@@ -87,22 +84,22 @@ class ProductsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         $product = Product::findOrFail($id);
-        $product_types = ProductType::lists('title','id');
-        $color = Material::where('type',3)->lists('name','id');
-        return view('products.edit',compact('product','product_types','color'));
+        $product_types = ProductType::lists('title', 'id');
+        $color = Material::where('type', 3)->lists('name', 'id');
+        return view('products.edit', compact('product', 'product_types', 'color'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(ProductRequest $request, $id)
@@ -114,10 +111,9 @@ class ProductsController extends Controller
         $product->length = $request->input('length');
         $product->diameter = $request->input('diameter');
         $product->weight = $weight = $request->input('weight');
-        if(!is_numeric($weight))
-        {
-            $nmub = explode('/',$weight);
-            $product->weight = $nmub[1]/$nmub[0];
+        if (!is_numeric($weight)) {
+            $nmub = explode('/', $weight);
+            $product->weight = $nmub[1] / $nmub[0];
         }
         $product->color = $request->input('color');
         $product->wholesale_price = $request->input('wholesale_price');
@@ -133,7 +129,7 @@ class ProductsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
 //    public function destroy($id)

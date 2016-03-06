@@ -2,16 +2,12 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Requests;
-use App\Models\UserGroup;
-use Carbon\Carbon;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\Http\Requests\UserGroupRequest;
+use App\Models\UserGroup;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
 use Session;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 
 class UserGroupsController extends Controller
 {

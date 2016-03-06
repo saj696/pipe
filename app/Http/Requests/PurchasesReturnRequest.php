@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-
 class PurchasesReturnRequest extends Request
 {
     /**
@@ -24,8 +22,8 @@ class PurchasesReturnRequest extends Request
     public function rules()
     {
         return [
-            'supplier_id'=>'required',
-            'purchase_return_date'=>'required',
+            'supplier_id' => 'required',
+            'purchase_return_date' => 'required',
         ];
     }
 }

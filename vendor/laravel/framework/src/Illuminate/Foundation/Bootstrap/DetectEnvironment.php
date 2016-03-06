@@ -11,12 +11,12 @@ class DetectEnvironment
     /**
      * Bootstrap the given application.
      *
-     * @param  \Illuminate\Contracts\Foundation\Application  $app
+     * @param  \Illuminate\Contracts\Foundation\Application $app
      * @return void
      */
     public function bootstrap(Application $app)
     {
-        if (! $app->configurationIsCached()) {
+        if (!$app->configurationIsCached()) {
             try {
                 (new Dotenv($app->environmentPath(), $app->environmentFile()))->load();
             } catch (InvalidPathException $e) {

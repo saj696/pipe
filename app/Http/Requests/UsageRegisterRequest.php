@@ -2,9 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-use App\Models\UsageRegister;
-
 class UsageRegisterRequest extends Request
 {
     /**
@@ -25,31 +22,28 @@ class UsageRegisterRequest extends Request
      */
     public function rules()
     {
-        switch($this->method())
-        {
+        switch ($this->method()) {
             case 'GET':
-            case 'DELETE':
-            {
+            case 'DELETE': {
                 return [];
             }
-            case 'POST':
-            {
+            case 'POST': {
                 return [
-                    'material_id'=>'required|array',
-                    'date'=>'required|date',
-                    'usage'=>'required|array'
+                    'material_id' => 'required|array',
+                    'date' => 'required|date',
+                    'usage' => 'required|array'
                 ];
             }
             case 'PUT':
-            case 'PATCH':
-            {
+            case 'PATCH': {
                 return [
-                    'material_id'=>'required|integer',
-                    'date'=>'required|date',
-                    'usage'=>'required|integer'
+                    'material_id' => 'required|integer',
+                    'date' => 'required|date',
+                    'usage' => 'required|integer'
                 ];
             }
-            default:break;
+            default:
+                break;
         }
     }
 }

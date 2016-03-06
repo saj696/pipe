@@ -14,18 +14,18 @@
                     <div class="table-scrollable">
                         <table class="table table-bordered table-hover" style="border-top: 0px;">
                             <tbody>
-                                <tr>
-                                    <td>
-                                        {{ Form::open(['url'=>'workspace_closing']) }}
-                                        {!! csrf_field() !!}
-                                        <div class="form-actions">
-                                            <div class="col-md-12 text-center">
-                                                {{ Form::submit('Account Close', ['class'=>'btn btn-circle green']) }}
-                                            </div>
+                            <tr>
+                                <td>
+                                    {{ Form::open(['url'=>'workspace_closing']) }}
+                                    {!! csrf_field() !!}
+                                    <div class="form-actions">
+                                        <div class="col-md-12 text-center">
+                                            {{ Form::submit('Account Close', ['class'=>'btn btn-circle green']) }}
                                         </div>
-                                        {{ Form::close() }}
-                                    </td>
-                                </tr>
+                                    </div>
+                                    {{ Form::close() }}
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>

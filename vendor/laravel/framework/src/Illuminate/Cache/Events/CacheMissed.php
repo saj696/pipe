@@ -21,8 +21,8 @@ class CacheMissed
     /**
      * Create a new event instance.
      *
-     * @param  string  $event
-     * @param  array  $tags
+     * @param  string $event
+     * @param  array $tags
      * @return void
      */
     public function __construct($key, array $tags = [])

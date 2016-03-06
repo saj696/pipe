@@ -55,7 +55,7 @@ trait Componentable
         $data = $this->getComponentData($component['signature'], $arguments);
 
         return new HtmlString(
-          $this->view->make($component['view'], $data)->render()
+            $this->view->make($component['view'], $data)->render()
         );
     }
 
@@ -93,7 +93,7 @@ trait Componentable
      * Dynamically handle calls to the class.
      *
      * @param  string $method
-     * @param  array  $parameters
+     * @param  array $parameters
      *
      * @return \Illuminate\Contracts\View\View|mixed
      *

@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\Payroll;
 
 use App\Helpers\CommonHelper;
-use App\Http\Requests\SalaryGeneratorRequest;
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
+use App\Http\Requests\SalaryGeneratorRequest;
 use App\Models\GeneralJournal;
 use App\Models\PersonalAccount;
 use App\Models\Salary;
 use App\Models\WorkspaceLedger;
+use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Redirect;
-use DB;
 
 class SalaryGeneratorController extends Controller
 {
@@ -42,9 +42,9 @@ class SalaryGeneratorController extends Controller
                 $inputs = $request->input();
                 $user = Auth::user();
                 $time = time();
-                $transaction_type=Config::get('common.transaction_type.salary');
-                $balance_type=Config::get('common.balance_type_intermediate');
-                $year=CommonHelper::get_current_financial_year();
+                $transaction_type = Config::get('common.transaction_type.salary');
+                $balance_type = Config::get('common.balance_type_intermediate');
+                $year = CommonHelper::get_current_financial_year();
                 $total = 0;
                 foreach ($inputs['selected'] as $employee_id) {
                     $salary = new Salary();
@@ -136,12 +136,12 @@ class SalaryGeneratorController extends Controller
     {
         try {
 
-            DB::transaction(function () use ($request,$id) {
+            DB::transaction(function () use ($request, $id) {
                 $user = Auth::user();
                 $time = time();
-                $year=CommonHelper::get_current_financial_year();
-                $transaction_type=Config::get('common.transaction_type.salary');
-                $balance_type=Config::get('common.balance_type_intermediate');
+                $year = CommonHelper::get_current_financial_year();
+                $transaction_type = Config::get('common.transaction_type.salary');
+                $balance_type = Config::get('common.balance_type_intermediate');
                 $inputs = $request->input();
                 $salary = Salary::find($id);
                 $copy = clone $salary;
@@ -175,13 +175,13 @@ class SalaryGeneratorController extends Controller
                     $accountPayableWorkspaceData->update();
 
                     // General Journal Table Impact
-                    $generalJournal = GeneralJournal::where(['transaction_type' => $transaction_type, 'reference_id' => $id, 'account_code' => 42000,'year'=>$year,'workspace_id'=>$user->workspace_id])->first();
+                    $generalJournal = GeneralJournal::where(['transaction_type' => $transaction_type, 'reference_id' => $id, 'account_code' => 42000, 'year' => $year, 'workspace_id' => $user->workspace_id])->first();
                     $generalJournal->amount += $balance;
                     $generalJournal->updated_by = $user->id;
                     $generalJournal->updated_at = $time;
                     $generalJournal->save();
 
-                    $generalJournal = GeneralJournal::where(['transaction_type' => $transaction_type, 'reference_id' => $id, 'account_code' => 22000,'year'=>$year,'workspace_id'=>$user->workspace_id])->first();
+                    $generalJournal = GeneralJournal::where(['transaction_type' => $transaction_type, 'reference_id' => $id, 'account_code' => 22000, 'year' => $year, 'workspace_id' => $user->workspace_id])->first();
                     $generalJournal->amount += $balance;
                     $generalJournal->updated_by = $user->id;
                     $generalJournal->updated_at = $time;
@@ -209,13 +209,13 @@ class SalaryGeneratorController extends Controller
                     $accountPayableWorkspaceData->update();
 
                     // General Journal Table Impact
-                    $generalJournal = GeneralJournal::where(['transaction_type' => $transaction_type, 'reference_id' => $id, 'account_code' => 42000,'year'=>$year,'workspace_id'=>$user->workspace_id])->first();
+                    $generalJournal = GeneralJournal::where(['transaction_type' => $transaction_type, 'reference_id' => $id, 'account_code' => 42000, 'year' => $year, 'workspace_id' => $user->workspace_id])->first();
                     $generalJournal->amount -= $balance;
                     $generalJournal->updated_by = $user->id;
                     $generalJournal->updated_at = $time;
                     $generalJournal->save();
 
-                    $generalJournal = GeneralJournal::where(['transaction_type' => $transaction_type, 'reference_id' => $id, 'account_code' => 22000,'year'=>$year,'workspace_id'=>$user->workspace_id])->first();
+                    $generalJournal = GeneralJournal::where(['transaction_type' => $transaction_type, 'reference_id' => $id, 'account_code' => 22000, 'year' => $year, 'workspace_id' => $user->workspace_id])->first();
                     $generalJournal->amount -= $balance;
                     $generalJournal->updated_by = $user->id;
                     $generalJournal->updated_at = $time;

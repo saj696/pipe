@@ -9,7 +9,8 @@
                         <i class="fa fa-coffee"></i>Task Detail
                     </div>
                     <div>
-                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="{{ url('/tasks' )}}">Back</a>
+                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right"
+                           href="{{ url('/tasks' )}}">Back</a>
                     </div>
                 </div>
                 <div class="portlet-body">
@@ -41,29 +42,29 @@
                             </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        {{ $task->name_en }}
-                                    </td>
-                                    <td>
-                                        <p>{{ $task->component->name_en }}</p>
-                                    </td>
-                                    <td>
-                                        <p>{{ $task->module->name_en }}</p>
-                                    </td>
-                                    <td>
-                                        <p>{{ $task->route }}</p>
-                                    </td>
-                                    <td>
-                                        <p>{{ $task->description }}</p>
-                                    </td>
-                                    <td>
-                                        {{ $task->icon }}
-                                    </td>
-                                    <td>
-                                        {{ $task->ordering }}
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>
+                                    {{ $task->name_en }}
+                                </td>
+                                <td>
+                                    <p>{{ $task->component->name_en }}</p>
+                                </td>
+                                <td>
+                                    <p>{{ $task->module->name_en }}</p>
+                                </td>
+                                <td>
+                                    <p>{{ $task->route }}</p>
+                                </td>
+                                <td>
+                                    <p>{{ $task->description }}</p>
+                                </td>
+                                <td>
+                                    {{ $task->icon }}
+                                </td>
+                                <td>
+                                    {{ $task->ordering }}
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>

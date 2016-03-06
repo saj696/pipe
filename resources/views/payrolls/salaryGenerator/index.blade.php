@@ -43,6 +43,9 @@
                                 <th>
                                     Net Salary
                                 </th>
+                                <th>
+                                    Action
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -59,13 +62,14 @@
                                         <td>{{ $list->bonus}}</td>
                                         <td>{{ $list->net}}</td>
                                         <td>
-                                            <a class="label label-danger" href="{{ url('/salary_generator/'.$list->id.'/edit' )}}">Edit</a>
+                                            <a class="label label-danger"
+                                               href="{{ url('/salary_generator/'.$list->id.'/edit' )}}">Edit</a>
                                         </td>
                                     </tr>
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="7" class="text-center danger">No Data Found</td>
+                                    <td colspan="12" class="text-center danger">No Data Found</td>
                                 </tr>
                             @endif
                             </tbody>

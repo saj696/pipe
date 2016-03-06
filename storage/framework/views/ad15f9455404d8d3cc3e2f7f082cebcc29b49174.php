@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
 <html lang="en" class="no-js">
 <!--<![endif]-->
@@ -48,9 +50,11 @@
     <script src="<?php echo e(URL::asset('js/index.js')); ?>" type="text/javascript"></script>
     <script src="<?php echo e(URL::asset('js/tasks.js')); ?>" type="text/javascript"></script>
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.2.3/css/simple-line-icons.css" rel="stylesheet" type="text/css"/>
-<?php /*    <link href="<?php echo e(URL::asset('css/font-awesome.min.css')); ?>" rel="stylesheet" type="text/css"/>*/ ?>
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet"
+          type="text/css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.2.3/css/simple-line-icons.css"
+          rel="stylesheet" type="text/css"/>
+    <?php /*    <link href="<?php echo e(URL::asset('css/font-awesome.min.css')); ?>" rel="stylesheet" type="text/css"/>*/ ?>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
     <link href="<?php echo e(URL::asset('css/simple-line-icons.min.css')); ?>" rel="stylesheet" type="text/css"/>
@@ -69,7 +73,8 @@
     <!-- END PAGE STYLES -->
     <!-- BEGIN THEME STYLES -->
     <!-- DOC: To use 'rounded corners' style just load 'components-rounded.css' stylesheet instead of 'components.css' in the below style tag -->
-    <link href="<?php echo e(URL::asset('css/components.css')); ?>" id="style_components" rel="stylesheet" type="text/css"/>
+    <link href="<?php echo e(URL::asset('css/components.css')); ?>" id="style_components" rel="stylesheet"
+          type="text/css"/>
     <link href="<?php echo e(URL::asset('css/plugins.css')); ?>" rel="stylesheet" type="text/css"/>
     <link href="<?php echo e(URL::asset('css/layout.css')); ?>" rel="stylesheet" type="text/css"/>
     <link href="<?php echo e(URL::asset('css/darkblue.css')); ?>" rel="stylesheet" type="text/css" id="style_color"/>
@@ -93,21 +98,23 @@
         </div>
         <!-- END LOGO -->
         <!-- BEGIN RESPONSIVE MENU TOGGLER -->
-        <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+        <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse"
+           data-target=".navbar-collapse">
         </a>
         <!-- END RESPONSIVE MENU TOGGLER -->
         <!-- BEGIN TOP NAVIGATION MENU -->
         <div class="top-menu">
             <ul class="nav navbar-nav pull-right">
                 <li class="dropdown dropdown-user">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
+                       data-close-others="true">
                         <img alt="" class="img-circle" src="<?php echo e(URL::asset('public/image/jr_small.jpg')); ?>"/>
 					<span class="username username-hide-on-mobile">
-					<?php if(Auth::check()): ?>	<?php echo e(Auth::user()->username); ?> <?php else: ?> <?php echo e('Guest'); ?><?php endif; ?></span>
+					<?php if (Auth::check()): ?><?php echo e(Auth::user()->username); ?><?php else: ?><?php echo e('Guest'); ?><?php endif; ?></span>
                         <i class="fa fa-angle-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-default">
-                        <?php if(Auth::guest()): ?>
+                        <?php if (Auth::guest()): ?>
                             <li><a href="<?php echo e(url('/login')); ?>">Login</a></li>
                             <li><a href="<?php echo e(url('/register')); ?>">Register</a></li>
                         <?php else: ?>
@@ -127,86 +134,83 @@
 <!-- BEGIN CONTAINER -->
 <div class="page-container">
     <!-- BEGIN SIDEBAR -->
-    <?php if(Auth::check()): ?>
+    <?php if (Auth::check()): ?>
         <?php
 //        $components = App\Helpers\UserHelper::get_task_module_component('position_left_01');
         $menus = Cache::get('menu');
         ?>
-    <div class="page-sidebar-wrapper">
-        <div class="page-sidebar navbar-collapse collapse">
-            <ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
-                <!-- DOC: To remove the sidebar toggler from the sidebar you just need to completely remove the below "sidebar-toggler-wrapper" LI element -->
-                <li class="sidebar-toggler-wrapper">
-                    <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-                    <div class="sidebar-toggler">
-                    </div>
-                    <!-- END SIDEBAR TOGGLER BUTTON -->
-                </li>
-                <!-- DOC: To remove the search box from the sidebar you just need to completely remove the below "sidebar-search-wrapper" LI element -->
-                <?php /*<li class="sidebar-search-wrapper">*/ ?>
+        <div class="page-sidebar-wrapper">
+            <div class="page-sidebar navbar-collapse collapse">
+                <ul class="page-sidebar-menu" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
+                    <!-- DOC: To remove the sidebar toggler from the sidebar you just need to completely remove the below "sidebar-toggler-wrapper" LI element -->
+                    <li class="sidebar-toggler-wrapper">
+                        <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+                        <div class="sidebar-toggler">
+                        </div>
+                        <!-- END SIDEBAR TOGGLER BUTTON -->
+                    </li>
+                    <!-- DOC: To remove the search box from the sidebar you just need to completely remove the below "sidebar-search-wrapper" LI element -->
+                    <?php /*<li class="sidebar-search-wrapper">*/ ?>
                     <?php /*<form class="sidebar-search " action="extra_search.html" method="POST">*/ ?>
-                        <?php /*<a href="javascript:;" class="remove">*/ ?>
-                            <?php /*<i class="icon-close"></i>*/ ?>
-                        <?php /*</a>*/ ?>
-                        <?php /*<div class="input-group">*/ ?>
-                            <?php /*<input type="text" class="form-control" placeholder="Search...">*/ ?>
-							<?php /*<span class="input-group-btn">*/ ?>
-							<?php /*<a href="javascript:;" class="btn submit"><i class="icon-magnifier"></i></a>*/ ?>
-							<?php /*</span>*/ ?>
-                        <?php /*</div>*/ ?>
+                    <?php /*<a href="javascript:;" class="remove">*/ ?>
+                    <?php /*<i class="icon-close"></i>*/ ?>
+                    <?php /*</a>*/ ?>
+                    <?php /*<div class="input-group">*/ ?>
+                    <?php /*<input type="text" class="form-control" placeholder="Search...">*/ ?>
+                    <?php /*<span class="input-group-btn">*/ ?>
+                    <?php /*<a href="javascript:;" class="btn submit"><i class="icon-magnifier"></i></a>*/ ?>
+                    <?php /*</span>*/ ?>
+                    <?php /*</div>*/ ?>
                     <?php /*</form>*/ ?>
                     <?php /*<!-- END RESPONSIVE QUICK SEARCH FORM -->*/ ?>
-                <?php /*</li>*/ ?>
-                <?php
-                if(is_array($menus) && sizeof($menus)>0)
-                {
-                    foreach($menus as $component)
-                    {
-                        foreach($component['modules'] as $key=>$module)
-                        {
-                        ?>
-                            <li class="<?php echo e($key==0?'start active open':''); ?>">
-                                <a href="javascript:;">
-                                    <i class="icon-home"></i>
-                                    <span class="title"><?php echo e($module['module_name']); ?></span>
-                                    <span class="selected"></span>
-                                    <span class="arrow open"></span>
-                                </a>
-                                <ul class="sub-menu">
-                                    <?php
-                                    foreach($module['tasks'] as $task)
-                                    {
-                                    ?>
-                                    <li class="active">
-                                        <a href="<?php echo e(url('/'.$task->route)); ?>">
-                                            <i class="<?php echo e($task->task_icon); ?>"></i>
-                                            <?php echo e($task->task_name); ?>
-
-                                        </a>
-                                    </li>
-                                    <?php
-                                    }
-                                    ?>
-                                </ul>
-                            </li>
-                        <?php
-                        }
-                        ?>
+                    <?php /*</li>*/ ?>
                     <?php
+                    if (is_array($menus) && sizeof($menus) > 0) {
+                        foreach ($menus as $component) {
+                            foreach ($component['modules'] as $key => $module) {
+                                ?>
+                                <li class="<?php echo e($key == 0 ? 'start active open' : ''); ?>">
+                                    <a href="javascript:;">
+                                        <i class="icon-home"></i>
+                                        <span class="title"><?php echo e($module['module_name']); ?></span>
+                                        <span class="selected"></span>
+                                        <span class="arrow open"></span>
+                                    </a>
+                                    <ul class="sub-menu">
+                                        <?php
+                                        foreach ($module['tasks'] as $task) {
+                                            ?>
+                                            <li class="active">
+                                                <a href="<?php echo e(url('/' . $task->route)); ?>">
+                                                    <i class="<?php echo e($task->task_icon); ?>"></i>
+                                                    <?php echo e($task->task_name); ?>
+
+                                                </a>
+                                            </li>
+                                            <?php
+                                        }
+                                        ?>
+                                    </ul>
+                                </li>
+                                <?php
+                            }
+                            ?>
+                            <?php
+                        }
                     }
-                }
-                ?>
-            </ul>
-            <!-- END SIDEBAR MENU -->
+                    ?>
+                </ul>
+                <!-- END SIDEBAR MENU -->
+            </div>
         </div>
-    </div>
     <?php endif; ?>
     <!-- END SIDEBAR -->
     <!-- BEGIN CONTENT -->
     <div class="page-content-wrapper">
         <div class="page-content">
             <!-- BEGIN SAMPLE PORTLET CONFIGURATION MODAL FORM-->
-            <div class="modal fade" id="portlet-config" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal fade" id="portlet-config" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -241,7 +245,8 @@
                     </li>
                 </ul>
                 <div class="page-toolbar">
-                    <div id="dashboard-report-range" class="pull-right tooltips btn btn-fit-height grey-salt" data-placement="top" data-original-title="Change dashboard date range">
+                    <div id="dashboard-report-range" class="pull-right tooltips btn btn-fit-height grey-salt"
+                         data-placement="top" data-original-title="Change dashboard date range">
                         <i class="icon-calendar"></i>&nbsp;
                         <span class="thin uppercase visible-lg-inline-block">&nbsp;</span>&nbsp;
                         <i class="fa fa-angle-down"></i>
@@ -255,9 +260,10 @@
             <div class="clearfix">
             </div>
 
-            <?php if(Session::has('flash_message')): ?>
-                <div class="alert alert-success<?php echo e(Session::has('flash_message_important')?'alert-important':''); ?>">
-                    <?php if(Session::has('flash_message_important')): ?>
+            <?php if (Session::has('flash_message')): ?>
+                <div
+                    class="alert alert-success<?php echo e(Session::has('flash_message_important') ? 'alert-important' : ''); ?>">
+                    <?php if (Session::has('flash_message_important')): ?>
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                     <?php endif; ?>
                     <?php echo e(Session::get('flash_message')); ?>
@@ -294,7 +300,7 @@
 
 <!-- END PAGE LEVEL SCRIPTS -->
 <script>
-    jQuery(document).ready(function() {
+    jQuery(document).ready(function () {
         Metronic.init(); // init metronic core componets
         Layout.init(); // init layout
         QuickSidebar.init(); // init quick sidebar

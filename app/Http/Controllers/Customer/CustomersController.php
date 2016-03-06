@@ -61,14 +61,15 @@ class CustomersController extends Controller
                 $inputs = $request->input();
                 $time = time();
                 $user = Auth::user();
-                $year=CommonHelper::get_current_financial_year();
+                $year = CommonHelper::get_current_financial_year();
                 $file = $request->file('picture');
                 $customer = new Customer();
 
                 $destinationPath = base_path() . '/public/image/customer/';
                 if ($request->hasFile('picture')) {
-                    $file->move($destinationPath, $file->getClientOriginalName());
-                    $customer->picture = $file->getClientOriginalName();
+                    $name = time() . $file->getClientOriginalName();
+                    $file->move($destinationPath, $name);
+                    $inputs['picture'] = $name;
                 }
                 $customer->name = $inputs['name'];
                 $customer->mobile = $inputs['mobile'];
@@ -90,14 +91,14 @@ class CustomersController extends Controller
                 if (!empty($inputs['due'])) {
                     $personal->due = $inputs['due'];
                 }
-                $personal->person_id = $customer;
+                $personal->person_id = $customer->id;
                 $personal->created_by = Auth::user()->id;
                 $personal->created_at = $time;
                 $personal->save();
 
                 if (!empty($inputs['balance'])) {
                     //Update Workspace Ledger
-                    $workspaceLedger = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 41000, 'balance_type' => Config::get('common.balance_type_intermediate'),'year'=>$year])->first();
+                    $workspaceLedger = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 41000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $year])->first();
                     $workspaceLedger->balance += $inputs['balance'];
                     $workspaceLedger->updated_by = $user->id;
                     $workspaceLedger->updated_by = $time;
@@ -120,7 +121,7 @@ class CustomersController extends Controller
 
                 if (!empty($inputs['due'])) {
                     //Update Workspace Ledger
-                    $workspaceLedger = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 12000, 'balance_type' => Config::get('common.balance_type_intermediate'),'year'=>$year])->first();
+                    $workspaceLedger = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 12000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $year])->first();
                     $workspaceLedger->balance += $inputs['due'];
                     $workspaceLedger->updated_by = $user->id;
                     $workspaceLedger->updated_by = $time;
@@ -162,9 +163,11 @@ class CustomersController extends Controller
         $inputs = $request->input();
         $file = $request->file('picture');
         $destinationPath = base_path() . '/public/image/customer/';
+
         if ($request->hasFile('picture')) {
-            $file->move($destinationPath, $file->getClientOriginalName());
-            $inputs['picture'] = $file->getClientOriginalName();
+            $name = time() . $file->getClientOriginalName();
+            $file->move($destinationPath, $name);
+            $inputs['picture'] = $name;
         }
         $inputs['updated_by'] = Auth::user()->id;
         $inputs['updated_at'] = time();

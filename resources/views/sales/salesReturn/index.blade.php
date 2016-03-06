@@ -7,10 +7,11 @@
             <div class="portlet box blue-hoki">
                 <div class="portlet-title">
                     <div class="caption">
-                        <i class="fa fa-globe"></i>Sales Delivery
+                        <i class="fa fa-globe"></i>Sales Return
                     </div>
                     <div>
-                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="{{ url('/sales_return/create' )}}">New</a>
+                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right"
+                           href="{{ url('/sales_return/create' )}}">New</a>
                     </div>
                 </div>
                 <div class="portlet-body">
@@ -30,9 +31,9 @@
                                 <th>
                                     Total Amount
                                 </th>
-                                <th>
-                                    Action
-                                </th>
+                                {{--<th>--}}
+                                    {{--Action--}}
+                                {{--</th>--}}
                             </tr>
                             </thead>
                             <tbody>
@@ -44,9 +45,9 @@
                                         <td>{{ Config::get('common.sales_customer_type.'.$salesReturn->customer_type) }}</td>
                                         <td>{{ $salesReturn->quantity }}</td>
                                         <td>{{ $salesReturn->total_amount}}</td>
-                                        <td>
-                                            &nbsp;
-                                        </td>
+                                        {{--<td>--}}
+                                            {{--&nbsp;--}}
+                                        {{--</td>--}}
                                     </tr>
                                 @endforeach
                             @else

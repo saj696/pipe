@@ -8,7 +8,8 @@
                         <i class="fa fa-coffee"></i>Daily Production Registers
                     </div>
                     <div>
-                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="<?php echo e(url('/productionRegisters/create')); ?>">New</a>
+                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right"
+                           href="<?php echo e(url('/productionRegisters/create')); ?>">New</a>
                     </div>
                 </div>
 
@@ -16,27 +17,27 @@
                     <div class="table-scrollable">
                         <table class="table table-bordered table-hover">
                             <thead>
-                                <tr>
-                                    <th>
-                                        Date
-                                    </th>
-                                    <th>
-                                        Product
-                                    </th>
-                                    <th>
-                                        production
-                                    </th>
-                                    <th>
-                                        Status
-                                    </th>
-                                    <th>
-                                        Action
-                                    </th>
-                                </tr>
+                            <tr>
+                                <th>
+                                    Date
+                                </th>
+                                <th>
+                                    Product
+                                </th>
+                                <th>
+                                    production
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Action
+                                </th>
+                            </tr>
                             </thead>
                             <tbody>
-                            <?php if(sizeof($productionRegisters)>0): ?>
-                                <?php foreach($productionRegisters as $productionRegister): ?>
+                            <?php if (sizeof($productionRegisters) > 0): ?>
+                                <?php foreach ($productionRegisters as $productionRegister): ?>
                                     <tr>
                                         <td>
                                             <?php echo e($productionRegister->date); ?>
@@ -55,14 +56,15 @@
 
                                         </td>
                                         <td>
-                                            <a class="label label-danger" href="<?php echo e(url('/productionRegisters/'.$productionRegister->id.'/edit' )); ?>">Edit</a>
+                                            <a class="label label-danger"
+                                               href="<?php echo e(url('/productionRegisters/' . $productionRegister->id . '/edit')); ?>">Edit</a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                            <tr>
-                                <td colspan="6" class="text-center danger">No Data Found</td>
-                            </tr>
+                                <tr>
+                                    <td colspan="6" class="text-center danger">No Data Found</td>
+                                </tr>
                             <?php endif; ?>
                             </tbody>
                         </table>

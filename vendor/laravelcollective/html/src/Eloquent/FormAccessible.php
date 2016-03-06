@@ -2,9 +2,9 @@
 
 namespace Collective\Html\Eloquent;
 
+use Illuminate\Support\Str;
 use ReflectionClass;
 use ReflectionMethod;
-use Illuminate\Support\Str;
 
 trait FormAccessible
 {
@@ -29,7 +29,7 @@ trait FormAccessible
         // instance on retrieval, which makes it quite convenient to work with
         // date fields without having to create a mutator for each property.
         if (in_array($key, $this->getDates())) {
-            if (! is_null($value)) {
+            if (!is_null($value)) {
                 $value = $this->asDateTime($value);
             }
         }
@@ -54,11 +54,11 @@ trait FormAccessible
         $methods = $this->getReflection()->getMethods(ReflectionMethod::IS_PUBLIC);
 
         $mutator = collect($methods)
-          ->first(function ($index, ReflectionMethod $method) use ($key) {
-              return $method->getName() == 'form' . Str::studly($key) . 'Attribute';
-          });
+            ->first(function ($index, ReflectionMethod $method) use ($key) {
+                return $method->getName() == 'form' . Str::studly($key) . 'Attribute';
+            });
 
-        return (bool) $mutator;
+        return (bool)$mutator;
     }
 
     /**
@@ -78,7 +78,7 @@ trait FormAccessible
      */
     protected function getReflection()
     {
-        if (! $this->reflection) {
+        if (!$this->reflection) {
             $this->reflection = new ReflectionClass($this);
         }
 

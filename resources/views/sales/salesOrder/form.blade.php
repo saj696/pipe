@@ -1,8 +1,8 @@
 {!! csrf_field() !!}
 
-<div class="form-group{{ $errors->has('customer_type') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('customer_type', 'Customer Type', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('customer_type') ? ' has-error' : '' }}">
         {{ Form::select('customer_type', Config::get('common.sales_customer_type'), Config::get('common.person_type_customer'),['class'=>'form-control','id'=>'sales_customer_type']) }}
         @if ($errors->has('customer_type'))
             <span class="help-block">
@@ -13,9 +13,9 @@
 </div>
 
 <div class="customer_id">
-    <div class="form-group{{ $errors->has('customer_id') ? ' has-error' : '' }}">
+    <div class="form-group">
         {{ Form::label('customer_id', 'Customer', ['class'=>'col-md-3 control-label']) }}
-        <div class="col-md-7">
+        <div class="col-md-7{{ $errors->has('customer_id') ? ' has-error' : '' }}">
             {{ Form::select('customer_id', $customers, null,['class'=>'form-control','placeholder'=>'Select']) }}
             @if ($errors->has('customer_id'))
                 <span class="help-block">
@@ -26,8 +26,8 @@
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('product') ? ' has-error' : '' }}">
-    <div class="col-md-offset-5 col-md-3">
+<div class="form-group">
+    <div class="col-md-offset-5 col-md-3 {{ $errors->has('product') ? ' has-error' : '' }}">
         {{ Form::text('product', null,['class'=>'form-control','id'=>'product','placeholder'=>'Search Product']) }}
         @if ($errors->has('product'))
             <span class="help-block">
@@ -39,8 +39,11 @@
 </div>
 
 <div class="product_list" data-product-id="0">
-    <div class='col-md-offset-3 col-md-2'>
+    <div class='col-md-offset-1 col-md-2'>
         <label for="">Product Name</label>
+    </div>
+    <div class='col-md-2'>
+        <label for="">Stock Quantity</label>
     </div>
     <div class='col-md-2'>
         <label for="">Sales Quantity</label>
@@ -53,9 +56,9 @@
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('total') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('total', 'Total Amount', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('total') ? ' has-error' : '' }}">
         {{ Form::text('total', null,['class'=>'form-control']) }}
         @if ($errors->has('total'))
             <span class="help-block">
@@ -66,9 +69,9 @@
 </div>
 
 
-<div class="form-group{{ $errors->has('discount') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('discount', 'Discount', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('discount') ? ' has-error' : '' }}">
         {{ Form::text('discount', null,['class'=>'form-control']) }}
         @if ($errors->has('discount'))
             <span class="help-block">
@@ -78,9 +81,9 @@
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('transport_cost') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('transport_cost', 'Transport Cost', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('transport_cost') ? ' has-error' : '' }}">
         {{ Form::text('transport_cost', null,['class'=>'form-control']) }}
         @if ($errors->has('transport_cost'))
             <span class="help-block">
@@ -89,9 +92,9 @@
         @endif
     </div>
 </div>
-<div class="form-group{{ $errors->has('paid') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('paid', 'Paid Amount', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('paid') ? ' has-error' : '' }}">
         {{ Form::text('paid', null,['class'=>'form-control']) }}
         @if ($errors->has('paid'))
             <span class="help-block">
@@ -100,9 +103,9 @@
         @endif
     </div>
 </div>
-<div class="form-group{{ $errors->has('due') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('due', 'Due', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('due') ? ' has-error' : '' }}">
         {{ Form::text('due', null,['class'=>'form-control']) }}
         @if ($errors->has('due'))
             <span class="help-block">
@@ -112,9 +115,9 @@
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('remarks') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('remarks', 'Remarks', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('remarks') ? ' has-error' : '' }}">
         {{ Form::textarea('remarks', null,['class'=>'form-control', 'rows'=>'3','required']) }}
         @if ($errors->has('remarks'))
             <span class="help-block">
@@ -180,9 +183,12 @@
 //                console.log(ui);
                 var index = $('.product_list').data('product-id');
                 var html = "<div class='form-group single_product'>" +
-                        "<div class='col-md-offset-3 col-md-2'>" +
+                        "<div class='col-md-offset-1 col-md-2'>" +
                         " <input type='text' class='form-control' value='" + ui.item.label + "' disabled>" +
                         "<input class='product_id' type='hidden' value='" + ui.item.value + "' name='product[" + index + "][product_id]'> " +
+                        "</div>" +
+                        "<div class='col-md-2'>" +
+                        "<input  class='form-control' disabled value='" + ui.item.quantity + "'> " +
                         "</div>" +
                         "<div class='col-md-2'>" +
                         "<input required type='text' class='form-control pcal single_p_quantity' name='product[" + index + "][sales_quantity]' placeholder='Sales Quantity'> " +
@@ -232,10 +238,9 @@
         });
 
         $(document).on('change', '#paid', function () {
-            var paid= parseFloat($(this).val());
-            var due= parseFloat($('#due').val());
-            if(paid > due)
-            {
+            var paid = parseFloat($(this).val());
+            var due = parseFloat($('#due').val());
+            if (paid > due) {
                 $(this).val("");
             }
             calculateAmount();

@@ -10,7 +10,8 @@
                         <i class="fa fa-coffee"></i>Customer
                     </div>
                     <div>
-                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="{{ url('/customers/create' )}}">New</a>
+                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right"
+                           href="{{ url('/customers/create' )}}">New</a>
                     </div>
                 </div>
 
@@ -18,29 +19,29 @@
                     <div class="table-scrollable">
                         <table class="table table-bordered table-hover">
                             <thead>
-                                <tr>
-                                    <th>
-                                        Name
-                                    </th>
-                                    <th>
-                                        Mobile
-                                    </th>
-                                    <th>
-                                        Address
-                                    </th>
-                                    <th>
-                                        Business Name
-                                    </th>
-                                    <th>
-                                        Business Address
-                                    </th>
-                                    <th>
-                                        Status
-                                    </th>
-                                    <th>
-                                        Action
-                                    </th>
-                                </tr>
+                            <tr>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Mobile
+                                </th>
+                                <th>
+                                    Address
+                                </th>
+                                <th>
+                                    Business Name
+                                </th>
+                                <th>
+                                    Business Address
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Action
+                                </th>
+                            </tr>
                             </thead>
                             <tbody>
                             @if(sizeof($customers)>0)
@@ -65,14 +66,15 @@
                                             {{ ($customer->status==1)? "Active" : "In-Active" }}
                                         </td>
                                         <td>
-                                            <a class="label label-danger" href="{{ url('/customers/'.$customer->id.'/edit' )}}">Edit</a>
+                                            <a class="label label-danger"
+                                               href="{{ url('/customers/'.$customer->id.'/edit' )}}">Edit</a>
                                         </td>
                                     </tr>
                                 @endforeach
                             @else
-                            <tr>
-                                <td colspan="6" class="text-center danger">No Data Found</td>
-                            </tr>
+                                <tr>
+                                    <td colspan="7" class="text-center danger">No Data Found</td>
+                                </tr>
                             @endif
                             </tbody>
                         </table>

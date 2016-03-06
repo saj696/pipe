@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-
 class WorkspaceRequest extends Request
 {
     /**
@@ -25,11 +23,11 @@ class WorkspaceRequest extends Request
     public function rules()
     {
         return [
-            'name'=>'required',
-            'type'=>'required|integer',
-            'location'=>'required',
-            'parent'=>'required|integer',
-            'status'=>'required|integer'
+            'name' => 'required',
+            'type' => 'required|integer',
+            'location' => 'required',
+            'parent' => 'required|integer',
+            'status' => 'required|integer'
         ];
     }
 }

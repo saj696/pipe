@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-
 class TransactionRecorderRequest extends Request
 {
     /**
@@ -25,14 +23,14 @@ class TransactionRecorderRequest extends Request
     public function rules()
     {
         return [
-            'date'=>'required|date',
-            'account_code'=>'required|integer',
-            'to_whom_type'=>'required_if:account_code, 41000',
-            'to_whom'=>'required_if:account_code, 41000',
-            'from_whom_type'=>'required_if:account_code, 12000, 20000, 30000',
-            'from_whom'=>'required_if:account_code, 12000, 20000, 30000',
-            'total_amount'=>'required_unless:account_code, 50000, 60000',
-            'amount'=>'required|numeric',
+            'date' => 'required|date',
+            'account_code' => 'required|integer',
+            'to_whom_type' => 'required_if:account_code, 41000',
+            'to_whom' => 'required_if:account_code, 41000',
+            'from_whom_type' => 'required_if:account_code, 12000, 20000, 30000',
+            'from_whom' => 'required_if:account_code, 12000, 20000, 30000',
+            'total_amount' => 'required_unless:account_code, 50000, 60000',
+            'amount' => 'required|numeric',
         ];
     }
 }

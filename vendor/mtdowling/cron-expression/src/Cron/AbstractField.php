@@ -11,7 +11,7 @@ abstract class AbstractField implements FieldInterface
      * Check to see if a field is satisfied by a value
      *
      * @param string $dateValue Date value to check
-     * @param string $value     Value to test
+     * @param string $value Value to test
      *
      * @return bool
      */
@@ -27,18 +27,6 @@ abstract class AbstractField implements FieldInterface
     }
 
     /**
-     * Check if a value is a range
-     *
-     * @param string $value Value to test
-     *
-     * @return bool
-     */
-    public function isRange($value)
-    {
-        return strpos($value, '-') !== false;
-    }
-
-    /**
      * Check if a value is an increments of ranges
      *
      * @param string $value Value to test
@@ -51,25 +39,10 @@ abstract class AbstractField implements FieldInterface
     }
 
     /**
-     * Test if a value is within a range
-     *
-     * @param string $dateValue Set date value
-     * @param string $value     Value to test
-     *
-     * @return bool
-     */
-    public function isInRange($dateValue, $value)
-    {
-        $parts = array_map('trim', explode('-', $value, 2));
-
-        return $dateValue >= $parts[0] && $dateValue <= $parts[1];
-    }
-
-    /**
      * Test if a value is within an increments of ranges (offset[-to]/step size)
      *
      * @param string $dateValue Set date value
-     * @param string $value     Value to test
+     * @param string $value Value to test
      *
      * @return bool
      */
@@ -78,7 +51,7 @@ abstract class AbstractField implements FieldInterface
         $parts = array_map('trim', explode('/', $value, 2));
         $stepSize = isset($parts[1]) ? $parts[1] : 0;
         if (($parts[0] == '*' || $parts[0] === '0') && 0 !== $stepSize) {
-            return (int) $dateValue % $stepSize == 0;
+            return (int)$dateValue % $stepSize == 0;
         }
 
         $range = explode('-', $parts[0], 2);
@@ -90,15 +63,42 @@ abstract class AbstractField implements FieldInterface
         }
 
         if ($dateValue > $offset && 0 === $stepSize) {
-          return false;
+            return false;
         }
 
-        for ($i = $offset; $i <= $to; $i+= $stepSize) {
+        for ($i = $offset; $i <= $to; $i += $stepSize) {
             if ($i == $dateValue) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * Check if a value is a range
+     *
+     * @param string $value Value to test
+     *
+     * @return bool
+     */
+    public function isRange($value)
+    {
+        return strpos($value, '-') !== false;
+    }
+
+    /**
+     * Test if a value is within a range
+     *
+     * @param string $dateValue Set date value
+     * @param string $value Value to test
+     *
+     * @return bool
+     */
+    public function isInRange($dateValue, $value)
+    {
+        $parts = array_map('trim', explode('-', $value, 2));
+
+        return $dateValue >= $parts[0] && $dateValue <= $parts[1];
     }
 }

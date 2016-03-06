@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-
 class AdjustmentRequest extends Request
 {
     /**
@@ -26,8 +24,15 @@ class AdjustmentRequest extends Request
     {
         return [
 //            'account_from'=>'required|unique:adjustments,account_from,year,'.date('Y'),
-            'account_from'=>'required|unique:adjustments,account_from,year:'.date('Y'),
-            'amount'=>'required'
+            'account_from' => 'required|unique:adjustments,account_from,year:' . date('Y'),
+            'amount' => 'required'
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'account_from.unique'=>'This Account has been adjusted this year!',
         ];
     }
 }

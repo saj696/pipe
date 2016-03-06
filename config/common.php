@@ -9,7 +9,7 @@
 
 return [
 
-    'chart_of_account_level_max'=>4,
+    'chart_of_account_level_max' => 4,
     'workspace_type' => ['1' => 'Showroom', '2' => 'Delivery Center', '3' => 'Factory'],
     'pagination' => 10,
     'status' => ['1'=>'Active','0'=>'Inactive'],
@@ -43,11 +43,11 @@ return [
         'November' => '11',
         'December' => '12',
     ],
-    'employee_type'=>[
-        'Regular'=>1,
-        'Daily Worker'=>2
+    'employee_type' => [
+        'Regular' => 1,
+        'Daily Worker' => 2
     ],
-    'adjustment_account_from'=>['25000', '27000'],
-    'adjustment_account_to'=>['13000', '14000'],
-    'salary_payment_status'=>['not_yet'=>0,'partial'=>1,'complete'=>2],
+    'adjustment_account_from' => ['25000', '27000'],
+    'adjustment_account_to' => ['13000', '14000'],
+    'salary_payment_status' => ['not_yet' => 0, 'partial' => 1, 'complete' => 2],
 ];

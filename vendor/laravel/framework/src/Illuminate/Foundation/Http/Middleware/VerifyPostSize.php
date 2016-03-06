@@ -10,8 +10,8 @@ class VerifyPostSize
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Closure $next
      * @return mixed
      *
      * @throws \Illuminate\Http\Exception\PostTooLargeException
@@ -38,13 +38,13 @@ class VerifyPostSize
 
         switch ($metric) {
             case 'K':
-                return (int) $postMaxSize * 1024;
+                return (int)$postMaxSize * 1024;
             case 'M':
-                return (int) $postMaxSize * 1048576;
+                return (int)$postMaxSize * 1048576;
             case 'G':
-                return (int) $postMaxSize * 1073741824;
+                return (int)$postMaxSize * 1073741824;
             default:
-                return (int) $postMaxSize;
+                return (int)$postMaxSize;
         }
     }
 }

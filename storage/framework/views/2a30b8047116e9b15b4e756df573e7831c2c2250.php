@@ -22,39 +22,40 @@
                     <div class="table-scrollable">
                         <table class="table table-bordered table-hover">
                             <thead>
-                                <tr>
-                                    <th>
-                                        Title
-                                    </th>
-                                    <th>
-                                        Body
-                                    </th>
-                                    <th>
-                                        Published On
-                                    </th>
-                                    <th>
-                                        Action
-                                    </th>
-                                </tr>
+                            <tr>
+                                <th>
+                                    Title
+                                </th>
+                                <th>
+                                    Body
+                                </th>
+                                <th>
+                                    Published On
+                                </th>
+                                <th>
+                                    Action
+                                </th>
+                            </tr>
                             </thead>
                             <tbody>
-                            <?php foreach($articles as $article): ?>
-                            <tr>
-                                <td>
-                                    <a href="<?php echo e(url('/articles', $article->id )); ?>"><?php echo e($article->title); ?></a>
-                                </td>
-                                <td>
-                                    <?php echo e(str_limit($article->body, 50)); ?>
+                            <?php foreach ($articles as $article): ?>
+                                <tr>
+                                    <td>
+                                        <a href="<?php echo e(url('/articles', $article->id)); ?>"><?php echo e($article->title); ?></a>
+                                    </td>
+                                    <td>
+                                        <?php echo e(str_limit($article->body, 50)); ?>
 
-                                </td>
-                                <td>
-                                    <?php echo e($article->published_at); ?>
+                                    </td>
+                                    <td>
+                                        <?php echo e($article->published_at); ?>
 
-                                </td>
-                                <td>
-                                    <a class="label label-danger" href="<?php echo e(url('/articles/'.$article->id.'/edit' )); ?>">Edit</a>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td>
+                                        <a class="label label-danger"
+                                           href="<?php echo e(url('/articles/' . $article->id . '/edit')); ?>">Edit</a>
+                                    </td>
+                                </tr>
                             <?php endforeach; ?>
                             </tbody>
                         </table>

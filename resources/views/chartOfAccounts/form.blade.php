@@ -1,8 +1,8 @@
 {!! csrf_field() !!}
 
-<div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('name', 'Name', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('name') ? ' has-error' : '' }}">
         {{ Form::text('name', null,['class'=>'form-control']) }}
         @if ($errors->has('name'))
             <span class="help-block">
@@ -12,9 +12,9 @@
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('code') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('code', 'Code', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('code') ? ' has-error' : '' }}">
         {{ Form::text('code', null,['class'=>'form-control']) }}
         @if ($errors->has('code'))
             <span class="help-block">
@@ -26,14 +26,14 @@
 
 <div class="form-group">
     {{ Form::label('parent', 'Parent', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('parent') ? ' has-error' : '' }}">
         {{ Form::select('parent', $parents, null,['class'=>'form-control', 'placeholder'=>'Select']) }}
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('status') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('status', 'Status', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('status') ? ' has-error' : '' }}">
         {{ Form::select('status', Config::get('common.status'), 1,['class'=>'form-control', 'placeholder'=>'Select']) }}
         @if ($errors->has('status'))
             <span class="help-block">
@@ -43,9 +43,9 @@
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('status') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('contra_status', 'Contra Status', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-1">
+    <div class="col-md-1{{ $errors->has('status') ? ' has-error' : '' }}">
         {{ Form::checkbox('contra_status', 1, null,['class'=>'form-control contra_status']) }}
         @if ($errors->has('contra_status'))
             <span class="help-block">
@@ -57,7 +57,7 @@
 
 <div class="form-group contra_id_div" style="display: none;">
     {{ Form::label('contra_id', 'Contra', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('contra_id') ? ' has-error' : '' }}">
         {{ Form::select('contra_id', $contras, null,['class'=>'form-control contra_id', 'placeholder'=>'Select']) }}
     </div>
 </div>
@@ -65,22 +65,18 @@
 <div class="form-actions">
     <div class="row">
         <div class="text-center col-md-12">
-        {{ Form::submit($submitText, ['class'=>'btn btn-circle green']) }}
+            {{ Form::submit($submitText, ['class'=>'btn btn-circle green']) }}
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function ()
-    {
-        $(document).on('click', '.contra_status', function ()
-        {
-            if($(this).prop('checked'))
-            {
+    $(document).ready(function () {
+        $(document).on('click', '.contra_status', function () {
+            if ($(this).prop('checked')) {
                 $('.contra_id_div').show();
             }
-            else
-            {
+            else {
                 $('.contra_id_div').hide();
                 $('.contra_id').val('');
             }

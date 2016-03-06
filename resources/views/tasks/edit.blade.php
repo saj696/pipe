@@ -6,7 +6,8 @@
                 <i class="fa fa-gift"></i> Edit: {{ $task->name_en }}
             </div>
             <div>
-                <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="{{ url('/tasks' )}}">Back</a>
+                <a style="margin: 12px; padding: 5px;" class="label label-success pull-right"
+                   href="{{ url('/tasks' )}}">Back</a>
             </div>
         </div>
         <div class="portlet-body form">

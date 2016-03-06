@@ -38,26 +38,26 @@
                             </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <?php echo e($article->title); ?>
+                            <tr>
+                                <td>
+                                    <?php echo e($article->title); ?>
 
-                                    </td>
-                                    <td>
-                                        <p><?php echo e($article->body); ?></p>
-                                    </td>
-                                    <td>
-                                        <?php echo e($article->published_at); ?>
+                                </td>
+                                <td>
+                                    <p><?php echo e($article->body); ?></p>
+                                </td>
+                                <td>
+                                    <?php echo e($article->published_at); ?>
 
-                                    </td>
-                                    <td>
-                                        <?php if ( ! ($article->tags->isEmpty())): ?>
-                                            <?php foreach($article->tags as $tag): ?>
-                                                <p><?php echo e($tag->name); ?></p>
-                                            <?php endforeach; ?>
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
+                                </td>
+                                <td>
+                                    <?php if (!($article->tags->isEmpty())): ?>
+                                        <?php foreach ($article->tags as $tag): ?>
+                                            <p><?php echo e($tag->name); ?></p>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>

@@ -46,19 +46,19 @@ class CodeCleaner
     /**
      * CodeCleaner constructor.
      *
-     * @param Parser        $parser    A PhpParser Parser instance. One will be created if not explicitly supplied.
-     * @param Printer       $printer   A PhpParser Printer instance. One will be created if not explicitly supplied.
+     * @param Parser $parser A PhpParser Parser instance. One will be created if not explicitly supplied.
+     * @param Printer $printer A PhpParser Printer instance. One will be created if not explicitly supplied.
      * @param NodeTraverser $traverser A PhpParser NodeTraverser instance. One will be created if not explicitly supplied.
      */
     public function __construct(Parser $parser = null, Printer $printer = null, NodeTraverser $traverser = null)
     {
         if ($parser === null) {
             $parserFactory = new ParserFactory();
-            $parser        = $parserFactory->createParser();
+            $parser = $parserFactory->createParser();
         }
 
-        $this->parser    = $parser;
-        $this->printer   = $printer   ?: new Printer();
+        $this->parser = $parser;
+        $this->printer = $printer ?: new Printer();
         $this->traverser = $traverser ?: new NodeTraverser();
 
         foreach ($this->getDefaultPasses() as $pass) {
@@ -99,7 +99,7 @@ class CodeCleaner
      * @throws ParseErrorException if the code is invalid PHP, and cannot be coerced into valid PHP.
      *
      * @param array $codeLines
-     * @param bool  $requireSemicolons
+     * @param bool $requireSemicolons
      *
      * @return string|false Cleaned PHP code, False if the input is incomplete.
      */
@@ -144,7 +144,7 @@ class CodeCleaner
      * @see Parser::parse
      *
      * @param string $code
-     * @param bool   $requireSemicolons
+     * @param bool $requireSemicolons
      *
      * @return array A set of statements
      */
@@ -189,7 +189,7 @@ class CodeCleaner
      * themselves.
      *
      * @param \PhpParser\Error $e
-     * @param string           $code
+     * @param string $code
      *
      * @return bool
      */

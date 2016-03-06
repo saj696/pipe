@@ -47,7 +47,8 @@
                                         <td>{{ date('F', mktime(0, 0, 0, $salaryPayment->month)) }}</td>
                                         <td>{{ $salaryPayment->amount }}</td>
                                         <td>
-                                            <a class="label label-danger" href="{{ url('/salary_payment/'.$salaryPayment->id.'/edit' )}}">Edit</a>
+                                            <a class="label label-danger"
+                                               href="{{ url('/salary_payment/'.$salaryPayment->id.'/edit' )}}">Edit</a>
                                         </td>
                                     </tr>
                                 @endforeach

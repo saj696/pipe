@@ -4,13 +4,13 @@ namespace Illuminate\View;
 
 use ArrayAccess;
 use BadMethodCallException;
-use Illuminate\Support\Str;
-use Illuminate\Support\MessageBag;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\View\Engines\EngineInterface;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\Support\MessageProvider;
+use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\View\View as ViewContract;
+use Illuminate\Support\MessageBag;
+use Illuminate\Support\Str;
+use Illuminate\View\Engines\EngineInterface;
 
 class View implements ArrayAccess, ViewContract
 {
@@ -52,11 +52,11 @@ class View implements ArrayAccess, ViewContract
     /**
      * Create a new view instance.
      *
-     * @param  \Illuminate\View\Factory  $factory
-     * @param  \Illuminate\View\Engines\EngineInterface  $engine
-     * @param  string  $view
-     * @param  string  $path
-     * @param  array   $data
+     * @param  \Illuminate\View\Factory $factory
+     * @param  \Illuminate\View\Engines\EngineInterface $engine
+     * @param  string $view
+     * @param  string $path
+     * @param  array $data
      * @return void
      */
     public function __construct(Factory $factory, EngineInterface $engine, $view, $path, $data = [])
@@ -66,13 +66,13 @@ class View implements ArrayAccess, ViewContract
         $this->engine = $engine;
         $this->factory = $factory;
 
-        $this->data = $data instanceof Arrayable ? $data->toArray() : (array) $data;
+        $this->data = $data instanceof Arrayable ? $data->toArray() : (array)$data;
     }
 
     /**
      * Get the string contents of the view.
      *
-     * @param  callable|null  $callback
+     * @param  callable|null $callback
      * @return string
      */
     public function render(callable $callback = null)
@@ -86,7 +86,7 @@ class View implements ArrayAccess, ViewContract
         // another view gets rendered in the future by the application developer.
         $this->factory->flushSectionsIfDoneRendering();
 
-        return ! is_null($response) ? $response : $contents;
+        return !is_null($response) ? $response : $contents;
     }
 
     /**
@@ -156,8 +156,8 @@ class View implements ArrayAccess, ViewContract
     /**
      * Add a piece of data to the view.
      *
-     * @param  string|array  $key
-     * @param  mixed   $value
+     * @param  string|array $key
+     * @param  mixed $value
      * @return $this
      */
     public function with($key, $value = null)
@@ -174,9 +174,9 @@ class View implements ArrayAccess, ViewContract
     /**
      * Add a view instance to the view data.
      *
-     * @param  string  $key
-     * @param  string  $view
-     * @param  array   $data
+     * @param  string $key
+     * @param  string $view
+     * @param  array $data
      * @return $this
      */
     public function nest($key, $view, array $data = [])
@@ -187,7 +187,7 @@ class View implements ArrayAccess, ViewContract
     /**
      * Add validation errors to the view.
      *
-     * @param  \Illuminate\Contracts\Support\MessageProvider|array  $provider
+     * @param  \Illuminate\Contracts\Support\MessageProvider|array $provider
      * @return $this
      */
     public function withErrors($provider)
@@ -195,7 +195,7 @@ class View implements ArrayAccess, ViewContract
         if ($provider instanceof MessageProvider) {
             $this->with('errors', $provider->getMessageBag());
         } else {
-            $this->with('errors', new MessageBag((array) $provider));
+            $this->with('errors', new MessageBag((array)$provider));
         }
 
         return $this;
@@ -264,7 +264,7 @@ class View implements ArrayAccess, ViewContract
     /**
      * Set the path to the view.
      *
-     * @param  string  $path
+     * @param  string $path
      * @return void
      */
     public function setPath($path)
@@ -275,7 +275,7 @@ class View implements ArrayAccess, ViewContract
     /**
      * Determine if a piece of data is bound.
      *
-     * @param  string  $key
+     * @param  string $key
      * @return bool
      */
     public function offsetExists($key)
@@ -286,7 +286,7 @@ class View implements ArrayAccess, ViewContract
     /**
      * Get a piece of bound data to the view.
      *
-     * @param  string  $key
+     * @param  string $key
      * @return mixed
      */
     public function offsetGet($key)
@@ -297,8 +297,8 @@ class View implements ArrayAccess, ViewContract
     /**
      * Set a piece of data on the view.
      *
-     * @param  string  $key
-     * @param  mixed   $value
+     * @param  string $key
+     * @param  mixed $value
      * @return void
      */
     public function offsetSet($key, $value)
@@ -309,7 +309,7 @@ class View implements ArrayAccess, ViewContract
     /**
      * Unset a piece of data from the view.
      *
-     * @param  string  $key
+     * @param  string $key
      * @return void
      */
     public function offsetUnset($key)
@@ -320,7 +320,7 @@ class View implements ArrayAccess, ViewContract
     /**
      * Get a piece of data from the view.
      *
-     * @param  string  $key
+     * @param  string $key
      * @return mixed
      */
     public function &__get($key)
@@ -331,8 +331,8 @@ class View implements ArrayAccess, ViewContract
     /**
      * Set a piece of data on the view.
      *
-     * @param  string  $key
-     * @param  mixed   $value
+     * @param  string $key
+     * @param  mixed $value
      * @return void
      */
     public function __set($key, $value)
@@ -343,7 +343,7 @@ class View implements ArrayAccess, ViewContract
     /**
      * Check if a piece of data is bound to the view.
      *
-     * @param  string  $key
+     * @param  string $key
      * @return bool
      */
     public function __isset($key)
@@ -354,7 +354,7 @@ class View implements ArrayAccess, ViewContract
     /**
      * Remove a piece of bound data from the view.
      *
-     * @param  string  $key
+     * @param  string $key
      * @return bool
      */
     public function __unset($key)
@@ -365,8 +365,8 @@ class View implements ArrayAccess, ViewContract
     /**
      * Dynamically bind parameters to the view.
      *
-     * @param  string  $method
-     * @param  array   $parameters
+     * @param  string $method
+     * @param  array $parameters
      * @return \Illuminate\View\View
      *
      * @throws \BadMethodCallException

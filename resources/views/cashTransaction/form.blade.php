@@ -1,8 +1,8 @@
 {!! csrf_field() !!}
 
-<div class="form-group{{ $errors->has('date') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('date', 'Date', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('date') ? ' has-error' : '' }}">
         {{ Form::text('date', null,['class'=>'form-control transaction_date']) }}
         @if ($errors->has('date'))
             <span class="help-block">
@@ -12,9 +12,9 @@
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('workspace_to') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('workspace_to', 'Workspace', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('workspace_to') ? ' has-error' : '' }}">
         {{ Form::select('workspace_to', $workspaces, null,['class'=>'form-control', 'id'=>'workspace_to', 'placeholder'=>'Select']) }}
         @if ($errors->has('workspace_to'))
             <span class="help-block">
@@ -24,9 +24,9 @@
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('amount') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('amount', 'Amount', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('amount') ? ' has-error' : '' }}">
         {{ Form::text('amount', null,['class'=>'form-control amount']) }}
         {{ Form::hidden('total_amount', $totalCash,['class'=>'form-control total_amount']) }}
         @if ($errors->has('amount'))

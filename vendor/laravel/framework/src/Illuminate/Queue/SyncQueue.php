@@ -3,19 +3,19 @@
 namespace Illuminate\Queue;
 
 use Exception;
-use Throwable;
-use Illuminate\Queue\Jobs\SyncJob;
 use Illuminate\Contracts\Queue\Job;
 use Illuminate\Contracts\Queue\Queue as QueueContract;
+use Illuminate\Queue\Jobs\SyncJob;
+use Throwable;
 
 class SyncQueue extends Queue implements QueueContract
 {
     /**
      * Push a new job onto the queue.
      *
-     * @param  string  $job
-     * @param  mixed   $data
-     * @param  string  $queue
+     * @param  string $job
+     * @param  mixed $data
+     * @param  string $queue
      * @return mixed
      * @throws \Throwable
      */
@@ -43,9 +43,9 @@ class SyncQueue extends Queue implements QueueContract
     /**
      * Push a raw payload onto the queue.
      *
-     * @param  string  $payload
-     * @param  string  $queue
-     * @param  array   $options
+     * @param  string $payload
+     * @param  string $queue
+     * @param  array $options
      * @return mixed
      */
     public function pushRaw($payload, $queue = null, array $options = [])
@@ -56,10 +56,10 @@ class SyncQueue extends Queue implements QueueContract
     /**
      * Push a new job onto the queue after a delay.
      *
-     * @param  \DateTime|int  $delay
-     * @param  string  $job
-     * @param  mixed   $data
-     * @param  string  $queue
+     * @param  \DateTime|int $delay
+     * @param  string $job
+     * @param  mixed $data
+     * @param  string $queue
      * @return mixed
      */
     public function later($delay, $job, $data = '', $queue = null)
@@ -70,7 +70,7 @@ class SyncQueue extends Queue implements QueueContract
     /**
      * Pop the next job off of the queue.
      *
-     * @param  string  $queue
+     * @param  string $queue
      * @return \Illuminate\Contracts\Queue\Job|null
      */
     public function pop($queue = null)
@@ -81,7 +81,7 @@ class SyncQueue extends Queue implements QueueContract
     /**
      * Resolve a Sync job instance.
      *
-     * @param  string  $payload
+     * @param  string $payload
      * @return \Illuminate\Queue\Jobs\SyncJob
      */
     protected function resolveJob($payload)
@@ -92,7 +92,7 @@ class SyncQueue extends Queue implements QueueContract
     /**
      * Raise the after queue job event.
      *
-     * @param  \Illuminate\Contracts\Queue\Job  $job
+     * @param  \Illuminate\Contracts\Queue\Job $job
      * @return void
      */
     protected function raiseAfterJobEvent(Job $job)
@@ -107,7 +107,7 @@ class SyncQueue extends Queue implements QueueContract
     /**
      * Handle the failed job.
      *
-     * @param  \Illuminate\Contracts\Queue\Job  $job
+     * @param  \Illuminate\Contracts\Queue\Job $job
      * @return array
      */
     protected function handleFailedJob(Job $job)
@@ -120,7 +120,7 @@ class SyncQueue extends Queue implements QueueContract
     /**
      * Raise the failed queue job event.
      *
-     * @param  \Illuminate\Contracts\Queue\Job  $job
+     * @param  \Illuminate\Contracts\Queue\Job $job
      * @return void
      */
     protected function raiseFailedJobEvent(Job $job)

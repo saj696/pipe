@@ -6,15 +6,16 @@
                 <i class="fa fa-gift"></i> New Module
             </div>
             <div>
-                <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="<?php echo e(url('/modules' )); ?>">Back</a>
+                <a style="margin: 12px; padding: 5px;" class="label label-success pull-right"
+                   href="<?php echo e(url('/modules')); ?>">Back</a>
             </div>
         </div>
         <div class="portlet-body form">
             <div class="form-horizontal" role="form">
                 <div class="form-body">
-                    <?php echo e(Form::open(['url'=>'modules'])); ?>
+                    <?php echo e(Form::open(['url' => 'modules'])); ?>
 
-                    <?php echo $__env->make('modules.form', ['submitText'=>'Add'], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                    <?php echo $__env->make('modules.form', ['submitText' => 'Add'], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
                     <?php echo e(Form::close()); ?>
 
                 </div>

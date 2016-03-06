@@ -32,8 +32,7 @@ class CommonHelper extends Facade
                 ->where('status', 1)
                 ->first();
             return $customer->company_name;
-        }elseif($type==1)
-        {
+        } elseif ($type == 1) {
             return "";
         }
 
@@ -45,8 +44,7 @@ class CommonHelper extends Facade
     {
         $current = intval(date('Y'));
         $years = [];
-        for($i=$current; $i<$current+5; $i++)
-        {
+        for ($i = $current; $i < $current + 5; $i++) {
             $years[] = $i;
         }
         return $years;
@@ -54,13 +52,13 @@ class CommonHelper extends Facade
 
     public static function get_current_financial_year()
     {
-        $year=DB::table('financial_years')->where('status','=',1)->first();
+        $year = DB::table('financial_years')->where('status', '=', 1)->first();
         return $year->year;
     }
 
-    public static function get_delivered_quantity($sales_order_id,$product_id)
+    public static function get_delivered_quantity($sales_order_id, $product_id)
     {
-        $result=SalesDeliveryDetail::where(['sales_order_id'=>$sales_order_id,'product_id'=>$product_id])->first();
+        $result = SalesDeliveryDetail::where(['sales_order_id' => $sales_order_id, 'product_id' => $product_id])->first();
         return $result->delivered_quantity;
     }
 

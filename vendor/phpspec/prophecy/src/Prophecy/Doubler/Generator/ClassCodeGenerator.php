@@ -22,20 +22,22 @@ class ClassCodeGenerator
     /**
      * Generates PHP code for class node.
      *
-     * @param string         $classname
+     * @param string $classname
      * @param Node\ClassNode $class
      *
      * @return string
      */
     public function generate($classname, Node\ClassNode $class)
     {
-        $parts     = explode('\\', $classname);
+        $parts = explode('\\', $classname);
         $classname = array_pop($parts);
         $namespace = implode('\\', $parts);
 
         $code = sprintf("class %s extends \%s implements %s {\n",
             $classname, $class->getParentClass(), implode(', ',
-                array_map(function ($interface) {return '\\'.$interface;}, $class->getInterfaces())
+                array_map(function ($interface) {
+                    return '\\' . $interface;
+                }, $class->getInterfaces())
             )
         );
 
@@ -45,7 +47,7 @@ class ClassCodeGenerator
         $code .= "\n";
 
         foreach ($class->getMethods() as $method) {
-            $code .= $this->generateMethod($method)."\n";
+            $code .= $this->generateMethod($method) . "\n";
         }
         $code .= "\n}";
 
@@ -57,14 +59,14 @@ class ClassCodeGenerator
         $php = sprintf("%s %s function %s%s(%s)%s {\n",
             $method->getVisibility(),
             $method->isStatic() ? 'static' : '',
-            $method->returnsReference() ? '&':'',
+            $method->returnsReference() ? '&' : '',
             $method->getName(),
             implode(', ', $this->generateArguments($method->getArguments())),
             $method->hasReturnType() ? sprintf(': %s', $method->getReturnType()) : ''
         );
-        $php .= $method->getCode()."\n";
+        $php .= $method->getCode() . "\n";
 
-        return $php.'}';
+        return $php . '}';
     }
 
     private function generateArguments(array $arguments)
@@ -76,14 +78,14 @@ class ClassCodeGenerator
                 if ('array' === $hint || 'callable' === $hint) {
                     $php .= $hint;
                 } else {
-                    $php .= '\\'.$hint;
+                    $php .= '\\' . $hint;
                 }
             }
 
-            $php .= ' '.($argument->isPassedByReference() ? '&' : '').'$'.$argument->getName();
+            $php .= ' ' . ($argument->isPassedByReference() ? '&' : '') . '$' . $argument->getName();
 
             if ($argument->isOptional()) {
-                $php .= ' = '.var_export($argument->getDefault(), true);
+                $php .= ' = ' . var_export($argument->getDefault(), true);
             }
 
             return $php;

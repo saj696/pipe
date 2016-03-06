@@ -4,21 +4,21 @@ class StatTest extends PHPUnit_Framework_TestCase
 {
     /**
      * All possible values should be > 30% but less than 170%
-     * 
+     *
      * This also catches 0 and 1000
      */
     public function testDistribution()
     {
         $integers = array_fill(0, 100, 0);
         for ($i = 0; $i < 10000; ++$i) {
-            ++$integers[random_int(0,99)];
+            ++$integers[random_int(0, 99)];
         }
         for ($i = 0; $i < 100; ++$i) {
             $this->assertFalse($integers[$i] < 30);
             $this->assertFalse($integers[$i] > 170);
         }
     }
-    
+
     /**
      * This should be between 55% and 75%, always
      */
@@ -26,7 +26,7 @@ class StatTest extends PHPUnit_Framework_TestCase
     {
         $integers = array_fill(0, 2000, 0);
         for ($i = 0; $i < 2000; ++$i) {
-            ++$integers[random_int(0,1999)];
+            ++$integers[random_int(0, 1999)];
         }
         $coverage = 0;
         for ($i = 0; $i < 2000; ++$i) {
@@ -37,7 +37,7 @@ class StatTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($coverage >= 1150);
         $this->assertTrue($coverage <= 1350);
     }
-    
+
     public function testCompressionRatios()
     {
         $some_bytes = random_bytes(65536);

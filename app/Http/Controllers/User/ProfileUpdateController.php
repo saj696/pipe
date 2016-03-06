@@ -2,18 +2,12 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Requests;
-use App\Models\User;
-use App\Models\UserGroup;
-use App\Models\Workspace;
-use Carbon\Carbon;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
 use Session;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 
 class ProfileUpdateController extends Controller
 {
@@ -34,10 +28,10 @@ class ProfileUpdateController extends Controller
         $file = $request->file('photo');
         $destinationPath = base_path() . '/public/image/user/';
 
-        if($request->hasFile('photo'))
-        {
-            $file->move($destinationPath, $file->getClientOriginalName());
-            $user->photo = $file->getClientOriginalName();
+        if ($request->hasFile('photo')) {
+            $name = time() . $file->getClientOriginalName();
+            $file->move($destinationPath, $name);
+            $user->photo = $name;
         }
 
         $user->username = $request->input('username');

@@ -21,13 +21,13 @@ use Prophecy\Exception\InvalidArgumentException;
 class ClassNode
 {
     private $parentClass = 'stdClass';
-    private $interfaces  = array();
-    private $properties  = array();
+    private $interfaces = array();
+    private $properties = array();
 
     /**
      * @var MethodNode[]
      */
-    private $methods     = array();
+    private $methods = array();
 
     public function getParentClass()
     {

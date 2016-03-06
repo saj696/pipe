@@ -2,9 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-use App\Models\ProductionRegister;
-
 class ProductionRegisterRequest extends Request
 {
     /**
@@ -25,30 +22,27 @@ class ProductionRegisterRequest extends Request
      */
     public function rules()
     {
-        switch($this->method())
-        {
+        switch ($this->method()) {
             case 'GET':
-            case 'DELETE':
-            {
+            case 'DELETE': {
                 return [];
             }
-            case 'POST':
-            {
+            case 'POST': {
                 return [
-                    'product_id'=>'required|array',
-                    'date'=>'required|date',
-                    'production'=>'required|array'
+                    'product_id' => 'required|array',
+                    'date' => 'required|date',
+                    'production' => 'required|array'
                 ];
             }
             case 'PUT':
-            case 'PATCH':
-            {
+            case 'PATCH': {
                 return [
-                    'date'=>'required|date',
-                    'production'=>'required|integer'
+                    'date' => 'required|date',
+                    'production' => 'required|integer'
                 ];
             }
-            default:break;
+            default:
+                break;
         }
     }
 }

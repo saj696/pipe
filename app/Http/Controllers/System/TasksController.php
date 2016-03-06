@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers\System;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests;
-use App\Models\Task;
+use App\Http\Requests\TaskRequest;
 use App\Models\Component;
 use App\Models\Module;
-use Carbon\Carbon;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\TaskRequest;
+use App\Models\Task;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Config;
 use Session;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 
 class TasksController extends Controller
 {
@@ -27,7 +24,7 @@ class TasksController extends Controller
         $tasks = Task::with('component', 'module')
             ->latest()
             ->where('tasks.status', 1)
-            ->paginate(5);
+            ->paginate(Config::get('common.pagination'));
 
         return view('tasks.index', compact('tasks'));
     }

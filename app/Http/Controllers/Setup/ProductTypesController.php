@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Setup;
 
-use App\Models\ProductType;
-use Illuminate\Http\Request;
-use App\Http\Requests\ProductTypeRequest;
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
+use App\Http\Requests\ProductTypeRequest;
+use App\Models\ProductType;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
@@ -16,6 +15,7 @@ class ProductTypesController extends Controller
     {
         $this->middleware('perm');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -23,7 +23,7 @@ class ProductTypesController extends Controller
      */
     public function index()
     {
-        return view('productTypes/index')->with('product_types',ProductType::paginate(Config::get('common.pagination')));
+        return view('productTypes/index')->with('product_types', ProductType::paginate(Config::get('common.pagination')));
     }
 
     /**
@@ -39,7 +39,7 @@ class ProductTypesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(ProductTypeRequest $request)
@@ -58,7 +58,7 @@ class ProductTypesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
 //    public function show($id)
@@ -69,20 +69,20 @@ class ProductTypesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         $product_type = ProductType::findOrFail($id);
-        return view('productTypes.edit')->with('product_type',$product_type);
+        return view('productTypes.edit')->with('product_type', $product_type);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(ProductTypeRequest $request, $id)
@@ -100,7 +100,7 @@ class ProductTypesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
 //    public function destroy($id)

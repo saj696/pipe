@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Sales;
 
 use App\Helpers\CommonHelper;
+use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\Models\SalesDeliveryDetail;
 use App\Models\SalesOrder;
 use App\Models\SalesOrderItem;
 use App\Models\Stock;
-use Illuminate\Http\Request;
 use DB;
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Redirect;
@@ -38,7 +38,13 @@ class SalesDeliveryController extends Controller
                 $join->on('sales.sales_order_id', '=', 'deliver.sales_order_id');
                 $join->on('sales.product_id', '=', 'deliver.product_id');
             })
-            ->select('sales.*', 'products.title', 'deliver.delivered_quantity')
+            ->leftJoin('stocks', function ($join) {
+                $join->on('products.id', '=', 'stocks.product_id')
+                    ->where('stocks.year', '=', CommonHelper::get_current_financial_year())
+                    ->where('stocks.stock_type', '=', Config::get('common.balance_type_intermediate'))
+                    ->where('stocks.workspace_id', '=', Auth::user()->workspace_id);
+            })
+            ->select('sales.*', 'products.title', 'deliver.delivered_quantity','stocks.quantity')
             ->where('sales.sales_order_id', $id)
             ->get();
 

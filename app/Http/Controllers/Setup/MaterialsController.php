@@ -3,19 +3,15 @@
 namespace App\Http\Controllers\Setup;
 
 use App\Helpers\CommonHelper;
+use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\Http\Requests\MaterialRequest;
 use App\Models\Material;
 use App\Models\RawStock;
-use Carbon\Carbon;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\MaterialRequest;
+use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Request;
 use Session;
-use DB;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 
 class MaterialsController extends Controller
 {
@@ -46,10 +42,8 @@ class MaterialsController extends Controller
 
     public function store(MaterialRequest $request)
     {
-        try
-        {
-            DB::transaction(function () use ($request)
-            {
+        try {
+            DB::transaction(function () use ($request) {
                 $material = New Material;
                 $material->name = $request->input('name');
                 $material->type = $request->input('type');
@@ -77,9 +71,7 @@ class MaterialsController extends Controller
                 $rawStock->created_at = time();
                 $rawStock->save();
             });
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             Session()->flash('error_message', 'Material not created!');
             return redirect('materials');
         }

@@ -2,8 +2,8 @@
 
 namespace Illuminate\Foundation\Console;
 
-use Illuminate\Support\Str;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 
 class KeyGenerateCommand extends Command
@@ -32,14 +32,14 @@ class KeyGenerateCommand extends Command
         $key = $this->getRandomKey($this->laravel['config']['app.cipher']);
 
         if ($this->option('show')) {
-            return $this->line('<comment>'.$key.'</comment>');
+            return $this->line('<comment>' . $key . '</comment>');
         }
 
         $path = base_path('.env');
 
         if (file_exists($path)) {
             file_put_contents($path, str_replace(
-                'APP_KEY='.$this->laravel['config']['app.key'], 'APP_KEY='.$key, file_get_contents($path)
+                'APP_KEY=' . $this->laravel['config']['app.key'], 'APP_KEY=' . $key, file_get_contents($path)
             ));
         }
 
@@ -51,7 +51,7 @@ class KeyGenerateCommand extends Command
     /**
      * Generate a random key for the application.
      *
-     * @param  string  $cipher
+     * @param  string $cipher
      * @return string
      */
     protected function getRandomKey($cipher)

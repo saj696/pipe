@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class UserGroupRole extends Model
 {
-    public $timestamps=false;
+    public $timestamps = false;
 
     protected $fillable = [
 

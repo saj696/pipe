@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SalaryPayment extends Model
 {
-    public $timestamps=false;
+    public $timestamps = false;
 
     protected $fillable = [
         'amount'

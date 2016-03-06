@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers\Employee;
 
-use App\Http\Requests;
-use App\Models\Designation;
-use Carbon\Carbon;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\Http\Requests\DesignationRequest;
+use App\Models\Designation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Request;
 use Session;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 
 class DesignationsController extends Controller
 {

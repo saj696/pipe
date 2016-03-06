@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
 use App\Models\User;
 
 
@@ -28,35 +27,32 @@ class UserRequest extends Request
     {
         $user = User::find($this->users);
 
-        switch($this->method())
-        {
+        switch ($this->method()) {
             case 'GET':
-            case 'DELETE':
-            {
+            case 'DELETE': {
                 return [];
             }
-            case 'POST':
-            {
+            case 'POST': {
                 return [
-                    'name_en'=>'required',
-                    'username'=>'required|alpha_dash|min:3|unique:users',
-                    'email'=>'required|email|unique:users',
-                    'password'=>'required|min:6',
-                    'user_group_id'=>'required'
+                    'name_en' => 'required',
+                    'username' => 'required|alpha_dash|min:3|unique:users',
+                    'email' => 'required|email|unique:users',
+                    'password' => 'required|min:6',
+                    'user_group_id' => 'required'
                 ];
             }
             case 'PUT':
-            case 'PATCH':
-            {
+            case 'PATCH': {
                 return [
-                    'name_en'=>'required',
-                    'username'=>'required|alpha_dash|min:3|unique:users,username,'.$user->id,
-                    'email'=>'required|email|unique:users,email,'.$user->id,
-                    'password'=>'required|min:6',
-                    'user_group_id'=>'required'
+                    'name_en' => 'required',
+                    'username' => 'required|alpha_dash|min:3|unique:users,username,' . $user->id,
+                    'email' => 'required|email|unique:users,email,' . $user->id,
+                    'password' => 'required|min:6',
+                    'user_group_id' => 'required'
                 ];
             }
-            default:break;
+            default:
+                break;
         }
     }
 }

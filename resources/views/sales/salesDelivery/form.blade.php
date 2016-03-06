@@ -7,6 +7,7 @@
         <th>Quantity</th>
         <th>Delivered</th>
         <th>Remaining</th>
+        <th>Stock Quantity</th>
         <th>Deliver Now</th>
     </tr>
     @foreach($productLists as $productList)
@@ -19,6 +20,13 @@
             </td>
             <td>{{  $productList->delivered_quantity ? $productList->delivered_quantity : 0 }}</td>
             <td class="remaining">{{  ($productList->sales_quantity-$productList->delivered_quantity) }}</td>
+            <td>
+                @if($productList->quantity > 10)
+                    <span class="badge badge-success stock">{{  ($productList->quantity) }}</span>
+                @else
+                    <span class="badge badge-danger stock">{{  ($productList->quantity) }}</span>
+                @endif
+            </td>
             <td>{{  Form::text('deliver_now['.$productList->product_id.']', (($productList->sales_quantity-$productList->delivered_quantity)==0)? 0: "", ['class'=>'form-control deliver_now','required'=>'required']) }}</td>
         </tr>
     @endforeach
@@ -38,13 +46,17 @@
             var obj = $(this);
 
             var remaining = parseFloat(obj.closest('.product').find('.remaining').html());
-            console.log(remaining)
-            if (deliver_now > remaining || deliver_now < 0) {
-                toster();
+            var stock = parseFloat(obj.closest('.product').find('.stock').html());
+//            console.log(stock)
+            if (deliver_now > stock || deliver_now < 0) {
+                toster('Deliver quantity should be equal or less than stock quantity !');
                 $(this).val("");
 
             }
-
+            else if (deliver_now > remaining || deliver_now < 0) {
+                toster('Deliver quantity should be equal or less than remaining quantity !');
+                $(this).val("");
+            }
         })
     });
 
@@ -68,18 +80,18 @@
 
     var i = 0;
 
-    function toster() {
-        delayToasts();
+    function toster(msg) {
+        delayToasts(msg);
     }
     ;
 
-    function delayToasts() {
+    function delayToasts(msg) {
         if (i === toasts.length) {
             return;
         }
         var delay = i === 0 ? 0 : 2100;
         window.setTimeout(function () {
-            showToast();
+            showToast(msg);
         }, delay);
 
         // re-enable the button
@@ -90,10 +102,10 @@
         }
     }
 
-    function showToast() {
+    function showToast(msg) {
         var t = toasts[i];
         toastr.options.positionClass = t.css;
-        toastr[t.type](t.msg);
+        toastr[t.type](msg);
         i++;
         delayToasts();
     }

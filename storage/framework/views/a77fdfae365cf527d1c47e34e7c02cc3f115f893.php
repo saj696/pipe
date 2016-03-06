@@ -6,14 +6,15 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Reset Password</div>
                 <div class="panel-body">
-                    <?php if(session('status')): ?>
+                    <?php if (session('status')): ?>
                         <div class="alert alert-success">
                             <?php echo e(session('status')); ?>
 
                         </div>
                     <?php endif; ?>
 
-                    <form class="form-horizontal" role="form" method="POST" action="<?php echo e(url('/password/email')); ?>">
+                    <form class="form-horizontal" role="form" method="POST"
+                          action="<?php echo e(url('/password/email')); ?>">
                         <?php echo csrf_field(); ?>
 
 
@@ -21,9 +22,10 @@
                             <label class="col-md-4 control-label">E-Mail Address</label>
 
                             <div class="col-md-6">
-                                <input type="email" class="form-control" name="email" value="<?php echo e(old('email')); ?>">
+                                <input type="email" class="form-control" name="email"
+                                       value="<?php echo e(old('email')); ?>">
 
-                                <?php if($errors->has('email')): ?>
+                                <?php if ($errors->has('email')): ?>
                                     <span class="help-block">
                                         <strong><?php echo e($errors->first('email')); ?></strong>
                                     </span>

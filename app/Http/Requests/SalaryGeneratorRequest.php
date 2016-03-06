@@ -2,9 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Controllers\Payroll\SalaryGeneratorController;
-use App\Http\Requests\Request;
-
 class SalaryGeneratorRequest extends Request
 {
     /**
@@ -25,26 +22,23 @@ class SalaryGeneratorRequest extends Request
     public function rules()
     {
 
-        switch($this->method())
-        {
+        switch ($this->method()) {
             case 'GET':
-            case 'DELETE':
-            {
+            case 'DELETE': {
                 return [];
             }
-            case 'POST':
-            {
+            case 'POST': {
                 return [
                     'month' => 'required|numeric',
                     'employee_type' => 'required|numeric',
                 ];
             }
             case 'PUT':
-            case 'PATCH':
-            {
+            case 'PATCH': {
                 return [];
             }
-            default:break;
+            default:
+                break;
         }
     }
 }

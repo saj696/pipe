@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-
 class UserGroupRequest extends Request
 {
     /**
@@ -25,8 +23,8 @@ class UserGroupRequest extends Request
     public function rules()
     {
         return [
-            'name_en'=>'required',
-            'status'=>'required'
+            'name_en' => 'required',
+            'status' => 'required'
         ];
     }
 }

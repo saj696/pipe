@@ -2,49 +2,49 @@
 
 namespace Illuminate\Database\Schema\Grammars;
 
-use RuntimeException;
-use Doctrine\DBAL\Types\Type;
-use Illuminate\Support\Fluent;
-use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Schema\AbstractSchemaManager as SchemaManager;
 use Doctrine\DBAL\Schema\Column;
-use Doctrine\DBAL\Schema\TableDiff;
-use Illuminate\Database\Connection;
 use Doctrine\DBAL\Schema\Comparator;
+use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Schema\TableDiff;
+use Doctrine\DBAL\Types\Type;
+use Illuminate\Database\Connection;
+use Illuminate\Database\Grammar as BaseGrammar;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Grammar as BaseGrammar;
-use Doctrine\DBAL\Schema\AbstractSchemaManager as SchemaManager;
+use Illuminate\Support\Fluent;
+use RuntimeException;
 
 abstract class Grammar extends BaseGrammar
 {
     /**
      * Compile a rename column command.
      *
-     * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
-     * @param  \Illuminate\Support\Fluent  $command
-     * @param  \Illuminate\Database\Connection  $connection
+     * @param  \Illuminate\Database\Schema\Blueprint $blueprint
+     * @param  \Illuminate\Support\Fluent $command
+     * @param  \Illuminate\Database\Connection $connection
      * @return array
      */
     public function compileRenameColumn(Blueprint $blueprint, Fluent $command, Connection $connection)
     {
         $schema = $connection->getDoctrineSchemaManager();
 
-        $table = $this->getTablePrefix().$blueprint->getTable();
+        $table = $this->getTablePrefix() . $blueprint->getTable();
 
         $column = $connection->getDoctrineColumn($table, $command->from);
 
         $tableDiff = $this->getRenamedDiff($blueprint, $command, $column, $schema);
 
-        return (array) $schema->getDatabasePlatform()->getAlterTableSQL($tableDiff);
+        return (array)$schema->getDatabasePlatform()->getAlterTableSQL($tableDiff);
     }
 
     /**
      * Get a new column instance with the new column name.
      *
-     * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
-     * @param  \Illuminate\Support\Fluent  $command
-     * @param  \Doctrine\DBAL\Schema\Column  $column
-     * @param  \Doctrine\DBAL\Schema\AbstractSchemaManager  $schema
+     * @param  \Illuminate\Database\Schema\Blueprint $blueprint
+     * @param  \Illuminate\Support\Fluent $command
+     * @param  \Doctrine\DBAL\Schema\Column $column
+     * @param  \Doctrine\DBAL\Schema\AbstractSchemaManager $schema
      * @return \Doctrine\DBAL\Schema\TableDiff
      */
     protected function getRenamedDiff(Blueprint $blueprint, Fluent $command, Column $column, SchemaManager $schema)
@@ -57,9 +57,9 @@ abstract class Grammar extends BaseGrammar
     /**
      * Set the renamed columns on the table diff.
      *
-     * @param  \Doctrine\DBAL\Schema\TableDiff  $tableDiff
-     * @param  \Illuminate\Support\Fluent  $command
-     * @param  \Doctrine\DBAL\Schema\Column  $column
+     * @param  \Doctrine\DBAL\Schema\TableDiff $tableDiff
+     * @param  \Illuminate\Support\Fluent $command
+     * @param  \Doctrine\DBAL\Schema\Column $column
      * @return \Doctrine\DBAL\Schema\TableDiff
      */
     protected function setRenamedColumns(TableDiff $tableDiff, Fluent $command, Column $column)
@@ -74,8 +74,8 @@ abstract class Grammar extends BaseGrammar
     /**
      * Compile a foreign key command.
      *
-     * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
-     * @param  \Illuminate\Support\Fluent  $command
+     * @param  \Illuminate\Database\Schema\Blueprint $blueprint
+     * @param  \Illuminate\Support\Fluent $command
      * @return string
      */
     public function compileForeign(Blueprint $blueprint, Fluent $command)
@@ -89,7 +89,7 @@ abstract class Grammar extends BaseGrammar
         // an array of columns to comma-delimited strings for the SQL queries.
         $columns = $this->columnize($command->columns);
 
-        $onColumns = $this->columnize((array) $command->references);
+        $onColumns = $this->columnize((array)$command->references);
 
         $sql = "alter table {$table} add constraint {$command->index} ";
 
@@ -98,11 +98,11 @@ abstract class Grammar extends BaseGrammar
         // Once we have the basic foreign key creation statement constructed we can
         // build out the syntax for what should happen on an update or delete of
         // the affected columns, which will get something like "cascade", etc.
-        if (! is_null($command->onDelete)) {
+        if (!is_null($command->onDelete)) {
             $sql .= " on delete {$command->onDelete}";
         }
 
-        if (! is_null($command->onUpdate)) {
+        if (!is_null($command->onUpdate)) {
             $sql .= " on update {$command->onUpdate}";
         }
 
@@ -123,7 +123,7 @@ abstract class Grammar extends BaseGrammar
             // Each of the column types have their own compiler functions which are tasked
             // with turning the column definition into its SQL format for this platform
             // used by the connection. The column's modifiers are compiled and added.
-            $sql = $this->wrap($column).' '.$this->getType($column);
+            $sql = $this->wrap($column) . ' ' . $this->getType($column);
 
             $columns[] = $this->addModifiers($sql, $blueprint, $column);
         }
@@ -134,9 +134,9 @@ abstract class Grammar extends BaseGrammar
     /**
      * Add the column modifiers to the definition.
      *
-     * @param  string  $sql
-     * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
-     * @param  \Illuminate\Support\Fluent  $column
+     * @param  string $sql
+     * @param  \Illuminate\Database\Schema\Blueprint $blueprint
+     * @param  \Illuminate\Support\Fluent $column
      * @return string
      */
     protected function addModifiers($sql, Blueprint $blueprint, Fluent $column)
@@ -153,8 +153,8 @@ abstract class Grammar extends BaseGrammar
     /**
      * Get the primary key command if it exists on the blueprint.
      *
-     * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
-     * @param  string  $name
+     * @param  \Illuminate\Database\Schema\Blueprint $blueprint
+     * @param  string $name
      * @return \Illuminate\Support\Fluent|null
      */
     protected function getCommandByName(Blueprint $blueprint, $name)
@@ -169,8 +169,8 @@ abstract class Grammar extends BaseGrammar
     /**
      * Get all of the commands with a given name.
      *
-     * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
-     * @param  string  $name
+     * @param  \Illuminate\Database\Schema\Blueprint $blueprint
+     * @param  string $name
      * @return array
      */
     protected function getCommandsByName(Blueprint $blueprint, $name)
@@ -183,25 +183,25 @@ abstract class Grammar extends BaseGrammar
     /**
      * Get the SQL for the column data type.
      *
-     * @param  \Illuminate\Support\Fluent  $column
+     * @param  \Illuminate\Support\Fluent $column
      * @return string
      */
     protected function getType(Fluent $column)
     {
-        return $this->{'type'.ucfirst($column->type)}($column);
+        return $this->{'type' . ucfirst($column->type)}($column);
     }
 
     /**
      * Add a prefix to an array of values.
      *
-     * @param  string  $prefix
-     * @param  array   $values
+     * @param  string $prefix
+     * @param  array $values
      * @return array
      */
     public function prefixArray($prefix, array $values)
     {
         return array_map(function ($value) use ($prefix) {
-            return $prefix.' '.$value;
+            return $prefix . ' ' . $value;
 
         }, $values);
     }
@@ -209,7 +209,7 @@ abstract class Grammar extends BaseGrammar
     /**
      * Wrap a table in keyword identifiers.
      *
-     * @param  mixed   $table
+     * @param  mixed $table
      * @return string
      */
     public function wrapTable($table)
@@ -236,7 +236,7 @@ abstract class Grammar extends BaseGrammar
     /**
      * Format a value so that it can be used in "default" clauses.
      *
-     * @param  mixed   $value
+     * @param  mixed $value
      * @return string
      */
     protected function getDefaultValue($value)
@@ -246,22 +246,22 @@ abstract class Grammar extends BaseGrammar
         }
 
         if (is_bool($value)) {
-            return "'".(int) $value."'";
+            return "'" . (int)$value . "'";
         }
 
-        return "'".strval($value)."'";
+        return "'" . strval($value) . "'";
     }
 
     /**
      * Create an empty Doctrine DBAL TableDiff from the Blueprint.
      *
-     * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
-     * @param  \Doctrine\DBAL\Schema\AbstractSchemaManager  $schema
+     * @param  \Illuminate\Database\Schema\Blueprint $blueprint
+     * @param  \Doctrine\DBAL\Schema\AbstractSchemaManager $schema
      * @return \Doctrine\DBAL\Schema\TableDiff
      */
     protected function getDoctrineTableDiff(Blueprint $blueprint, SchemaManager $schema)
     {
-        $table = $this->getTablePrefix().$blueprint->getTable();
+        $table = $this->getTablePrefix() . $blueprint->getTable();
 
         $tableDiff = new TableDiff($table);
 
@@ -273,14 +273,14 @@ abstract class Grammar extends BaseGrammar
     /**
      * Compile a change column command into a series of SQL statements.
      *
-     * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
-     * @param  \Illuminate\Support\Fluent  $command
+     * @param  \Illuminate\Database\Schema\Blueprint $blueprint
+     * @param  \Illuminate\Support\Fluent $command
      * @param  \Illuminate\Database\Connection $connection
      * @return array
      */
     public function compileChange(Blueprint $blueprint, Fluent $command, Connection $connection)
     {
-        if (! $connection->isDoctrineAvailable()) {
+        if (!$connection->isDoctrineAvailable()) {
             throw new RuntimeException(sprintf(
                 'Changing columns for table "%s" requires Doctrine DBAL; install "doctrine/dbal".',
                 $blueprint->getTable()
@@ -292,7 +292,7 @@ abstract class Grammar extends BaseGrammar
         $tableDiff = $this->getChangedDiff($blueprint, $schema);
 
         if ($tableDiff !== false) {
-            return (array) $schema->getDatabasePlatform()->getAlterTableSQL($tableDiff);
+            return (array)$schema->getDatabasePlatform()->getAlterTableSQL($tableDiff);
         }
 
         return [];
@@ -301,13 +301,13 @@ abstract class Grammar extends BaseGrammar
     /**
      * Get the Doctrine table difference for the given changes.
      *
-     * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
-     * @param  \Doctrine\DBAL\Schema\AbstractSchemaManager  $schema
+     * @param  \Illuminate\Database\Schema\Blueprint $blueprint
+     * @param  \Doctrine\DBAL\Schema\AbstractSchemaManager $schema
      * @return \Doctrine\DBAL\Schema\TableDiff|bool
      */
     protected function getChangedDiff(Blueprint $blueprint, SchemaManager $schema)
     {
-        $table = $schema->listTableDetails($this->getTablePrefix().$blueprint->getTable());
+        $table = $schema->listTableDetails($this->getTablePrefix() . $blueprint->getTable());
 
         return (new Comparator)->diffTable($table, $this->getTableWithColumnChanges($blueprint, $table));
     }
@@ -315,8 +315,8 @@ abstract class Grammar extends BaseGrammar
     /**
      * Get a copy of the given Doctrine table after making the column changes.
      *
-     * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
-     * @param  \Doctrine\DBAL\Schema\Table  $table
+     * @param  \Illuminate\Database\Schema\Blueprint $blueprint
+     * @param  \Doctrine\DBAL\Schema\Table $table
      * @return \Doctrine\DBAL\Schema\TableDiff
      */
     protected function getTableWithColumnChanges(Blueprint $blueprint, Table $table)
@@ -330,8 +330,8 @@ abstract class Grammar extends BaseGrammar
             // Doctrine column definitions - which is necessary because Laravel and Doctrine
             // use some different terminology for various column attributes on the tables.
             foreach ($fluent->getAttributes() as $key => $value) {
-                if (! is_null($option = $this->mapFluentOptionToDoctrine($key))) {
-                    if (method_exists($column, $method = 'set'.ucfirst($option))) {
+                if (!is_null($option = $this->mapFluentOptionToDoctrine($key))) {
+                    if (method_exists($column, $method = 'set' . ucfirst($option))) {
                         $column->{$method}($this->mapFluentValueToDoctrine($option, $value));
                     }
                 }
@@ -344,8 +344,8 @@ abstract class Grammar extends BaseGrammar
     /**
      * Get the Doctrine column instance for a column change.
      *
-     * @param  \Doctrine\DBAL\Schema\Table  $table
-     * @param  \Illuminate\Support\Fluent  $fluent
+     * @param  \Doctrine\DBAL\Schema\Table $table
+     * @param  \Illuminate\Support\Fluent $fluent
      * @return \Doctrine\DBAL\Schema\Column
      */
     protected function getDoctrineColumnForChange(Table $table, Fluent $fluent)
@@ -358,7 +358,7 @@ abstract class Grammar extends BaseGrammar
     /**
      * Get the Doctrine column change options.
      *
-     * @param  \Illuminate\Support\Fluent  $fluent
+     * @param  \Illuminate\Support\Fluent $fluent
      * @return array
      */
     protected function getDoctrineColumnChangeOptions(Fluent $fluent)
@@ -375,7 +375,7 @@ abstract class Grammar extends BaseGrammar
     /**
      * Get the doctrine column type.
      *
-     * @param  string  $type
+     * @param  string $type
      * @return \Doctrine\DBAL\Types\Type
      */
     protected function getDoctrineColumnType($type)
@@ -401,7 +401,7 @@ abstract class Grammar extends BaseGrammar
     /**
      * Calculate the proper column length to force the Doctrine text type.
      *
-     * @param  string  $type
+     * @param  string $type
      * @return int
      */
     protected function calculateDoctrineTextLength($type)
@@ -421,7 +421,7 @@ abstract class Grammar extends BaseGrammar
     /**
      * Get the matching Doctrine option for a given Fluent attribute name.
      *
-     * @param  string  $attribute
+     * @param  string $attribute
      * @return string|null
      */
     protected function mapFluentOptionToDoctrine($attribute)
@@ -448,12 +448,12 @@ abstract class Grammar extends BaseGrammar
     /**
      * Get the matching Doctrine value for a given Fluent attribute.
      *
-     * @param  string  $option
-     * @param  mixed  $value
+     * @param  string $option
+     * @param  mixed $value
      * @return mixed
      */
     protected function mapFluentValueToDoctrine($option, $value)
     {
-        return $option == 'notnull' ? ! $value : $value;
+        return $option == 'notnull' ? !$value : $value;
     }
 }

@@ -8,7 +8,8 @@
                         <i class="fa fa-coffee"></i>Task Detail
                     </div>
                     <div>
-                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="<?php echo e(url('/tasks' )); ?>">Back</a>
+                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right"
+                           href="<?php echo e(url('/tasks')); ?>">Back</a>
                     </div>
                 </div>
                 <div class="portlet-body">
@@ -40,32 +41,32 @@
                             </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        <?php echo e($task->name_en); ?>
+                            <tr>
+                                <td>
+                                    <?php echo e($task->name_en); ?>
 
-                                    </td>
-                                    <td>
-                                        <p><?php echo e($task->component->name_en); ?></p>
-                                    </td>
-                                    <td>
-                                        <p><?php echo e($task->module->name_en); ?></p>
-                                    </td>
-                                    <td>
-                                        <p><?php echo e($task->route); ?></p>
-                                    </td>
-                                    <td>
-                                        <p><?php echo e($task->description); ?></p>
-                                    </td>
-                                    <td>
-                                        <?php echo e($task->icon); ?>
+                                </td>
+                                <td>
+                                    <p><?php echo e($task->component->name_en); ?></p>
+                                </td>
+                                <td>
+                                    <p><?php echo e($task->module->name_en); ?></p>
+                                </td>
+                                <td>
+                                    <p><?php echo e($task->route); ?></p>
+                                </td>
+                                <td>
+                                    <p><?php echo e($task->description); ?></p>
+                                </td>
+                                <td>
+                                    <?php echo e($task->icon); ?>
 
-                                    </td>
-                                    <td>
-                                        <?php echo e($task->ordering); ?>
+                                </td>
+                                <td>
+                                    <?php echo e($task->ordering); ?>
 
-                                    </td>
-                                </tr>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>

@@ -1,7 +1,7 @@
 {!! csrf_field() !!}
-<div class="form-group{{ $errors->has('supplier_id') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('supplier_id', 'Supplier', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('supplier_id') ? ' has-error' : '' }}">
         {{ Form::select('supplier_id',$suppliers, null,['class'=>'form-control']) }}
         @if ($errors->has('supplier_id'))
             <span class="help-block">
@@ -11,9 +11,9 @@
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('purchase_date') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('purchase_date', 'Purchase Date', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('purchase_date') ? ' has-error' : '' }}">
         {{ Form::text('purchase_date', null,['class'=>'form-control datepicker','required']) }}
         @if ($errors->has('purchase_date'))
             <span class="help-block">
@@ -22,9 +22,9 @@
         @endif
     </div>
 </div>
-<div class="form-group{{ $errors->has('transportation_cost') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('transportation_cost', 'Transportation Cost', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('transportation_cost') ? ' has-error' : '' }}">
         {{ Form::text('transportation_cost', 0,['class'=>'form-control']) }}
         @if ($errors->has('transportation_cost'))
             <span class="help-block">
@@ -34,9 +34,10 @@
     </div>
 </div>
 <?php
-      $old_items = isset($purchase) ?  $purchase['purchaseDetails'] : false;
+$old_items = isset($purchase) ? $purchase['purchaseDetails'] : false;
 ?>
-<div class="row" id="purchase_wrp" data-current-index="{{ isset($purchase) ?  count($purchase['purchaseDetails']) : 0}}">
+<div class="row" id="purchase_wrp"
+     data-current-index="{{ isset($purchase) ?  count($purchase['purchaseDetails']) : 0}}">
     @if($old_items)
         @foreach($old_items as $item)
             <div class="col-md-12 purchase_row">
@@ -75,10 +76,12 @@
                 <div class="col-md-3">
                     <label for="quantity" class="col-md-4 control-label">Total</label>
                     <div class="col-md-4">
-                        <span class="badge badge-info row_total" style="margin-top: 10px">{{$item['unit_price']*$item['quantity']}}</span>
+                        <span class="badge badge-info row_total"
+                              style="margin-top: 10px">{{$item['unit_price']*$item['quantity']}}</span>
                     </div>
                     <div class="col-md-4">
-                        <i class="fa fa-close" onclick="closeIt(this)" style="color: red;margin-top: 10px; cursor: pointer"></i>
+                        <i class="fa fa-close" onclick="closeIt(this)"
+                           style="color: red;margin-top: 10px; cursor: pointer"></i>
                     </div>
                 </div>
             </div>
@@ -123,14 +126,17 @@
                     <span class="badge badge-info row_total" style="margin-top: 10px">0</span>
                 </div>
                 <div class="col-md-4">
-                    <i class="fa fa-close" onclick="closeIt(this)" style="color: red;margin-top: 10px; cursor: pointer"></i>
+                    <i class="fa fa-close" onclick="closeIt(this)"
+                       style="color: red;margin-top: 10px; cursor: pointer"></i>
                 </div>
             </div>
         </div>
-        @endif
+    @endif
 
 </div>
-<button type="button" onclick="addMore()" class="btn-circle btn btn-success pull-right" style="margin: 10px 0">Add more</button>
+<button type="button" onclick="addMore()" class="btn-circle btn btn-success pull-right" style="margin: 10px 0">Add
+    more
+</button>
 
 <div class="row">
     <div class="col-md-3 col-md-offset-9">
@@ -163,89 +169,86 @@
     </div>
 </div>
 <script type="text/javascript">
-    $(document).on('ready',function(){
+    $(document).on('ready', function () {
         findTotal();
     });
-    $(function() {
-        $( ".datepicker" ).datepicker();
+    $(function () {
+        $(".datepicker").datepicker();
     });
-    function addMore()
-    {
+    function addMore() {
         var currentIndex = parseInt($('#purchase_wrp').data('current-index'));
-        var newIndex = currentIndex+1;
-        parseInt($('#purchase_wrp').data('current-index',newIndex));
+        var newIndex = currentIndex + 1;
+        parseInt($('#purchase_wrp').data('current-index', newIndex));
 
         var rowHtml = $('#purchase_wrp :first').clone();
         $('#purchase_wrp').append(rowHtml);
-        $('#purchase_wrp:last').find('.material_id:last').attr('name','items['+newIndex+'][material_id]');
-        $('#purchase_wrp:last').find('.quantity:last').attr('name','items['+newIndex+'][quantity]');
-        $('#purchase_wrp:last').find('.received_quantity:last').attr('name','items['+newIndex+'][received_quantity]');
-        $('#purchase_wrp:last').find('.unit_price:last').attr('name','items['+newIndex+'][unit_price]');
+        $('#purchase_wrp:last').find('.material_id:last').attr('name', 'items[' + newIndex + '][material_id]');
+        $('#purchase_wrp:last').find('.quantity:last').attr('name', 'items[' + newIndex + '][quantity]');
+        $('#purchase_wrp:last').find('.received_quantity:last').attr('name', 'items[' + newIndex + '][received_quantity]');
+        $('#purchase_wrp:last').find('.unit_price:last').attr('name', 'items[' + newIndex + '][unit_price]');
         $('#purchase_wrp:last').find('.material_id:last').val('');
         $('#purchase_wrp:last').find('.quantity:last').val('');
         $('#purchase_wrp:last').find('.received_quantity:last').val('');
         $('#purchase_wrp:last').find('.unit_price:last').val('');
         $('#purchase_wrp:last').find('.row_total:last').html('');
     }
-    function closeIt(ele)
-    {
+    function closeIt(ele) {
         var noOfChild = $('#purchase_wrp .purchase_row').length;
-        if(noOfChild <2)
-        {
+        if (noOfChild < 2) {
             alert('You Can\'t remove all items');
             return false;
         }
         ele.closest('.purchase_row').remove();
         findTotal();
     }
-    $(document).on('change','.quantity',function(){
+    $(document).on('change', '.quantity', function () {
         findRowTotal(this);
         findTotal();
     });
-    $(document).on('change','.unit_price',function(){
+    $(document).on('change', '.unit_price', function () {
         findRowTotal(this);
         findTotal();
     });
-    $(document).on('change','#transportation_cost',function(){
+    $(document).on('change', '#transportation_cost', function () {
         findRowTotal(this);
         findTotal();
     });
-    $(document).on('submit','form',function(ee){
+    $(document).on('submit', 'form', function (ee) {
         var total = parseFloat($('#total_amount').val());
         var paid = parseFloat($('#paid').val());
-        if(!total)
+        if (!total)
             alert('Total Amount Required');
-        if(total < paid){
+        if (total < paid) {
             alert('Paid amount can\'t be Grater than Total Amount ');
 
         }
     });
-    $(document).on('change','.material_id',function(){
+    $(document).on('change', '.material_id', function () {
         var currentMaterial = $(this).val();
-        var allMaterials = $('.material_id option:selected[value='+currentMaterial+']');
+        var allMaterials = $('.material_id option:selected[value=' + currentMaterial + ']');
         var noOfObject = allMaterials.toArray().length;
-        if(noOfObject>1){
+        if (noOfObject > 1) {
             $(this).val('');
             alert('This Material already exists');
         }
     });
-    function findRowTotal(ele){
+    function findRowTotal(ele) {
         var thisQuantity = parseFloat($(ele).closest('.purchase_row').find('.quantity').val());
         var thisUnitPrice = parseFloat($(ele).closest('.purchase_row').find('.unit_price').val());
-        $(ele).closest('.purchase_row').find('.row_total').html(thisQuantity*thisUnitPrice);
+        $(ele).closest('.purchase_row').find('.row_total').html(thisQuantity * thisUnitPrice);
     }
-    function findTotal(){
+    function findTotal() {
         var total = 0;
-        $.each($('.row_total'),function(){
-            if(parseFloat($(this).html()))
-            total+= parseFloat($(this).html());
+        $.each($('.row_total'), function () {
+            if (parseFloat($(this).html()))
+                total += parseFloat($(this).html());
         });
-        total+= parseFloat($('#transportation_cost').val());
-        if(total)
-        $('#total_amount').val(total);
-        $('#total_amount').css('background','#F7F779');
+        total += parseFloat($('#transportation_cost').val());
+        if (total)
+            $('#total_amount').val(total);
+        $('#total_amount').css('background', '#F7F779');
         setTimeout(function () {
-            $('#total_amount').css('background','none');
+            $('#total_amount').css('background', 'none');
         }, 300);
     }
 </script>

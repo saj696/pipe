@@ -7,14 +7,15 @@
                 <i class="fa fa-gift"></i> New Component
             </div>
             <div>
-                <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="{{ url('/components' )}}">Back</a>
+                <a style="margin: 12px; padding: 5px;" class="label label-success pull-right"
+                   href="{{ url('/components' )}}">Back</a>
             </div>
         </div>
         <div class="portlet-body form">
             <div class="form-horizontal" role="form">
                 <div class="form-body">
                     {{ Form::open(['url'=>'components']) }}
-                    @include('components.form', ['submitText'=>'Add'])
+                    @include('components.form', ['submitText'=>'Save'])
                     {{ Form::close() }}
                 </div>
             </div>

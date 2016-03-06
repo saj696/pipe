@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers\System;
 
-use App\Http\Requests;
-use App\Models\Module;
-use App\Models\Component;
-use Carbon\Carbon;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\Http\Requests\ModuleRequest;
+use App\Models\Component;
+use App\Models\Module;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
 use Session;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 
 class ModulesController extends Controller
 {

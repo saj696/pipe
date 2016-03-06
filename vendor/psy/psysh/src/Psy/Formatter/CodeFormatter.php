@@ -34,9 +34,9 @@ class CodeFormatter implements Formatter
                 throw new RuntimeException('Source code unavailable.');
             }
 
-            $file  = file_get_contents($fileName);
+            $file = file_get_contents($fileName);
             $start = $reflector->getStartLine();
-            $end   = $reflector->getEndLine() - $start;
+            $end = $reflector->getEndLine() - $start;
 
             $colors = new ConsoleColor();
             $colors->addTheme('line_number', array('blue'));

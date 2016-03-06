@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-
 class PurchaseRequest extends Request
 {
     /**
@@ -24,9 +22,9 @@ class PurchaseRequest extends Request
     public function rules()
     {
         return [
-            'supplier_id'=>'required',
-            'purchase_date'=>'required',
-            'transportation_cost'=>'required'
+            'supplier_id' => 'required',
+            'purchase_date' => 'required',
+            'transportation_cost' => 'required'
         ];
     }
 }

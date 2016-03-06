@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-
 class ModuleRequest extends Request
 {
     /**
@@ -25,10 +23,10 @@ class ModuleRequest extends Request
     public function rules()
     {
         return [
-            'name_en'=>'required',
-            'component_id'=>'required',
-            'icon'=>'required',
-            'ordering'=>'required'
+            'name_en' => 'required',
+            'component_id' => 'required',
+            'icon' => 'required',
+            'ordering' => 'required'
         ];
     }
 }

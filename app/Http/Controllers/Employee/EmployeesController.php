@@ -2,26 +2,22 @@
 
 namespace App\Http\Controllers\Employee;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests;
-use App\Models\Employee;
-use App\Models\UserGroup;
+use App\Http\Requests\EmployeeRequest;
 use App\Models\Designation;
+use App\Models\Employee;
 use App\Models\GeneralJournal;
-use App\Models\User;
 use App\Models\PersonalAccount;
+use App\Models\User;
+use App\Models\UserGroup;
 use App\Models\Workspace;
 use App\Models\WorkspaceLedger;
-use App\Models\GeneralLedger;
-use Carbon\Carbon;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\EmployeeRequest;
+use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Request;
+use Request;
 use Session;
-use DB;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 
 class EmployeesController extends Controller
 {
@@ -33,7 +29,7 @@ class EmployeesController extends Controller
     public function index()
     {
         $status = Config::get('common.status');
-        $employees = Employee::with('designation')->paginate(Config::get('common.pagination'));
+        $employees = Employee::with('designation')->latest()->paginate(Config::get('common.pagination'));
         return view('employees.index', compact('employees', 'status'));
     }
 
@@ -48,25 +44,23 @@ class EmployeesController extends Controller
         $user = Auth::user();
         $userGroups = UserGroup::where('level', '>', $user->user_group_id)->lists('name_en', 'id');
         $designations = Designation::lists('name', 'id');
-        $workspaces= Workspace::lists('name','id');
-        return view('employees.create', compact('designations','workspaces', 'userGroups'));
+        $workspaces = Workspace::lists('name', 'id');
+        return view('employees.create', compact('designations', 'workspaces', 'userGroups'));
     }
 
     public function store(EmployeeRequest $request)
     {
-        try
-        {
-            DB::transaction(function () use ($request)
-            {
+        try {
+            DB::transaction(function () use ($request) {
                 $employee = New Employee;
 
                 $file = $request->file('photo');
                 $destinationPath = base_path() . '/public/image/employee/';
 
-                if($request->hasFile('photo'))
-                {
-                    $file->move($destinationPath, $file->getClientOriginalName());
-                    $employee->photo = $file->getClientOriginalName();
+                if ($request->hasFile('photo')) {
+                    $name = time() . $file->getClientOriginalName();
+                    $file->move($destinationPath, $name);
+                    $employee->photo = $name;
                 }
 
                 $employee->name = $request->input('name');
@@ -85,16 +79,15 @@ class EmployeesController extends Controller
                 $insertedId = $employee->id;
 
                 // Creation As User
-                if($request->as_user==1)
-                {
+                if ($request->as_user == 1) {
                     $user = New User;
                     $file = $request->file('photo');
                     $destinationPath = base_path() . '/public/image/user/';
 
-                    if($request->hasFile('photo'))
-                    {
-                        $file->move($destinationPath, $file->getClientOriginalName());
-                        $user->photo = $file->getClientOriginalName();
+                    if ($request->hasFile('photo')) {
+                        $name = time() . $file->getClientOriginalName();
+                        $file->move($destinationPath, $name);
+                        $user->photo = $name;
                     }
 
                     $user->username = $request->input('username');
@@ -119,11 +112,10 @@ class EmployeesController extends Controller
                 $personalAccount->save();
 
                 // Impacts on accounting tables
-                if($request->input('balance')>0)
-                {
+                if ($request->input('balance') > 0) {
                     $workspace_id = Auth::user()->workspace_id;
                     $accountPayableCode = 41000;
-                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$accountPayableCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => $accountPayableCode, 'balance_type' => Config::get('common.balance_type_intermediate')])->first();
                     $accountPayableWorkspaceData->balance += $request->input('balance');
                     $accountPayableWorkspaceData->update();
 
@@ -142,11 +134,10 @@ class EmployeesController extends Controller
                     $generalJournal->save();
                 }
 
-                if($request->input('due')>0)
-                {
+                if ($request->input('due') > 0) {
                     $workspace_id = Auth::user()->workspace_id;
                     $accountReceivableCode = 12000;
-                    $accountReceivableWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>$accountReceivableCode,'balance_type'=>Config::get('common.balance_type_intermediate')])->first();
+                    $accountReceivableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => $accountReceivableCode, 'balance_type' => Config::get('common.balance_type_intermediate')])->first();
                     $accountReceivableWorkspaceData->balance += $request->input('due');
                     $accountReceivableWorkspaceData->update();
 
@@ -164,9 +155,7 @@ class EmployeesController extends Controller
                     $generalJournal->save();
                 }
             });
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             dd($e);
             Session()->flash('error_message', 'Employee Not Created!');
             return redirect('employees');
@@ -180,13 +169,22 @@ class EmployeesController extends Controller
     {
         $employee = Employee::findOrFail($id);
         $designations = Designation::lists('name', 'id');
-        $workspaces= Workspace::lists('name','id');
-        return view('employees.edit', compact('employee', 'designations','workspaces'));
+        $workspaces = Workspace::lists('name', 'id');
+        return view('employees.edit', compact('employee', 'designations', 'workspaces'));
     }
 
     public function update($id, EmployeeRequest $request)
     {
         $employee = Employee::findOrFail($id);
+        $file = $request->file('photo');
+        $destinationPath = base_path() . '/public/image/employee/';
+
+        if ($request->hasFile('photo')) {
+            $name = time() . $file->getClientOriginalName();
+            $file->move($destinationPath, $name);
+            $employee->photo = $name;
+        }
+
         $employee->name = $request->input('name');
         $employee->mobile = $request->input('mobile');
         $employee->email = $request->input('email');

@@ -10,7 +10,8 @@
                         <i class="fa fa-coffee"></i>Daily Production Registers
                     </div>
                     <div>
-                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="{{ url('/productionRegisters/create') }}">New</a>
+                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right"
+                           href="{{ url('/productionRegisters/create') }}">New</a>
                     </div>
                 </div>
 
@@ -18,23 +19,23 @@
                     <div class="table-scrollable">
                         <table class="table table-bordered table-hover">
                             <thead>
-                                <tr>
-                                    <th>
-                                        Date
-                                    </th>
-                                    <th>
-                                        Product
-                                    </th>
-                                    <th>
-                                        production
-                                    </th>
-                                    <th>
-                                        Status
-                                    </th>
-                                    <th>
-                                        Action
-                                    </th>
-                                </tr>
+                            <tr>
+                                <th>
+                                    Date
+                                </th>
+                                <th>
+                                    Product
+                                </th>
+                                <th>
+                                    production
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Action
+                                </th>
+                            </tr>
                             </thead>
                             <tbody>
                             @if(sizeof($productionRegisters)>0)
@@ -53,14 +54,15 @@
                                             {{ $status[$productionRegister->status] }}
                                         </td>
                                         <td>
-                                            <a class="label label-danger" href="{{ url('/productionRegisters/'.$productionRegister->id.'/edit' )}}">Edit</a>
+                                            <a class="label label-danger"
+                                               href="{{ url('/productionRegisters/'.$productionRegister->id.'/edit' )}}">Edit</a>
                                         </td>
                                     </tr>
                                 @endforeach
                             @else
-                            <tr>
-                                <td colspan="6" class="text-center danger">No Data Found</td>
-                            </tr>
+                                <tr>
+                                    <td colspan="6" class="text-center danger">No Data Found</td>
+                                </tr>
                             @endif
                             </tbody>
                         </table>

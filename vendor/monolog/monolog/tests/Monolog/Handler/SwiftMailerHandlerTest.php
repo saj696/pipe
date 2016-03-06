@@ -43,8 +43,8 @@ class SwiftMailerHandlerTest extends TestCase
             ->method('send')
             ->with($this->callback(function ($value) use ($expectedMessage) {
                 return $value instanceof \Swift_Message
-                    && $value->getSubject() === 'Emergency'
-                    && $value === $expectedMessage;
+                && $value->getSubject() === 'Emergency'
+                && $value === $expectedMessage;
             }));
 
         // Callback dynamically changes subject based on number of logged records
@@ -63,7 +63,8 @@ class SwiftMailerHandlerTest extends TestCase
         $handler->handleBatch($records);
     }
 
-    public function testMessageHaveUniqueId() {
+    public function testMessageHaveUniqueId()
+    {
         $messageTemplate = \Swift_Message::newInstance();
         $handler = new SwiftMailerHandler($this->mailer, $messageTemplate);
 

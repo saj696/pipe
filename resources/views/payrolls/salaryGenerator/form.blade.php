@@ -1,8 +1,8 @@
 {!! csrf_field() !!}
 
-<div class="form-group{{ $errors->has('month') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('month', 'Month', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('month') ? ' has-error' : '' }}">
         {{ Form::select('month', array_flip(Config::get('common.month')), null,['class'=>'form-control','placeholder'=>'Select','required']) }}
         @if ($errors->has('month'))
             <span class="help-block">
@@ -12,9 +12,9 @@
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('employee_type') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('employee_type', 'Employee Type', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('employee_type') ? ' has-error' : '' }}">
         {{ Form::select('employee_type',array_flip(Config::get('common.employee_type')), null,['class'=>'form-control','placeholder'=>'Select','required']) }}
         @if ($errors->has('employee_type'))
             <span class="help-block">
@@ -68,7 +68,7 @@
         $(document).on('change', '.cut', function () {
             var obj = $(this);
             var cut = parseFloat($(this).val());
-            if (cut > 0) {
+            if (cut >= 0) {
                 obj.closest('tr').find('.net').val(calculation(obj));
             }
         });

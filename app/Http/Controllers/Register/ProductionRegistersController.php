@@ -3,20 +3,16 @@
 namespace App\Http\Controllers\Register;
 
 use App\Helpers\CommonHelper;
-use App\Http\Requests;
-use App\Models\ProductionRegister;
-use App\Models\Product;
-use App\Models\Stock;
-use Carbon\Carbon;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\Http\Requests\ProductionRegisterRequest;
+use App\Models\Product;
+use App\Models\ProductionRegister;
+use App\Models\Stock;
+use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Request;
 use Session;
-use DB;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 
 class ProductionRegistersController extends Controller
 {
@@ -46,18 +42,15 @@ class ProductionRegistersController extends Controller
 
     public function store(ProductionRegisterRequest $request)
     {
-        try
-        {
-            DB::transaction(function () use ($request)
-            {
+        try {
+            DB::transaction(function () use ($request) {
                 $currentYear = CommonHelper::get_current_financial_year();
                 $workspace_id = Auth::user()->workspace_id;
                 $count = sizeof($request->input('product_id'));
                 $productInput = $request->input('product_id');
                 $productionInput = $request->input('production');
 
-                for ($i = 0; $i < $count; $i++)
-                {
+                for ($i = 0; $i < $count; $i++) {
                     $productionRegister = New ProductionRegister;
                     $productionRegister->date = $request->input('date');
                     $productionRegister->year = $currentYear;
@@ -67,18 +60,15 @@ class ProductionRegistersController extends Controller
                     $productionRegister->created_at = time();
                     $productionRegister->save();
 
-                    $existingStock = DB::table('stocks')->where(['stock_type'=>Config::get('common.balance_type_intermediate'), 'year'=>$currentYear, 'workspace_id' => 1, 'product_id' => $productInput[$i]])->first();
+                    $existingStock = DB::table('stocks')->where(['stock_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear, 'workspace_id' => 1, 'product_id' => $productInput[$i]])->first();
 
-                    if ($existingStock)
-                    {
+                    if ($existingStock) {
                         $stock = Stock::findOrFail($existingStock->id);
                         $stock->quantity = $productionInput[$i] + $existingStock->quantity;
                         $stock->updated_by = Auth::user()->id;
                         $stock->updated_at = time();
                         $stock->update();
-                    }
-                    else
-                    {
+                    } else {
                         // Opening Stock Entry
                         $stock = New Stock;
                         $stock->year = $currentYear;
@@ -102,9 +92,7 @@ class ProductionRegistersController extends Controller
                     }
                 }
             });
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             Session()->flash('error_message', 'Production Register not created!');
             return redirect('productionRegisters');
         }
@@ -122,10 +110,8 @@ class ProductionRegistersController extends Controller
 
     public function update($id, ProductionRegisterRequest $request)
     {
-        try
-        {
-            DB::transaction(function () use ($request, $id)
-            {
+        try {
+            DB::transaction(function () use ($request, $id) {
                 $user = Auth::user();
                 $existingRegister = DB::table('production_registers')->where('id', $id)->first();
                 $productionRegister = ProductionRegister::findOrFail($id);
@@ -135,21 +121,17 @@ class ProductionRegistersController extends Controller
                 $productionRegister->updated_at = time();
                 $productionRegister->update();
 
-                $existingStock = DB::table('stocks')->where(['year'=>CommonHelper::get_current_financial_year(), 'stock_type'=>Config::get('common.balance_type_intermediate'), 'workspace_id' => $user->workspace_id, 'product_id' => $existingRegister->product_id])->first();
+                $existingStock = DB::table('stocks')->where(['year' => CommonHelper::get_current_financial_year(), 'stock_type' => Config::get('common.balance_type_intermediate'), 'workspace_id' => $user->workspace_id, 'product_id' => $existingRegister->product_id])->first();
 
-                if ($existingRegister->production != $request->input('production'))
-                {
-                    if ($existingRegister->production > $request->input('production'))
-                    {
+                if ($existingRegister->production != $request->input('production')) {
+                    if ($existingRegister->production > $request->input('production')) {
                         $difference = $existingRegister->production - $request->input('production');
                         $stock = Stock::findOrFail($existingStock->id);
                         $stock->quantity = $existingStock->quantity - $difference;
                         $stock->updated_by = Auth::user()->id;
                         $stock->updated_at = time();
                         $stock->update();
-                    }
-                    elseif ($existingRegister->production < $request->input('production'))
-                    {
+                    } elseif ($existingRegister->production < $request->input('production')) {
                         $difference = $request->input('production') - $existingRegister->production;
                         $stock = Stock::findOrFail($existingStock->id);
                         $stock->quantity = $existingStock->quantity + $difference;
@@ -159,9 +141,7 @@ class ProductionRegistersController extends Controller
                     }
                 }
             });
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             Session()->flash('error_message', 'Production Register not updated!');
             return redirect('productionRegisters');
         }

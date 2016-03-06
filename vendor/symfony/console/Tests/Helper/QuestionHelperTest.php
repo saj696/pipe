@@ -11,9 +11,9 @@
 
 namespace Symfony\Component\Console\Tests\Helper;
 
-use Symfony\Component\Console\Helper\QuestionHelper;
-use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\FormatterHelper;
+use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -156,9 +156,9 @@ class QuestionHelperTest extends \PHPUnit_Framework_TestCase
     {
         $dialog = new QuestionHelper();
 
-        $dialog->setInputStream($this->getInputStream($question."\n"));
+        $dialog->setInputStream($this->getInputStream($question . "\n"));
         $question = new ConfirmationQuestion('Do you like French fries?', $default);
-        $this->assertEquals($expected, $dialog->ask($this->createInputInterfaceMock(), $this->createOutputInterface(), $question), 'confirmation question should '.($expected ? 'pass' : 'cancel'));
+        $this->assertEquals($expected, $dialog->ask($this->createInputInterfaceMock(), $this->createOutputInterface(), $question), 'confirmation question should ' . ($expected ? 'pass' : 'cancel'));
     }
 
     public function getAskConfirmationData()
@@ -228,7 +228,7 @@ class QuestionHelperTest extends \PHPUnit_Framework_TestCase
         );
 
         $dialog = new QuestionHelper();
-        $dialog->setInputStream($this->getInputStream($providedAnswer."\n"));
+        $dialog->setInputStream($this->getInputStream($providedAnswer . "\n"));
         $helperSet = new HelperSet(array(new FormatterHelper()));
         $dialog->setHelperSet($helperSet);
 
@@ -264,7 +264,7 @@ class QuestionHelperTest extends \PHPUnit_Framework_TestCase
         );
 
         $dialog = new QuestionHelper();
-        $dialog->setInputStream($this->getInputStream($providedAnswer."\n"));
+        $dialog->setInputStream($this->getInputStream($providedAnswer . "\n"));
         $helperSet = new HelperSet(array(new FormatterHelper()));
         $dialog->setHelperSet($helperSet);
 
@@ -299,7 +299,7 @@ class QuestionHelperTest extends \PHPUnit_Framework_TestCase
         );
 
         $dialog = new QuestionHelper();
-        $dialog->setInputStream($this->getInputStream($providedAnswer."\n"));
+        $dialog->setInputStream($this->getInputStream($providedAnswer . "\n"));
         $helperSet = new HelperSet(array(new FormatterHelper()));
         $dialog->setHelperSet($helperSet);
 

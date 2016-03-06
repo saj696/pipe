@@ -14,16 +14,19 @@ class PurchasesReturn extends Model
     {
         return date('d-m-Y', $value);
     }
+
     public function setPurchaseReturnDateAttribute($value)
     {
         $this->attributes['purchase_return_date'] = strtotime($value);
     }
+
     public function supplier()
     {
-        return  $this->belongsTo('App\Models\Supplier','supplier_id');
+        return $this->belongsTo('App\Models\Supplier', 'supplier_id');
     }
+
     public function PurchasesReturnDetail()
     {
-        return  $this->hasMany('App\Models\PurchasesReturnDetail');
+        return $this->hasMany('App\Models\PurchasesReturnDetail');
     }
 }

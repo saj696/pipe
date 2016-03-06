@@ -7,7 +7,8 @@
                 <i class="fa fa-gift"></i>Salary Payment
             </div>
             <div>
-                <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="{{ url('salary_payment' )}}">Back</a>
+                <a style="margin: 12px; padding: 5px;" class="label label-success pull-right"
+                   href="{{ url('salary_payment' )}}">Back</a>
             </div>
         </div>
         <div class="portlet-body form">

@@ -7,7 +7,8 @@
                 <i class="fa fa-gift"></i> Generate Salary
             </div>
             <div>
-                <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="{{ url('salary_generator' )}}">Back</a>
+                <a style="margin: 12px; padding: 5px;" class="label label-success pull-right"
+                   href="{{ url('salary_generator' )}}">Back</a>
             </div>
         </div>
         <div class="portlet-body form">

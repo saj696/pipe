@@ -7,7 +7,8 @@
                 <i class="fa fa-gift"></i> New Purchase Return
             </div>
             <div>
-                <a style="margin: 12px; padding: 5px;" class="label label-danger pull-right" href="{{ url('/purchases_return' )}}">Back</a>
+                <a style="margin: 12px; padding: 5px;" class="label label-danger pull-right"
+                   href="{{ url('/purchases_return' )}}">Back</a>
             </div>
         </div>
         <div class="portlet-body form">

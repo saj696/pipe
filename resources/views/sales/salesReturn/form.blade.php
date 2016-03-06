@@ -1,7 +1,7 @@
 {!! csrf_field() !!}
-<div class="form-group{{ $errors->has('customer_type') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('customer_type', 'Customer Type', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('customer_type') ? ' has-error' : '' }}">
         {{ Form::select('customer_type', Config::get('common.sales_customer_type'), Config::get('common.person_type_customer'),['class'=>'form-control','id'=>'sales_customer_type',]) }}
         @if ($errors->has('customer_type'))
             <span class="help-block">
@@ -12,9 +12,9 @@
 </div>
 
 <div class="customer_id">
-    <div class="form-group{{ $errors->has('customer_id') ? ' has-error' : '' }}">
+    <div class="form-group">
         {{ Form::label('customer_id', 'Customer', ['class'=>'col-md-3 control-label']) }}
-        <div class="col-md-7">
+        <div class="col-md-7{{ $errors->has('customer_id') ? ' has-error' : '' }}">
             {{ Form::select('customer_id', $customers, null,['class'=>'form-control','placeholder'=>'Select']) }}
             @if ($errors->has('customer_id'))
                 <span class="help-block">
@@ -25,8 +25,8 @@
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('product') ? ' has-error' : '' }}">
-    <div class="col-md-offset-5 col-md-3">
+<div class="form-group">
+    <div class="col-md-offset-5 col-md-3{{ $errors->has('product') ? ' has-error' : '' }}">
         {{ Form::text('product', null,['class'=>'form-control','id'=>'product','placeholder'=>'Search Product']) }}
         @if ($errors->has('product'))
             <span class="help-block">
@@ -52,9 +52,9 @@
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('total') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('total', 'Total Amount', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('total') ? ' has-error' : '' }}">
         {{ Form::text('total', null,['class'=>'form-control']) }}
         @if ($errors->has('total'))
             <span class="help-block">
@@ -64,9 +64,9 @@
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('return_type') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('return_type', 'Return Type', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('return_type') ? ' has-error' : '' }}">
         {{ Form::select('return_type', Config::get('common.product_return_type'), null,['class'=>'form-control','id'=>'product_return_type','placeholder'=>'Select']) }}
         @if ($errors->has('return_type'))
             <span class="help-block">
@@ -122,7 +122,8 @@
                     url: "{{ route('ajax.product_select') }}",
                     dataType: "json",
                     data: {
-                        q: request.term
+                        q: request.term,
+                        '_token': $('input[name=_token]').val()
                     },
                     success: function (data) {
                         response(data);
@@ -210,12 +211,11 @@
                                 '</div>';
                         $('.pay_due').html(html);
                         var total_amount = parseFloat($('#total').val());
-                        if (return_type == 2 && total_amount > data)
-                        {
+                        if (return_type == 2 && total_amount > data) {
                             alert('Total amount cannot be greater than Due amount. Please select the Return type "Pay Due & Cash Return"');
                             e.preventDefault();
                         }
-                                },
+                    },
                     error: function (xhr, desc, err) {
 
                     }

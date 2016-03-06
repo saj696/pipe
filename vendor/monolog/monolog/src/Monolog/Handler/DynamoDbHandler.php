@@ -38,9 +38,9 @@ class DynamoDbHandler extends AbstractProcessingHandler
 
     /**
      * @param DynamoDbClient $client
-     * @param string         $table
-     * @param integer        $level
-     * @param boolean        $bubble
+     * @param string $table
+     * @param integer $level
+     * @param boolean $bubble
      */
     public function __construct(DynamoDbClient $client, $table, $level = Logger::DEBUG, $bubble = true)
     {

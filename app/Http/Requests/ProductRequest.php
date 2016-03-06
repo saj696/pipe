@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-
 class ProductRequest extends Request
 {
     /**
@@ -24,12 +22,12 @@ class ProductRequest extends Request
     public function rules()
     {
         return [
-            'title'=>'required',
-            'product_type_id'=>'required',
-            'diameter'=>'required',
-            'length'=>'required',
-            'weight'=>'required',
-            'color'=>'required',
+            'title' => 'required',
+            'product_type_id' => 'required',
+            'diameter' => 'required',
+            'length' => 'required',
+            'weight' => 'required',
+            'color' => 'required',
         ];
     }
 }

@@ -40,7 +40,7 @@
                             </thead>
                             <tbody>
 
-                            @if(sizeof($salesOrders)>0)
+                            @if(isset($salesOrders))
                                 @foreach($salesOrders as $salesOrder)
                                     <tr>
                                         <td>{{ \App\Helpers\CommonHelper::getCustomerName($salesOrder->customer_id,$salesOrder->customer_type) }}</td>

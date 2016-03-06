@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\Wages;
 
-use App\Helpers\CommonHelper;
-use App\Http\Requests\WageRequest;
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
+use App\Http\Requests\WageRequest;
 use App\Models\PersonalAccount;
 use App\Models\Wage;
+use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use DB;
 
 ;
 
@@ -55,12 +54,11 @@ class WagesController extends Controller
                     $wage->created_by = time();
                     $wage->save();
 
-                    $personalAccount = PersonalAccount::where(['person_id'=>$employee_id,'person_type'=>Config::get('common.person_type_employee')])->first();
-                    $personalAccount->balance +=$inputs['employee'][$employee_id]['net']; //Add
+                    $personalAccount = PersonalAccount::where(['person_id' => $employee_id, 'person_type' => Config::get('common.person_type_employee')])->first();
+                    $personalAccount->balance += $inputs['employee'][$employee_id]['net']; //Add
                     $personalAccount->updated_by = Auth::user()->id;
                     $personalAccount->updated_at = time();
                     $personalAccount->save();
-
 
 
                 }

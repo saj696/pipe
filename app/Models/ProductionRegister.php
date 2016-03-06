@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class ProductionRegister extends Model
 {
-    public $timestamps=false;
+    public $timestamps = false;
 
     protected $fillable = [
         'date',
@@ -27,7 +26,7 @@ class ProductionRegister extends Model
 
     public function setDateAttribute($value)
     {
-        $this->attributes['date']=strtotime($value);
+        $this->attributes['date'] = strtotime($value);
     }
 
 }

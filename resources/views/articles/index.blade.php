@@ -24,37 +24,38 @@
                     <div class="table-scrollable">
                         <table class="table table-bordered table-hover">
                             <thead>
-                                <tr>
-                                    <th>
-                                        Title
-                                    </th>
-                                    <th>
-                                        Body
-                                    </th>
-                                    <th>
-                                        Published On
-                                    </th>
-                                    <th>
-                                        Action
-                                    </th>
-                                </tr>
+                            <tr>
+                                <th>
+                                    Title
+                                </th>
+                                <th>
+                                    Body
+                                </th>
+                                <th>
+                                    Published On
+                                </th>
+                                <th>
+                                    Action
+                                </th>
+                            </tr>
                             </thead>
                             <tbody>
                             @foreach($articles as $article)
-                            <tr>
-                                <td>
-                                    <a href="{{ url('/articles', $article->id )}}">{{ $article->title }}</a>
-                                </td>
-                                <td>
-                                    {{ str_limit($article->body, 50) }}
-                                </td>
-                                <td>
-                                    {{ $article->published_at }}
-                                </td>
-                                <td>
-                                    <a class="label label-danger" href="{{ url('/articles/'.$article->id.'/edit' )}}">Edit</a>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>
+                                        <a href="{{ url('/articles', $article->id )}}">{{ $article->title }}</a>
+                                    </td>
+                                    <td>
+                                        {{ str_limit($article->body, 50) }}
+                                    </td>
+                                    <td>
+                                        {{ $article->published_at }}
+                                    </td>
+                                    <td>
+                                        <a class="label label-danger"
+                                           href="{{ url('/articles/'.$article->id.'/edit' )}}">Edit</a>
+                                    </td>
+                                </tr>
                             @endforeach
                             </tbody>
                         </table>

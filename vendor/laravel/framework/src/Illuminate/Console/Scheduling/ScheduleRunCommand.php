@@ -30,7 +30,7 @@ class ScheduleRunCommand extends Command
     /**
      * Create a new command instance.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
+     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
      * @return void
      */
     public function __construct(Schedule $schedule)
@@ -50,7 +50,7 @@ class ScheduleRunCommand extends Command
         $events = $this->schedule->dueEvents($this->laravel);
 
         foreach ($events as $event) {
-            $this->line('<info>Running scheduled command:</info> '.$event->getSummaryForDisplay());
+            $this->line('<info>Running scheduled command:</info> ' . $event->getSummaryForDisplay());
 
             $event->run($this->laravel);
         }

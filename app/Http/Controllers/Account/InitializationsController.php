@@ -3,21 +3,17 @@
 namespace App\Http\Controllers\Account;
 
 use App\Helpers\CommonHelper;
-use App\Http\Requests;
-use App\Models\GeneralLedger;
-use App\Models\WorkspaceLedger;
-use App\Models\ChartOfAccount;
-use App\Models\Workspace;
-use Carbon\Carbon;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\Http\Requests\InitializationRequest;
+use App\Models\ChartOfAccount;
+use App\Models\GeneralLedger;
+use App\Models\Workspace;
+use App\Models\WorkspaceLedger;
+use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Request;
 use Session;
-use DB;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 
 class InitializationsController extends Controller
 {
@@ -41,14 +37,11 @@ class InitializationsController extends Controller
 
     public function update($id, InitializationRequest $request)
     {
-        try
-        {
-            DB::transaction(function () use ($request, $id)
-            {
+        try {
+            DB::transaction(function () use ($request, $id) {
                 $currentYear = CommonHelper::get_current_financial_year();
                 $balanceInput = $request->input('balance');
-                foreach ($balanceInput as $code => $amount)
-                {
+                foreach ($balanceInput as $code => $amount) {
                     $WorkspaceLedger = New WorkspaceLedger;
                     $GeneralLedger = New GeneralLedger;
 
@@ -72,11 +65,10 @@ class InitializationsController extends Controller
                     $WorkspaceLedger->created_at = time();
                     $WorkspaceLedger->save();
 
-                    $existingGeneralData = GeneralLedger::where(['account_code' => $code, 'balance_type' => Config::get('common.balance_type_opening'),'year'=>$currentYear])->first();
+                    $existingGeneralData = GeneralLedger::where(['account_code' => $code, 'balance_type' => Config::get('common.balance_type_opening'), 'year' => $currentYear])->first();
 
-                    if($existingGeneralData)
-                    {
-                        $existingGeneral = GeneralLedger::firstOrNew(['account_code' => $code, 'balance_type' => Config::get('common.balance_type_opening'),'year'=>$currentYear]);
+                    if ($existingGeneralData) {
+                        $existingGeneral = GeneralLedger::firstOrNew(['account_code' => $code, 'balance_type' => Config::get('common.balance_type_opening'), 'year' => $currentYear]);
 
                         $existingGeneral->year = $currentYear;
                         $existingGeneral->account_code = $code;
@@ -85,9 +77,7 @@ class InitializationsController extends Controller
                         $existingGeneral->updated_by = Auth::user()->id;
                         $existingGeneral->updated_at = time();
                         $existingGeneral->update();
-                    }
-                    else
-                    {
+                    } else {
                         $GeneralLedger->year = $currentYear;
                         $GeneralLedger->account_code = $code;
                         $GeneralLedger->balance_type = Config::get('common.balance_type_opening');
@@ -125,9 +115,7 @@ class InitializationsController extends Controller
 //                }
                 }
             });
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             Session()->flash('error_message', 'Accounts not Initialized!');
             return redirect('initializations');
         }

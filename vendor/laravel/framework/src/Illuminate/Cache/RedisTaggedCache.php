@@ -7,8 +7,8 @@ class RedisTaggedCache extends TaggedCache
     /**
      * Store an item in the cache indefinitely.
      *
-     * @param  string  $key
-     * @param  mixed   $value
+     * @param  string $key
+     * @param  mixed $value
      * @return void
      */
     public function forever($key, $value)
@@ -16,6 +16,33 @@ class RedisTaggedCache extends TaggedCache
         $this->pushForeverKeys($this->tags->getNamespace(), $key);
 
         parent::forever($key, $value);
+    }
+
+    /**
+     * Store a copy of the full key for each namespace segment.
+     *
+     * @param  string $namespace
+     * @param  string $key
+     * @return void
+     */
+    protected function pushForeverKeys($namespace, $key)
+    {
+        $fullKey = $this->getPrefix() . sha1($namespace) . ':' . $key;
+
+        foreach (explode('|', $namespace) as $segment) {
+            $this->store->connection()->lpush($this->foreverKey($segment), $fullKey);
+        }
+    }
+
+    /**
+     * Get the forever reference key for the segment.
+     *
+     * @param  string $segment
+     * @return string
+     */
+    protected function foreverKey($segment)
+    {
+        return $this->getPrefix() . $segment . ':forever';
     }
 
     /**
@@ -28,22 +55,6 @@ class RedisTaggedCache extends TaggedCache
         $this->deleteForeverKeys();
 
         parent::flush();
-    }
-
-    /**
-     * Store a copy of the full key for each namespace segment.
-     *
-     * @param  string  $namespace
-     * @param  string  $key
-     * @return void
-     */
-    protected function pushForeverKeys($namespace, $key)
-    {
-        $fullKey = $this->getPrefix().sha1($namespace).':'.$key;
-
-        foreach (explode('|', $namespace) as $segment) {
-            $this->store->connection()->lpush($this->foreverKey($segment), $fullKey);
-        }
     }
 
     /**
@@ -63,7 +74,7 @@ class RedisTaggedCache extends TaggedCache
     /**
      * Delete all of the keys that have been stored forever.
      *
-     * @param  string  $foreverKey
+     * @param  string $foreverKey
      * @return void
      */
     protected function deleteForeverValues($foreverKey)
@@ -73,16 +84,5 @@ class RedisTaggedCache extends TaggedCache
         if (count($forever) > 0) {
             call_user_func_array([$this->store->connection(), 'del'], $forever);
         }
-    }
-
-    /**
-     * Get the forever reference key for the segment.
-     *
-     * @param  string  $segment
-     * @return string
-     */
-    protected function foreverKey($segment)
-    {
-        return $this->getPrefix().$segment.':forever';
     }
 }

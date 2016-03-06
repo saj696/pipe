@@ -6,9 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class SalesOrder extends Model
 {
-    protected $table = 'sales_order';
     public $timestamps = false;
-
+    protected $table = 'sales_order';
 
     public function salesOrderItems()
     {
@@ -17,10 +16,8 @@ class SalesOrder extends Model
 
     public function workspaces()
     {
-        return $this->belongsTo('App\Models\Workspace','workspace_id');
+        return $this->belongsTo('App\Models\Workspace', 'workspace_id');
     }
-
-
 
 
 }

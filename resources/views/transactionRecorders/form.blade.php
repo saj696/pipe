@@ -1,8 +1,8 @@
 {!! csrf_field() !!}
 
-<div class="form-group{{ $errors->has('date') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('date', 'Date', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('date') ? ' has-error' : '' }}">
         {{ Form::text('date', null,['class'=>'form-control transaction_date']) }}
         @if ($errors->has('date'))
             <span class="help-block">
@@ -12,9 +12,9 @@
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('account_code') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('account_code', 'Account', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('account_code') ? ' has-error' : '' }}">
         {{ Form::select('account_code', $accounts, null,['class'=>'form-control', 'id'=>'account_type', 'placeholder'=>'Select']) }}
         @if ($errors->has('account_code'))
             <span class="help-block">
@@ -24,9 +24,10 @@
     </div>
 </div>
 
-<div class="to_whom_type_div form-group{{ $errors->has('to_whom_type') ? ' has-error' : '' }}" style="display: {{ (isset($recorder->to_whom_type) && $recorder->to_whom_type>0)?'show':'none' }};">
+<div class="to_whom_type_div form-group"
+     style="display: {{ (isset($recorder->to_whom_type) && $recorder->to_whom_type>0)?'show':'none' }};">
     {{ Form::label('to_whom_type', 'To Whom Type', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('to_whom_type') ? ' has-error' : '' }}">
         {{ Form::select('to_whom_type', $types, null,['class'=>'form-control', 'id'=>'to_whom_type', 'placeholder'=>'Select']) }}
         @if ($errors->has('to_whom_type'))
             <span class="help-block">
@@ -36,7 +37,8 @@
     </div>
 </div>
 
-<div class="to_whom_div" style="display: {{ (isset($recorder->to_whom_type) && $recorder->to_whom_type>0)?'show':'none' }};">
+<div class="to_whom_div"
+     style="display: {{ (isset($recorder->to_whom_type) && $recorder->to_whom_type>0)?'show':'none' }};">
     @if(isset($recorder->to_whom_type) && $recorder->to_whom_type>0)
         @if($recorder->to_whom_type==1)
             <?php
@@ -64,9 +66,10 @@
     @endif
 </div>
 
-<div class="from_whom_type_div form-group{{ $errors->has('from_whom_type') ? ' has-error' : '' }}" style="display: {{ (isset($recorder->from_whom_type) && $recorder->from_whom_type>0)?'show':'none' }};">
+<div class="from_whom_type_div form-group"
+     style="display: {{ (isset($recorder->from_whom_type) && $recorder->from_whom_type>0)?'show':'none' }};">
     {{ Form::label('from_whom_type', 'From Whom Type', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('from_whom_type') ? ' has-error' : '' }}">
         {{ Form::select('from_whom_type', $types, null,['class'=>'form-control', 'id'=>'from_whom_type', 'placeholder'=>'Select']) }}
         @if ($errors->has('from_whom_type'))
             <span class="help-block">
@@ -76,7 +79,8 @@
     </div>
 </div>
 
-<div class="from_whom_div" style="display: {{ (isset($recorder->from_whom_type) && $recorder->from_whom_type>0)?'show':'none' }};">
+<div class="from_whom_div"
+     style="display: {{ (isset($recorder->from_whom_type) && $recorder->from_whom_type>0)?'show':'none' }};">
     @if(isset($recorder->from_whom_type) && $recorder->from_whom_type>0)
         @if($recorder->from_whom_type==1)
             <?php
@@ -104,9 +108,10 @@
     @endif
 </div>
 
-<div class="total_amount_div form-group{{ $errors->has('total_amount') ? ' has-error' : '' }}" style="display: {{ (isset($recorder->total_amount) && $recorder->total_amount>0)?'show':'none' }};">
+<div class="total_amount_div form-group"
+     style="display: {{ (isset($recorder->total_amount) && $recorder->total_amount>0)?'show':'none' }};">
     {{ Form::label('total_amount', 'Total Amount', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('total_amount') ? ' has-error' : '' }}">
         {{ Form::text('total_amount', null,['class'=>'form-control total_amount']) }}
         @if ($errors->has('total_amount'))
             <span class="help-block">
@@ -116,9 +121,10 @@
     </div>
 </div>
 
-<div class="amount_div form-group{{ $errors->has('amount') ? ' has-error' : '' }}" style="display: {{ (isset($recorder->amount) && $recorder->amount>0)?'show':'none' }};">
+<div class="amount_div form-group"
+     style="display: {{ (isset($recorder->amount) && $recorder->amount>0)?'show':'none' }};">
     {{ Form::label('amount', 'Amount', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('amount') ? ' has-error' : '' }}">
         {{ Form::text('amount', null,['class'=>'form-control amount']) }}
         @if ($errors->has('amount'))
             <span class="help-block">
@@ -128,16 +134,18 @@
     </div>
 </div>
 
-<div class="form-group due_div" style="display: {{ (isset($recorder->total_amount) && $recorder->total_amount>0)?'show':'none' }};">
+<div class="form-group due_div"
+     style="display: {{ (isset($recorder->total_amount) && $recorder->total_amount>0)?'show':'none' }};">
     {{ Form::label('due', 'Due', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7">
         {{ Form::text('due', (isset($recorder->total_amount) && isset($recorder->amount))?($recorder->total_amount - $recorder->amount):null,['class'=>'form-control due']) }}
     </div>
 </div>
 
-<div class="transaction_detail_div form-group{{ $errors->has('transaction_detail') ? ' has-error' : '' }}" style="display: {{ (isset($recorder->transaction_detail) && strlen($recorder->transaction_detail)>0)?'show':'none' }};">
+<div class="transaction_detail_div form-group"
+     style="display: {{ (isset($recorder->transaction_detail) && strlen($recorder->transaction_detail)>0)?'show':'none' }};">
     {{ Form::label('transaction_detail', 'Transaction Detail', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('transaction_detail') ? ' has-error' : '' }}">
         {{ Form::textarea('transaction_detail', null,['class'=>'form-control', 'rows'=>3]) }}
         @if ($errors->has('transaction_detail'))
             <span class="help-block">
@@ -150,27 +158,24 @@
 <div class="form-actions">
     <div class="row">
         <div class="text-center col-md-12">
-        {{ Form::submit($submitText, ['class'=>'btn btn-circle green']) }}
+            {{ Form::submit($submitText, ['class'=>'btn btn-circle green']) }}
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
 
-    $(function() {
-        $( ".transaction_date" ).datepicker({ maxDate: new Date });
+    $(function () {
+        $(".transaction_date").datepicker({maxDate: new Date});
     });
 
-    $(document).ready(function ()
-    {
-        $(document).on('change', '#account_type', function()
-        {
+    $(document).ready(function () {
+        $(document).on('change', '#account_type', function () {
             $('.total_amount').val('');
             var code = $(this).val();
-            var slice = code.substring(0,1);
+            var slice = code.substring(0, 1);
 
-            if(slice==1 || slice==2 || slice==3)
-            {
+            if (slice == 1 || slice == 2 || slice == 3) {
                 $('.from_whom_type_div').show();
                 $('.to_whom_type_div').hide();
                 $('#to_whom_type').val('');
@@ -181,8 +186,7 @@
                 $('.due_div').show();
                 $('.transaction_detail_div').show();
             }
-            else if(slice==4)
-            {
+            else if (slice == 4) {
                 $('.to_whom_type_div').show();
                 $('.from_whom_type_div').hide();
                 $('#from_whom_type').val('');
@@ -193,8 +197,7 @@
                 $('.due_div').show();
                 $('.transaction_detail_div').show();
             }
-            else if(slice==5 || slice==6)
-            {
+            else if (slice == 5 || slice == 6) {
                 $('.to_whom_type_div').hide();
                 $('#to_whom_type').val('');
                 $('.to_whom_div').empty();
@@ -210,22 +213,18 @@
             }
         });
 
-        $(document).on('change', '#to_whom_type', function ()
-        {
+        $(document).on('change', '#to_whom_type', function () {
+            $('.total_amount').val('');
             var type = $(this).val();
-            if(type>0)
-            {
+            if (type > 0) {
                 var url = "";
-                if (type == 2)
-                {
+                if (type == 2) {
                     url = "{{ route('ajax.supplier_select') }}";
                 }
-                else if (type == 1)
-                {
+                else if (type == 1) {
                     url = "{{ route('ajax.employee_select') }}";
                 }
-                else if(type == 3)
-                {
+                else if (type == 3) {
                     url = "{{ route('ajax.customer_select') }}";
                 }
 
@@ -246,29 +245,24 @@
                     }
                 });
             }
-            else
-            {
+            else {
                 $('.to_whom_div').empty();
                 $('.to_whom_div').hide();
             }
         });
 
-        $(document).on('change', '#from_whom_type', function ()
-        {
+        $(document).on('change', '#from_whom_type', function () {
+            $('.total_amount').val('');
             var type = $(this).val();
-            if(type>0)
-            {
+            if (type > 0) {
                 var url = "";
-                if (type == 2)
-                {
+                if (type == 2) {
                     url = "{{ route('ajax.supplier_select') }}";
                 }
-                else if (type == 1)
-                {
+                else if (type == 1) {
                     url = "{{ route('ajax.employee_select') }}";
                 }
-                else if (type == 3)
-                {
+                else if (type == 3) {
                     url = "{{ route('ajax.customer_select') }}";
                 }
 
@@ -289,15 +283,13 @@
                     }
                 });
             }
-            else
-            {
+            else {
                 $('.from_whom_div').empty();
                 $('.from_whom_div').hide();
             }
         });
 
-        $(document).on('keyup', '.amount', function ()
-        {
+        $(document).on('keyup', '.amount', function () {
             var amount = parseFloat($(this).val());
             var total_amount = parseFloat($('.total_amount').val());
             var due = total_amount - amount;
@@ -305,54 +297,46 @@
             $('.due').val(due);
         });
 
-        $(document).on('change', '#from_whom', function ()
-        {
+        $(document).on('change', '#from_whom', function () {
             var code = $('#account_type').val();
-            var slice = code.substring(0,1);
+            var slice = code.substring(0, 1);
             var type = $('#from_whom_type').val();
             var person_id = $(this).val();
 
-            if($(this).val()>0 && slice==1)
-            {
+            if ($(this).val() > 0 && slice == 1) {
                 $('.total_amount').val('');
                 $.ajax({
                     url: '{{ route('ajax.transaction_recorder_amount') }}',
                     type: 'POST',
                     dataType: "JSON",
                     data: {type: type, slice: slice, person_id: person_id},
-                    success: function (data, status)
-                    {
+                    success: function (data, status) {
                         $('.total_amount').val(data);
                     },
-                    error: function (xhr, desc, err)
-                    {
+                    error: function (xhr, desc, err) {
                         console.log("error");
                     }
                 });
             }
         });
 
-        $(document).on('change', '#to_whom', function ()
-        {
+        $(document).on('change', '#to_whom', function () {
             var code = $('#account_type').val();
-            var slice = code.substring(0,1);
+            var slice = code.substring(0, 1);
             var type = $('#to_whom_type').val();
             var person_id = $(this).val();
 
-            if($(this).val()>0 && slice==4)
-            {
+            if ($(this).val() > 0 && slice == 4) {
                 $('.total_amount').val('');
                 $.ajax({
                     url: '{{ route('ajax.transaction_recorder_amount') }}',
                     type: 'POST',
                     dataType: "JSON",
                     data: {type: type, slice: slice, person_id: person_id},
-                    success: function (data, status)
-                    {
+                    success: function (data, status) {
                         $('.total_amount').val(data);
                     },
-                    error: function (xhr, desc, err)
-                    {
+                    error: function (xhr, desc, err) {
                         console.log("error");
                     }
                 });

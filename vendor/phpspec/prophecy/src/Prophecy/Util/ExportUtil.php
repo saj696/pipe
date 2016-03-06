@@ -38,7 +38,7 @@ class ExportUtil
      *  - Carriage returns and newlines are normalized to \n
      *  - Recursion and repeated rendering is treated properly
      *
-     * @param  mixed   $value       The value to export
+     * @param  mixed $value The value to export
      * @param  integer $indentation The indentation level of the 2nd+ line
      *
      * @return string
@@ -49,52 +49,11 @@ class ExportUtil
     }
 
     /**
-     * Converts an object to an array containing all of its private, protected
-     * and public properties.
-     *
-     * @param  object $object
-     *
-     * @return array
-     */
-    public static function toArray($object)
-    {
-        $array = array();
-
-        foreach ((array) $object as $key => $value) {
-            // properties are transformed to keys in the following way:
-
-            // private   $property => "\0Classname\0property"
-            // protected $property => "\0*\0property"
-            // public    $property => "property"
-
-            if (preg_match('/^\0.+\0(.+)$/', $key, $matches)) {
-                $key = $matches[1];
-            }
-
-            $array[$key] = $value;
-        }
-
-        // Some internal classes like SplObjectStorage don't work with the
-        // above (fast) mechanism nor with reflection
-        // Format the output similarly to print_r() in this case
-        if ($object instanceof SplObjectStorage) {
-            foreach ($object as $key => $value) {
-                $array[spl_object_hash($value)] = array(
-                    'obj' => $value,
-                    'inf' => $object->getInfo(),
-                );
-            }
-        }
-
-        return $array;
-    }
-
-    /**
      * Recursive implementation of export.
      *
-     * @param  mixed   $value            The value to export
-     * @param  integer $indentation      The indentation level of the 2nd+ line
-     * @param  array   $processedObjects Contains all objects that were already
+     * @param  mixed $value The value to export
+     * @param  integer $indentation The indentation level of the 2nd+ line
+     * @param  array $processedObjects Contains all objects that were already
      *                                   rendered
      *
      * @return string
@@ -149,8 +108,8 @@ class ExportUtil
             // Numeric integer strings are automatically converted to integers
             // by PHP
             foreach ($recursiveKeys as $key => $recursiveKey) {
-                if ((string) (integer) $recursiveKey === $recursiveKey) {
-                    $recursiveKeys[$key] = (integer) $recursiveKey;
+                if ((string)(integer)$recursiveKey === $recursiveKey) {
+                    $recursiveKeys[$key] = (integer)$recursiveKey;
                 }
             }
 
@@ -176,10 +135,51 @@ class ExportUtil
             );
         }
 
-        if (is_double($value) && (double)(integer) $value === $value) {
+        if (is_double($value) && (double)(integer)$value === $value) {
             return $value . '.0';
         }
 
-        return (string) $value;
+        return (string)$value;
+    }
+
+    /**
+     * Converts an object to an array containing all of its private, protected
+     * and public properties.
+     *
+     * @param  object $object
+     *
+     * @return array
+     */
+    public static function toArray($object)
+    {
+        $array = array();
+
+        foreach ((array)$object as $key => $value) {
+            // properties are transformed to keys in the following way:
+
+            // private   $property => "\0Classname\0property"
+            // protected $property => "\0*\0property"
+            // public    $property => "property"
+
+            if (preg_match('/^\0.+\0(.+)$/', $key, $matches)) {
+                $key = $matches[1];
+            }
+
+            $array[$key] = $value;
+        }
+
+        // Some internal classes like SplObjectStorage don't work with the
+        // above (fast) mechanism nor with reflection
+        // Format the output similarly to print_r() in this case
+        if ($object instanceof SplObjectStorage) {
+            foreach ($object as $key => $value) {
+                $array[spl_object_hash($value)] = array(
+                    'obj' => $value,
+                    'inf' => $object->getInfo(),
+                );
+            }
+        }
+
+        return $array;
     }
 }

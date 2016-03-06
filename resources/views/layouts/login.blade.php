@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 
-<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]>
+<html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
 <html lang="en">
 <!--<![endif]-->
@@ -49,8 +51,10 @@
     <script src="{{ URL::asset('js/tasks.js') }}" type="text/javascript"></script>
     <script src="{{ URL::asset('js/login.js') }}" type="text/javascript"></script>
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css"/>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.2.3/css/simple-line-icons.css" rel="stylesheet" type="text/css"/>
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet"
+          type="text/css"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.2.3/css/simple-line-icons.css"
+          rel="stylesheet" type="text/css"/>
     {{--    <link href="{{ URL::asset('css/font-awesome.min.css') }}" rel="stylesheet" type="text/css"/>--}}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
@@ -98,37 +102,37 @@
 @yield('content')
 
 {{--<div class="content">--}}
-    {{--<!-- BEGIN LOGIN FORM -->--}}
-    {{--<form class="login-form" action="index.html" method="post">--}}
-        {{--<h3 class="form-title">Sign In</h3>--}}
-        {{--<div class="alert alert-danger display-hide">--}}
-            {{--<button class="close" data-close="alert"></button>--}}
-			{{--<span>--}}
-			{{--Enter any username and password. </span>--}}
-        {{--</div>--}}
-        {{--<div class="form-group">--}}
-            {{--<!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->--}}
-            {{--<label class="control-label visible-ie8 visible-ie9">Username</label>--}}
-            {{--<input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off" placeholder="Username" name="username"/>--}}
-        {{--</div>--}}
-        {{--<div class="form-group">--}}
-            {{--<label class="control-label visible-ie8 visible-ie9">Password</label>--}}
-            {{--<input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="password"/>--}}
-        {{--</div>--}}
-        {{--<div class="form-actions">--}}
-            {{--<button type="submit" class="btn btn-success uppercase">Login</button>--}}
-            {{--<label class="rememberme check">--}}
-                {{--<input type="checkbox" name="remember" value="1"/>Remember </label>--}}
-            {{--<a href="javascript:;" id="forget-password" class="forget-password">Forgot Password?</a>--}}
-        {{--</div>--}}
-    {{--</form>--}}
+{{--<!-- BEGIN LOGIN FORM -->--}}
+{{--<form class="login-form" action="index.html" method="post">--}}
+{{--<h3 class="form-title">Sign In</h3>--}}
+{{--<div class="alert alert-danger display-hide">--}}
+{{--<button class="close" data-close="alert"></button>--}}
+{{--<span>--}}
+{{--Enter any username and password. </span>--}}
+{{--</div>--}}
+{{--<div class="form-group">--}}
+{{--<!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->--}}
+{{--<label class="control-label visible-ie8 visible-ie9">Username</label>--}}
+{{--<input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off" placeholder="Username" name="username"/>--}}
+{{--</div>--}}
+{{--<div class="form-group">--}}
+{{--<label class="control-label visible-ie8 visible-ie9">Password</label>--}}
+{{--<input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="password"/>--}}
+{{--</div>--}}
+{{--<div class="form-actions">--}}
+{{--<button type="submit" class="btn btn-success uppercase">Login</button>--}}
+{{--<label class="rememberme check">--}}
+{{--<input type="checkbox" name="remember" value="1"/>Remember </label>--}}
+{{--<a href="javascript:;" id="forget-password" class="forget-password">Forgot Password?</a>--}}
+{{--</div>--}}
+{{--</form>--}}
 {{--</div>--}}
 <div class="copyright">
     2016 © Soft-BD Ltd.
 </div>
 
 <script>
-    jQuery(document).ready(function() {
+    jQuery(document).ready(function () {
         Metronic.init(); // init metronic core components
         Layout.init(); // init current layout
         Login.init();

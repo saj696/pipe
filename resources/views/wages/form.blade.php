@@ -1,8 +1,8 @@
 {!! csrf_field() !!}
 
-<div class="form-group{{ $errors->has('month') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('month', 'Month', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('month') ? ' has-error' : '' }}">
         {{ Form::select('month', array_flip(Config::get('common.month')), null,['class'=>'form-control','placeholder'=>'Select','required']) }}
         @if ($errors->has('month'))
             <span class="help-block">
@@ -12,9 +12,9 @@
     </div>
 </div>
 
-<div class="form-group{{ $errors->has('employee_type') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('employee_type', 'Employee Type', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('employee_type') ? ' has-error' : '' }}">
         {{ Form::select('employee_type',array_flip(Config::get('common.employee_type')), null,['class'=>'form-control','placeholder'=>'Select','required']) }}
         @if ($errors->has('employee_type'))
             <span class="help-block">
@@ -43,9 +43,8 @@
             var month = $('#month option:selected').val();
             if (type && month) {
                 var url = '{{ route('ajax.get_employee_list') }}';
-            }else
-            {
-                $(this).prop('selectedIndex',0);
+            } else {
+                $(this).prop('selectedIndex', 0);
                 alert('Please Select Both Month & Employee Type.');
             }
             $.ajax({
@@ -96,16 +95,15 @@
             }
         });
 
-        $(document).on('submit','form',function(e){
-            if(!$('.e_select:checked').length)
-            {
+        $(document).on('submit', 'form', function (e) {
+            if (!$('.e_select:checked').length) {
                 alert('Please select at least one.')
                 e.preventDefault();
             }
         });
 
-        $(document).on('change','#month',function(){
-            $('#employee_type').prop('selectedIndex',0);
+        $(document).on('change', '#month', function () {
+            $('#employee_type').prop('selectedIndex', 0);
         });
     });
 

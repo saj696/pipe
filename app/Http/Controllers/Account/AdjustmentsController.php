@@ -3,21 +3,17 @@
 namespace App\Http\Controllers\Account;
 
 use App\Helpers\CommonHelper;
+use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\Http\Requests\AdjustmentRequest;
 use App\Models\Adjustment;
 use App\Models\ChartOfAccount;
-use App\Models\WorkspaceLedger;
 use App\Models\GeneralJournal;
-use Carbon\Carbon;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\AdjustmentRequest;
+use App\Models\WorkspaceLedger;
+use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Request;
 use Session;
-use DB;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 
 class AdjustmentsController extends Controller
 {
@@ -41,10 +37,8 @@ class AdjustmentsController extends Controller
 
     public function store(AdjustmentRequest $request)
     {
-        try
-        {
-            DB::transaction(function () use ($request)
-            {
+        try {
+            DB::transaction(function () use ($request) {
                 $currentYear = CommonHelper::get_current_financial_year();
                 $workspace_id = Auth::user()->workspace_id;
                 $adjustment = New Adjustment;
@@ -52,12 +46,9 @@ class AdjustmentsController extends Controller
                 $adjustment->account_from = $request->account_from;
                 $adjustment->amount = $request->amount;
 
-                if($request->account_from==25000)
-                {
+                if ($request->account_from == 25000) {
                     $adjustment->account_to = 14000;
-                }
-                elseif($request->account_from==27000)
-                {
+                } elseif ($request->account_from == 27000) {
                     $adjustment->account_to = 13000;
                 }
 
@@ -65,15 +56,14 @@ class AdjustmentsController extends Controller
                 $adjustment->created_at = time();
                 $adjustment->save();
 
-                if($request->account_from==25000)
-                {
+                if ($request->account_from == 25000) {
                     // Workspace_id hardcoded for head office
                     // Workspace Ledger Purchase Credit(-)
-                    $purchaseWorkspaceData = WorkspaceLedger::where(['workspace_id'=>1, 'account_code'=>25000,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
+                    $purchaseWorkspaceData = WorkspaceLedger::where(['workspace_id' => 1, 'account_code' => 25000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear])->first();
                     $purchaseWorkspaceData->balance = $purchaseWorkspaceData->balance - $request->amount;
                     $purchaseWorkspaceData->update();
                     // Workspace Ledger Inventory Raw Material Account Debit(+)
-                    $assetWorkspaceData = WorkspaceLedger::where(['workspace_id'=>1, 'account_code'=>14000,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
+                    $assetWorkspaceData = WorkspaceLedger::where(['workspace_id' => 1, 'account_code' => 14000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear])->first();
                     $assetWorkspaceData->balance += $request->amount;
                     $assetWorkspaceData->update();
                     // General Journals Insert
@@ -88,15 +78,13 @@ class AdjustmentsController extends Controller
                     $generalJournal->created_by = Auth::user()->id;
                     $generalJournal->created_at = time();
                     $generalJournal->save();
-                }
-                elseif($request->account_from==27000)
-                {
+                } elseif ($request->account_from == 27000) {
                     // Workspace Ledger Office Supply Credit(-)
-                    $officeWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>27000,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
+                    $officeWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => 27000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear])->first();
                     $officeWorkspaceData->balance = $officeWorkspaceData->balance - $request->amount;
                     $officeWorkspaceData->update();
                     // Workspace Ledger Inventory Office Supplies Account Debit(+)
-                    $assetWorkspaceData = WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'account_code'=>13000,'balance_type'=>Config::get('common.balance_type_intermediate'),'year'=>$currentYear])->first();
+                    $assetWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => 13000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear])->first();
                     $assetWorkspaceData->balance += $request->amount;
                     $assetWorkspaceData->update();
                     // General Journals Insert
@@ -113,9 +101,7 @@ class AdjustmentsController extends Controller
                     $generalJournal->save();
                 }
             });
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             Session()->flash('error_message', 'Adjustment not done!');
             return redirect('adjustments');
         }

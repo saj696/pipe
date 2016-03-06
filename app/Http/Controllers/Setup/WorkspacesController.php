@@ -2,20 +2,13 @@
 
 namespace App\Http\Controllers\Setup;
 
-use App\Http\Requests;
-use App\Models\Workspace;
-use App\Models\Component;
-use App\Models\WorkspaceLedger;
-use App\Models\ChartOfAccount;
-use Carbon\Carbon;
 use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\Http\Requests\WorkspaceRequest;
+use App\Models\Workspace;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Request;
 use Session;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 
 class WorkspacesController extends Controller
 {

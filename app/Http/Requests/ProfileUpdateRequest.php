@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
 use App\Models\User;
 
 
@@ -29,10 +28,10 @@ class ProfileUpdateRequest extends Request
         $user = User::find($this->profile_update);
 
         return [
-            'name_en'=>'required',
-            'username'=>'required|alpha_dash|min:3|unique:users,username,'.$user->id,
-            'email'=>'required|email|unique:users,email,'.$user->id,
-            'password'=>'required|min:6',
+            'name_en' => 'required',
+            'username' => 'required|alpha_dash|min:3|unique:users,username,' . $user->id,
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'required|min:6',
             'photo' => 'image'
         ];
     }

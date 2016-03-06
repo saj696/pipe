@@ -6,16 +6,16 @@ namespace App\Http\Controllers;
 use App\Helpers\CommonHelper;
 use App\Http\Requests;
 use App\Models\Customer;
+use App\Models\Employee;
 use App\Models\Module;
 use App\Models\PersonalAccount;
-use App\Models\Product;
+use App\Models\PurchaseDetail;
+use App\Models\RawStock;
 use App\Models\Salary;
 use App\Models\Supplier;
-use App\Models\Employee;
-use App\Models\Workspace;
-use App\Models\RawStock;
 use App\Models\TransactionRecorder;
-use App\Models\PurchaseDetail;
+use App\Models\Workspace;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -67,8 +67,15 @@ class AjaxController extends Controller
     public function getProducts(Request $request)
     {
         $title = $request->input('q');
-        $suppliers = Product::select('id as value', 'title as label', 'retail_price', 'wholesale_price')->where('status', 1)->where('title', 'like', $title . '%')->get();
-//        dd($suppliers);
+        $suppliers = DB::table('products')
+            ->where('products.status','=',1)
+            ->where('products.title', 'like', $title . '%')
+            ->leftJoin('stocks', function ($join) {
+                $join->on('products.id', '=', 'stocks.product_id')
+                    ->where('stocks.year', '=', CommonHelper::get_current_financial_year())
+                    ->where('stocks.stock_type', '=', Config::get('common.balance_type_intermediate'))
+                    ->where('stocks.workspace_id', '=', Auth::user()->workspace_id);
+            })->get(['products.id as value', 'products.title as label', 'products.retail_price', 'products.wholesale_price','stocks.quantity']);
         return response()->json($suppliers);
     }
 
@@ -105,7 +112,7 @@ class AjaxController extends Controller
         $slice = $request->input('slice');
         $person_id = $request->input('person_id');
 
-        $personal = PersonalAccount::where(['person_type' => $type, 'id' => $person_id])->first();
+        $personal = PersonalAccount::where(['person_type' => $type, 'person_id' => $person_id])->first();
         if ($slice == 1) {
             return response()->json(isset($personal->due)?$personal->due:0);
         } elseif ($slice == 4) {
@@ -157,7 +164,7 @@ class AjaxController extends Controller
     {
         $inputs = $request->input();
         $workspace_id = Auth::user()->workspace_id;
-        $salaries = Salary::where(['workspace_id' => $workspace_id, 'month' => $inputs['month'], 'employee_type' => Config::get('common.employee_type.Regular'), 'year' => CommonHelper::get_current_financial_year()])->where('due','>',0)->with('employee')->get();
+        $salaries = Salary::where(['workspace_id' => $workspace_id, 'month' => $inputs['month'], 'employee_type' => Config::get('common.employee_type.Regular'), 'year' => CommonHelper::get_current_financial_year()])->where('due', '>', 0)->with('employee')->get();
         $list = view('ajaxView.employeeSalaryPaymentList')->with('salaries', $salaries)->render();
         return response()->json($list);
 

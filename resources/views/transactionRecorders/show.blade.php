@@ -9,7 +9,8 @@
                         <i class="fa fa-coffee"></i>Module Detail
                     </div>
                     <div>
-                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="{{ url('/modules' )}}">Back</a>
+                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right"
+                           href="{{ url('/modules' )}}">Back</a>
                     </div>
                 </div>
                 <div class="portlet-body">
@@ -35,23 +36,23 @@
                             </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        {{ $module->name_en }}
-                                    </td>
-                                    <td>
-                                        <p>{{ $module->component->name_en }}</p>
-                                    </td>
-                                    <td>
-                                        <p>{{ $module->description }}</p>
-                                    </td>
-                                    <td>
-                                        {{ $module->icon }}
-                                    </td>
-                                    <td>
-                                        {{ $module->ordering }}
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>
+                                    {{ $module->name_en }}
+                                </td>
+                                <td>
+                                    <p>{{ $module->component->name_en }}</p>
+                                </td>
+                                <td>
+                                    <p>{{ $module->description }}</p>
+                                </td>
+                                <td>
+                                    {{ $module->icon }}
+                                </td>
+                                <td>
+                                    {{ $module->ordering }}
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>

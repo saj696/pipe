@@ -3,10 +3,10 @@
 namespace Collective\Html;
 
 use BadMethodCallException;
-use Illuminate\Support\HtmlString;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Support\Traits\Macroable;
 use Illuminate\Contracts\Routing\UrlGenerator;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Support\HtmlString;
+use Illuminate\Support\Traits\Macroable;
 
 class HtmlBuilder
 {
@@ -34,7 +34,7 @@ class HtmlBuilder
      * Create a new HTML builder instance.
      *
      * @param \Illuminate\Contracts\Routing\UrlGenerator $url
-     * @param \Illuminate\Contracts\View\Factory         $view
+     * @param \Illuminate\Contracts\View\Factory $view
      */
     public function __construct(UrlGenerator $url = null, Factory $view)
     {
@@ -70,8 +70,8 @@ class HtmlBuilder
      * Generate a link to a JavaScript file.
      *
      * @param string $url
-     * @param array  $attributes
-     * @param bool   $secure
+     * @param array $attributes
+     * @param bool $secure
      *
      * @return \Illuminate\Support\HtmlString
      */
@@ -86,8 +86,8 @@ class HtmlBuilder
      * Generate a link to a CSS file.
      *
      * @param string $url
-     * @param array  $attributes
-     * @param bool   $secure
+     * @param array $attributes
+     * @param bool $secure
      *
      * @return \Illuminate\Support\HtmlString
      */
@@ -107,8 +107,8 @@ class HtmlBuilder
      *
      * @param string $url
      * @param string $alt
-     * @param array  $attributes
-     * @param bool   $secure
+     * @param array $attributes
+     * @param bool $secure
      *
      * @return \Illuminate\Support\HtmlString
      */
@@ -117,15 +117,15 @@ class HtmlBuilder
         $attributes['alt'] = $alt;
 
         return $this->toHtmlString('<img src="' . $this->url->asset($url,
-            $secure) . '"' . $this->attributes($attributes) . '>');
+                $secure) . '"' . $this->attributes($attributes) . '>');
     }
 
     /**
      * Generate a link to a Favicon file.
      *
      * @param string $url
-     * @param array  $attributes
-     * @param bool   $secure
+     * @param array $attributes
+     * @param bool $secure
      *
      * @return \Illuminate\Support\HtmlString
      */
@@ -145,8 +145,8 @@ class HtmlBuilder
      *
      * @param string $url
      * @param string $title
-     * @param array  $attributes
-     * @param bool   $secure
+     * @param array $attributes
+     * @param bool $secure
      *
      * @return \Illuminate\Support\HtmlString
      */
@@ -166,7 +166,7 @@ class HtmlBuilder
      *
      * @param string $url
      * @param string $title
-     * @param array  $attributes
+     * @param array $attributes
      *
      * @return \Illuminate\Support\HtmlString
      */
@@ -180,8 +180,8 @@ class HtmlBuilder
      *
      * @param string $url
      * @param string $title
-     * @param array  $attributes
-     * @param bool   $secure
+     * @param array $attributes
+     * @param bool $secure
      *
      * @return \Illuminate\Support\HtmlString
      */
@@ -197,7 +197,7 @@ class HtmlBuilder
      *
      * @param string $url
      * @param string $title
-     * @param array  $attributes
+     * @param array $attributes
      *
      * @return \Illuminate\Support\HtmlString
      */
@@ -211,8 +211,8 @@ class HtmlBuilder
      *
      * @param string $name
      * @param string $title
-     * @param array  $parameters
-     * @param array  $attributes
+     * @param array $parameters
+     * @param array $attributes
      *
      * @return \Illuminate\Support\HtmlString
      */
@@ -226,8 +226,8 @@ class HtmlBuilder
      *
      * @param string $action
      * @param string $title
-     * @param array  $parameters
-     * @param array  $attributes
+     * @param array $parameters
+     * @param array $attributes
      *
      * @return \Illuminate\Support\HtmlString
      */
@@ -241,7 +241,7 @@ class HtmlBuilder
      *
      * @param string $email
      * @param string $title
-     * @param array  $attributes
+     * @param array $attributes
      *
      * @return \Illuminate\Support\HtmlString
      */
@@ -309,7 +309,7 @@ class HtmlBuilder
         $html = "<dl{$attributes}>";
 
         foreach ($list as $key => $value) {
-            $value = (array) $value;
+            $value = (array)$value;
 
             $html .= "<dt>$key</dt>";
 
@@ -327,8 +327,8 @@ class HtmlBuilder
      * Create a listing HTML element.
      *
      * @param string $type
-     * @param array  $list
-     * @param array  $attributes
+     * @param array $list
+     * @param array $attributes
      *
      * @return \Illuminate\Support\HtmlString|string
      */
@@ -355,9 +355,9 @@ class HtmlBuilder
     /**
      * Create the HTML for a listing element.
      *
-     * @param mixed  $key
+     * @param mixed $key
      * @param string $type
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return string
      */
@@ -373,9 +373,9 @@ class HtmlBuilder
     /**
      * Create the HTML for a nested listing attribute.
      *
-     * @param mixed  $key
+     * @param mixed $key
      * @param string $type
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return string
      */
@@ -399,10 +399,10 @@ class HtmlBuilder
     {
         $html = [];
 
-        foreach ((array) $attributes as $key => $value) {
+        foreach ((array)$attributes as $key => $value) {
             $element = $this->attributeElement($key, $value);
 
-            if (! is_null($element)) {
+            if (!is_null($element)) {
                 $html[] = $element;
             }
         }
@@ -427,7 +427,7 @@ class HtmlBuilder
             $key = $value;
         }
 
-        if (! is_null($value)) {
+        if (!is_null($value)) {
             return $key . '="' . e($value) . '"';
         }
     }
@@ -473,7 +473,7 @@ class HtmlBuilder
      *
      * @param string $name
      * @param string $content
-     * @param array  $attributes
+     * @param array $attributes
      *
      * @return \Illuminate\Support\HtmlString
      */
@@ -502,7 +502,7 @@ class HtmlBuilder
      * Dynamically handle calls to the class.
      *
      * @param  string $method
-     * @param  array  $parameters
+     * @param  array $parameters
      *
      * @return \Illuminate\Contracts\View\View|mixed
      *

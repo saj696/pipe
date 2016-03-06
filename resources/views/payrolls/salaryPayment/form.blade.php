@@ -1,8 +1,8 @@
 {!! csrf_field() !!}
 
-<div class="form-group{{ $errors->has('month') ? ' has-error' : '' }}">
+<div class="form-group">
     {{ Form::label('month', 'Month', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7">
+    <div class="col-md-7{{ $errors->has('month') ? ' has-error' : '' }}">
         {{ Form::select('month', array_flip(Config::get('common.month')), null,['class'=>'form-control','placeholder'=>'Select','required']) }}
         @if ($errors->has('month'))
             <span class="help-block">
@@ -55,12 +55,11 @@
             }
         });
 
-        $(document).on('keyup' ,'.pay_now', function () {
-            var obj=$(this);
-            var pay_now=parseFloat($(this).val());
-            var due= parseFloat(obj.closest('tr').find('.due').val());
-            if(pay_now>due)
-            {
+        $(document).on('keyup', '.pay_now', function () {
+            var obj = $(this);
+            var pay_now = parseFloat($(this).val());
+            var due = parseFloat(obj.closest('tr').find('.due').val());
+            if (pay_now > due) {
                 alert('Pay now could not greater than due amount');
                 $(this).val(due);
             }

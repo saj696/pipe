@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-
 class MaterialRequest extends Request
 {
     /**
@@ -25,8 +23,8 @@ class MaterialRequest extends Request
     public function rules()
     {
         return [
-            'name'=>'required',
-            'type'=>'required|integer'
+            'name' => 'required',
+            'type' => 'required|integer'
         ];
     }
 }

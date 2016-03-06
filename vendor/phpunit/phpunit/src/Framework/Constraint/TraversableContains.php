@@ -33,8 +33,8 @@ class PHPUnit_Framework_Constraint_TraversableContains extends PHPUnit_Framework
 
     /**
      * @param mixed $value
-     * @param bool  $checkForObjectIdentity
-     * @param bool  $checkForNonObjectIdentity
+     * @param bool $checkForObjectIdentity
+     * @param bool $checkForNonObjectIdentity
      *
      * @throws PHPUnit_Framework_Exception
      */
@@ -50,9 +50,9 @@ class PHPUnit_Framework_Constraint_TraversableContains extends PHPUnit_Framework
             throw PHPUnit_Util_InvalidArgumentHelper::factory(3, 'boolean');
         }
 
-        $this->checkForObjectIdentity    = $checkForObjectIdentity;
+        $this->checkForObjectIdentity = $checkForObjectIdentity;
         $this->checkForNonObjectIdentity = $checkForNonObjectIdentity;
-        $this->value                     = $value;
+        $this->value = $value;
     }
 
     /**
@@ -72,38 +72,26 @@ class PHPUnit_Framework_Constraint_TraversableContains extends PHPUnit_Framework
         if (is_object($this->value)) {
             foreach ($other as $element) {
                 if (($this->checkForObjectIdentity &&
-                     $element === $this->value) ||
+                        $element === $this->value) ||
                     (!$this->checkForObjectIdentity &&
-                     $element == $this->value)) {
+                        $element == $this->value)
+                ) {
                     return true;
                 }
             }
         } else {
             foreach ($other as $element) {
                 if (($this->checkForNonObjectIdentity &&
-                     $element === $this->value) ||
+                        $element === $this->value) ||
                     (!$this->checkForNonObjectIdentity &&
-                     $element == $this->value)) {
+                        $element == $this->value)
+                ) {
                     return true;
                 }
             }
         }
 
         return false;
-    }
-
-    /**
-     * Returns a string representation of the constraint.
-     *
-     * @return string
-     */
-    public function toString()
-    {
-        if (is_string($this->value) && strpos($this->value, "\n") !== false) {
-            return 'contains "' . $this->value . '"';
-        } else {
-            return 'contains ' . $this->exporter->export($this->value);
-        }
     }
 
     /**
@@ -123,5 +111,19 @@ class PHPUnit_Framework_Constraint_TraversableContains extends PHPUnit_Framework
             is_array($other) ? 'an array' : 'a traversable',
             $this->toString()
         );
+    }
+
+    /**
+     * Returns a string representation of the constraint.
+     *
+     * @return string
+     */
+    public function toString()
+    {
+        if (is_string($this->value) && strpos($this->value, "\n") !== false) {
+            return 'contains "' . $this->value . '"';
+        } else {
+            return 'contains ' . $this->exporter->export($this->value);
+        }
     }
 }

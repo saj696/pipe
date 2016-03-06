@@ -6,9 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
 {
-    protected $table='customer';
-    public $timestamps=false;
-
+    public $timestamps = false;
+    protected $table = 'customer';
     protected $fillable = [
         'name',
         'mobile',
@@ -19,13 +18,13 @@ class Customer extends Model
         'status'
     ];
 
-   /* public function component()
-    {
-        return $this->belongsTo('App\Models\Component');
-    }
+    /* public function component()
+     {
+         return $this->belongsTo('App\Models\Component');
+     }
 
-    public function tasks()
-    {
-        return $this->hasMany('App\Models\Task');
-    }*/
+     public function tasks()
+     {
+         return $this->hasMany('App\Models\Task');
+     }*/
 }

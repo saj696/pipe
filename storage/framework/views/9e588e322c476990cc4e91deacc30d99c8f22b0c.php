@@ -19,9 +19,9 @@
         <div class="portlet-body form">
             <div class="form-horizontal" role="form">
                 <div class="form-body">
-                    <?php echo e(Form::open(['url'=>'articles'])); ?>
+                    <?php echo e(Form::open(['url' => 'articles'])); ?>
 
-                    <?php echo $__env->make('articles.form', ['submitText'=>'Add'], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                    <?php echo $__env->make('articles.form', ['submitText' => 'Add'], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
                     <?php echo e(Form::close()); ?>
 
                 </div>

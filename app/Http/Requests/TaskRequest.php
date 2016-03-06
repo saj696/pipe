@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-
 class TaskRequest extends Request
 {
     /**
@@ -25,12 +23,12 @@ class TaskRequest extends Request
     public function rules()
     {
         return [
-            'name_en'=>'required',
-            'component_id'=>'required',
-            'module_id'=>'required',
-            'route'=>'required',
-            'icon'=>'required',
-            'ordering'=>'required'
+            'name_en' => 'required',
+            'component_id' => 'required',
+            'module_id' => 'required',
+            'route' => 'required',
+            'icon' => 'required',
+            'ordering' => 'required'
         ];
     }
 }

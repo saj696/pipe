@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Payroll;
 
 use App\Helpers\CommonHelper;
+use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\Http\Requests\SalaryPaymentRequest;
 use App\Models\GeneralJournal;
 use App\Models\PersonalAccount;
@@ -11,10 +13,6 @@ use App\Models\SalaryPayment;
 use App\Models\WorkspaceLedger;
 use Config;
 use DB;
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 

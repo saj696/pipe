@@ -1,4 +1,5 @@
 <?php
+
 class UtilityTest extends PHPUnit_Framework_TestCase
 {
     public function testStrlen()
@@ -10,7 +11,7 @@ class UtilityTest extends PHPUnit_Framework_TestCase
         }
         $this->assertEquals(RandomCompat_strlen("\xF0\x9D\x92\xB3"), 4);
     }
-    
+
     public function testIntval()
     {
         if (!function_exists('RandomCompat_intval')) {
@@ -23,7 +24,7 @@ class UtilityTest extends PHPUnit_Framework_TestCase
             abs(RandomCompat_intval(-4.5)),
             abs(RandomCompat_intval(4.5))
         );
-        
+
         // True
         $this->assertTrue(
             is_int(RandomCompat_intval(PHP_INT_MAX, true))
@@ -40,13 +41,13 @@ class UtilityTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(
             is_int(RandomCompat_intval("1.", true))
         );
-        
+
         // False
         $this->assertFalse(
-            is_int(RandomCompat_intval((float) PHP_INT_MAX, true))
+            is_int(RandomCompat_intval((float)PHP_INT_MAX, true))
         );
         $this->assertFalse(
-            is_int(RandomCompat_intval((float) ~PHP_INT_MAX, true))
+            is_int(RandomCompat_intval((float)~PHP_INT_MAX, true))
         );
         $this->assertFalse(
             is_int(RandomCompat_intval(PHP_INT_MAX + 1, true))
@@ -63,7 +64,7 @@ class UtilityTest extends PHPUnit_Framework_TestCase
         $this->assertFalse(
             is_int(RandomCompat_intval("hello", true))
         );
-        
+
         if (PHP_INT_SIZE === 8) {
             $this->assertFalse(
                 is_int(RandomCompat_intval("-9223372036854775809", true))

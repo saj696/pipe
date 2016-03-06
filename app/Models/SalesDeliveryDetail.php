@@ -6,10 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class SalesDeliveryDetail extends Model
 {
-    protected $table = 'sales_delivery_details';
     public $timestamps = false;
-
-    protected $fillable= [
+    protected $table = 'sales_delivery_details';
+    protected $fillable = [
         'delivered_quantity',
         'last_delivered_quantity'
     ];

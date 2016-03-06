@@ -16,15 +16,17 @@
                                        class="form-control"></td>
                 <td><input type="text" value="{{ $salary->net }}" disabled
                            class="form-control"></td>
-                <td><input type="text" name="employee[{{ $salary->employee->id }}][due]" value="{{ $salary->due }}" readonly
+                <td><input type="text" name="employee[{{ $salary->employee->id }}][due]" value="{{ $salary->due }}"
+                           readonly
                            class="form-control due"></td>
                 <td><input type="text" value="{{$salary->paid}}" disabled
                            class="form-control paid">
                 </td>
                 <td><input type="text" name="employee[{{ $salary->employee->id }}][pay_now]"
-                           placeholder="Pay Now" value="{{ $salary->net-$salary->paid }}" class="form-control pay_now"></td>
+                           placeholder="Pay Now" value="{{ $salary->net-$salary->paid }}" class="form-control pay_now">
+                </td>
                 <input type="hidden" name="employee[{{ $salary->employee->id }}][salary_id]"
-                        value="{{ $salary->id }}" >
+                       value="{{ $salary->id }}">
             </tr>
         @endforeach
     @else

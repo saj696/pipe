@@ -47,11 +47,11 @@ class MakeAuthCommand extends Command
 
         $this->exportViews();
 
-        if (! $this->option('views')) {
+        if (!$this->option('views')) {
             $this->info('Installed HomeController.');
 
             copy(
-                __DIR__.'/stubs/make/controllers/HomeController.stub',
+                __DIR__ . '/stubs/make/controllers/HomeController.stub',
                 app_path('Http/Controllers/HomeController.php')
             );
 
@@ -59,7 +59,7 @@ class MakeAuthCommand extends Command
 
             file_put_contents(
                 app_path('Http/routes.php'),
-                file_get_contents(__DIR__.'/stubs/make/routes.stub'),
+                file_get_contents(__DIR__ . '/stubs/make/routes.stub'),
                 FILE_APPEND
             );
         }
@@ -74,15 +74,15 @@ class MakeAuthCommand extends Command
      */
     protected function createDirectories()
     {
-        if (! is_dir(base_path('resources/views/layouts'))) {
+        if (!is_dir(base_path('resources/views/layouts'))) {
             mkdir(base_path('resources/views/layouts'), 0755, true);
         }
 
-        if (! is_dir(base_path('resources/views/auth/passwords'))) {
+        if (!is_dir(base_path('resources/views/auth/passwords'))) {
             mkdir(base_path('resources/views/auth/passwords'), 0755, true);
         }
 
-        if (! is_dir(base_path('resources/views/auth/emails'))) {
+        if (!is_dir(base_path('resources/views/auth/emails'))) {
             mkdir(base_path('resources/views/auth/emails'), 0755, true);
         }
     }
@@ -95,11 +95,11 @@ class MakeAuthCommand extends Command
     protected function exportViews()
     {
         foreach ($this->views as $key => $value) {
-            $path = base_path('resources/views/'.$value);
+            $path = base_path('resources/views/' . $value);
 
-            $this->line('<info>Created View:</info> '.$path);
+            $this->line('<info>Created View:</info> ' . $path);
 
-            copy(__DIR__.'/stubs/make/views/'.$key, $path);
+            copy(__DIR__ . '/stubs/make/views/' . $key, $path);
         }
     }
 }

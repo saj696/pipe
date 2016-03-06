@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Sales;
 
 use App\Helpers\CommonHelper;
+use App\Http\Controllers\Controller;
+use App\Http\Requests;
 use App\Http\Requests\SalesOrderRequest;
 use App\Models\Customer;
 use App\Models\GeneralJournal;
@@ -11,14 +13,9 @@ use App\Models\SalesOrder;
 use App\Models\SalesOrderItem;
 use App\Models\Stock;
 use App\Models\WorkspaceLedger;
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 
 class SalesOrderController extends Controller

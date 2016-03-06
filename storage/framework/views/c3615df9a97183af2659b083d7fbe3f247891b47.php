@@ -28,9 +28,10 @@
                                 <label class="col-md-4 control-label">Username</label>
 
                                 <div class="col-md-6">
-                                    <input type="text" class="form-control" name="username" value="<?php echo e(old('username')); ?>">
+                                    <input type="text" class="form-control" name="username"
+                                           value="<?php echo e(old('username')); ?>">
 
-                                    <?php if($errors->has('name')): ?>
+                                    <?php if ($errors->has('name')): ?>
                                         <span class="help-block">
                                             <strong><?php echo e($errors->first('username')); ?></strong>
                                         </span>
@@ -44,7 +45,7 @@
                                 <div class="col-md-6">
                                     <input type="password" class="form-control" name="password">
 
-                                    <?php if($errors->has('password')): ?>
+                                    <?php if ($errors->has('password')): ?>
                                         <span class="help-block">
                                             <strong><?php echo e($errors->first('password')); ?></strong>
                                         </span>
@@ -68,7 +69,8 @@
                                         <i class="fa fa-btn fa-sign-in"></i>Login
                                     </button>
 
-                                    <a class="btn btn-link" href="<?php echo e(url('/password/reset')); ?>">Forgot Your Password?</a>
+                                    <a class="btn btn-link" href="<?php echo e(url('/password/reset')); ?>">Forgot Your
+                                        Password?</a>
                                 </div>
                             </div>
                         </form>

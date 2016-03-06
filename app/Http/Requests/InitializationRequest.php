@@ -2,9 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-use App\Models\ProductionRegister;
-
 class InitializationRequest extends Request
 {
     /**
@@ -26,7 +23,7 @@ class InitializationRequest extends Request
     public function rules()
     {
         return [
-            'balance'=>'required|array'
+            'balance' => 'required|array'
         ];
     }
 }

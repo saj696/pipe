@@ -9,7 +9,8 @@
                         <i class="fa fa-coffee"></i>Component Detail
                     </div>
                     <div>
-                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="{{ url('/components' )}}">Back</a>
+                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right"
+                           href="{{ url('/components' )}}">Back</a>
                     </div>
                 </div>
                 <div class="portlet-body">
@@ -32,20 +33,20 @@
                             </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        {{ $component->name_en }}
-                                    </td>
-                                    <td>
-                                        <p>{{ $component->description }}</p>
-                                    </td>
-                                    <td>
-                                        {{ $component->icon }}
-                                    </td>
-                                    <td>
-                                        {{ $component->ordering }}
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>
+                                    {{ $component->name_en }}
+                                </td>
+                                <td>
+                                    <p>{{ $component->description }}</p>
+                                </td>
+                                <td>
+                                    {{ $component->icon }}
+                                </td>
+                                <td>
+                                    {{ $component->ordering }}
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>

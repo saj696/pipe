@@ -39,24 +39,24 @@
                             </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        {{ $article->title }}
-                                    </td>
-                                    <td>
-                                        <p>{{ $article->body }}</p>
-                                    </td>
-                                    <td>
-                                        {{ $article->published_at }}
-                                    </td>
-                                    <td>
-                                        @unless($article->tags->isEmpty())
-                                            @foreach($article->tags as $tag)
-                                                <p>{{ $tag->name }}</p>
-                                            @endforeach
-                                        @endunless
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>
+                                    {{ $article->title }}
+                                </td>
+                                <td>
+                                    <p>{{ $article->body }}</p>
+                                </td>
+                                <td>
+                                    {{ $article->published_at }}
+                                </td>
+                                <td>
+                                    @unless($article->tags->isEmpty())
+                                        @foreach($article->tags as $tag)
+                                            <p>{{ $tag->name }}</p>
+                                        @endforeach
+                                    @endunless
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>

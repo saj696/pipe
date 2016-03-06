@@ -115,16 +115,15 @@
             });
         });
 
-        function calculate()
-        {
+        function calculate() {
             var extra_salary = parseFloat($('#extra_salary').val());
-            if(isNaN(extra_salary))
-                    extra_salary=0;
+            if (isNaN(extra_salary))
+                extra_salary = 0;
             var cut = parseFloat($('#cut').val());
             var bonus = parseFloat($('#bonus').val());
             var salary = parseFloat($('#salary').val());
 
-            return ((salary+extra_salary+bonus)-cut)
+            return ((salary + extra_salary + bonus) - cut)
         }
     </script>
 @stop

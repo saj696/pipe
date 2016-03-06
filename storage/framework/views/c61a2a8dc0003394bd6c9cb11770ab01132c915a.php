@@ -19,9 +19,9 @@
         <div class="portlet-body form">
             <div class="form-horizontal" role="form">
                 <div class="form-body">
-                    <?php echo e(Form::model($productionRegister, ['method'=>'PATCH','action'=>['Register\ProductionRegistersController@update', $productionRegister->id]])); ?>
+                    <?php echo e(Form::model($productionRegister, ['method' => 'PATCH', 'action' => ['Register\ProductionRegistersController@update', $productionRegister->id]])); ?>
 
-                    <?php echo $__env->make('productionRegisters.editForm', ['submitText'=>'Update'], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                    <?php echo $__env->make('productionRegisters.editForm', ['submitText' => 'Update'], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
                     <?php echo e(Form::close()); ?>
 
                 </div>

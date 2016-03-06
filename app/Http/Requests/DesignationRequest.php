@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-
 class DesignationRequest extends Request
 {
     /**
@@ -25,8 +23,8 @@ class DesignationRequest extends Request
     public function rules()
     {
         return [
-            'name'=>'required',
-            'salary'=>'required|integer'
+            'name' => 'required',
+            'salary' => 'required|integer'
         ];
     }
 }

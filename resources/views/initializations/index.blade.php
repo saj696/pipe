@@ -14,31 +14,32 @@
                     <div class="table-scrollable">
                         <table class="table table-bordered table-hover">
                             <thead>
-                                <tr>
-                                    <th>
-                                        Workspace
-                                    </th>
-                                    <th>
-                                        Action
-                                    </th>
-                                </tr>
+                            <tr>
+                                <th>
+                                    Workspace
+                                </th>
+                                <th>
+                                    Action
+                                </th>
+                            </tr>
                             </thead>
                             <tbody>
 
                             @if(sizeof($workspaces)>0)
                                 @foreach($workspaces as $workspace)
-                                <tr>
-                                    <td>
-                                        {{ $workspace->name }}
-                                    </td>
-                                    <td>
-                                        @if($workspace->workspaceLedger->isEmpty())
-                                            <a class="label label-danger" href="{{ url('/initializations/'.$workspace->id.'/edit' )}}">Initialize</a>
-                                        @else
-                                            <a class="label label-success" href="#">Initialized</a>
-                                        @endif
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td>
+                                            {{ $workspace->name }}
+                                        </td>
+                                        <td>
+                                            @if($workspace->workspaceLedger->isEmpty())
+                                                <a class="label label-danger"
+                                                   href="{{ url('/initializations/'.$workspace->id.'/edit' )}}">Initialize</a>
+                                            @else
+                                                <a class="label label-success" href="#">Initialized</a>
+                                            @endif
+                                        </td>
+                                    </tr>
                                 @endforeach
                             @else
                                 <tr>

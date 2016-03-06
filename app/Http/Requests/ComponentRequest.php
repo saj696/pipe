@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-
 class ComponentRequest extends Request
 {
     /**
@@ -25,9 +23,9 @@ class ComponentRequest extends Request
     public function rules()
     {
         return [
-            'name_en'=>'required',
-            'icon'=>'required',
-            'ordering'=>'required'
+            'name_en' => 'required',
+            'icon' => 'required',
+            'ordering' => 'required'
         ];
     }
 }

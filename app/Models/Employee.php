@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Employee extends Model
 {
-    public $timestamps=false;
+    public $timestamps = false;
 
     protected $fillable = [
         'name',
@@ -30,7 +29,7 @@ class Employee extends Model
 
     public function setDobAttribute($value)
     {
-        $this->attributes['dob']=strtotime($value);
+        $this->attributes['dob'] = strtotime($value);
     }
 
     public function getJoiningDateAttribute($value)
@@ -40,6 +39,6 @@ class Employee extends Model
 
     public function setJoiningDateAttribute($value)
     {
-        $this->attributes['joining_date']=strtotime($value);
+        $this->attributes['joining_date'] = strtotime($value);
     }
 }
