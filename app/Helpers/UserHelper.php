@@ -8,6 +8,7 @@
 
 namespace App\Helpers;
 
+use App\Models\Task;
 use DB;
 use Illuminate\Support\Facades\Auth;
 

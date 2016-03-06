@@ -94,6 +94,8 @@
     <!-- END THEME STYLES -->
     <link rel="shortcut icon" href="favicon.ico"/>
 </head>
+
+
 <body class="page-header-fixed page-quick-sidebar-over-content page-style-square">
 <!-- BEGIN HEADER -->
 <div class="page-header navbar navbar-fixed-top">
@@ -308,7 +310,20 @@
 
 <!-- END PAGE LEVEL SCRIPTS -->
 <script>
-    jQuery(document).ready(function() {
+
+    $(document).ready(function() {
+        $(document).on("click",".module",function()
+        {
+            $('.module').removeClass('active open');
+            $(this).addClass('active open');
+        });
+
+        $(document).on("click",".task",function()
+        {
+            $('.task').removeClass('active');
+            $(this).addClass('active');
+        });
+
         Metronic.init(); // init metronic core componets
         Layout.init(); // init layout
         QuickSidebar.init(); // init quick sidebar
@@ -324,9 +339,10 @@
         TableAdvanced.init();
         UIToastr.init();
     });
+</script>
 
-    $(document).ready(function ()
-    {
+<script type="text/javascript">
+    $(document).ready(function() {
         $(document).on("click",".module",function()
         {
             $('.module').removeClass('active open');
