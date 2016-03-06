@@ -95,7 +95,7 @@ trait AuthenticatesUsers
     protected function handleUserWasAuthenticated(Request $request, $throttles)
     {
         // Put menus to cache
-        Cache::put('menu', UserHelper::get_task_module_component('position_left_01'), 1440);
+        Cache::forever('menu', UserHelper::get_task_module_component('position_left_01'));
 
         if ($throttles) {
             $this->clearLoginAttempts($request);
@@ -164,7 +164,7 @@ trait AuthenticatesUsers
     public function logout()
     {
         Auth::logout();
-        Cache::forget('menu');
+        Cache::flush();
         Session::flush();
         return redirect(\URL::previous());
 //        return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : '/');
