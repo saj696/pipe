@@ -12,7 +12,7 @@ class SalesReportController extends Controller
 {
     public function __construct()
     {
-        //$this->middleware('perm');
+        $this->middleware('reportPerm');
     }
 
     public function index()
