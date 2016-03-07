@@ -31,11 +31,8 @@
                     </span>
                 @endif
             </div>
-            <div class="form-actions">
+            <div class="form-actions text-center">
                 <input type="submit" class="btn btn-success uppercase" value="Submit"/>
-                <label class="rememberme check">
-                    <input type="checkbox" name="remember" value="1"/>Remember </label>
-                <a href="javascript:;" id="forget-password" class="forget-password">Forgot Password?</a>
             </div>
         </form>
     </div>

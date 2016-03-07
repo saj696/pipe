@@ -7,7 +7,7 @@
             <div class="portlet box yellow">
                 <div class="portlet-title">
                     <div class="caption">
-                        <i class="fa fa-coffee"></i>Cash Transactions
+                        <i class="fa fa-coffee"></i>Cash Transfer
                     </div>
                     <div>
                         <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="{{ url('/cash_transaction/create' )}}">Send Cash</a>

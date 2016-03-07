@@ -4,7 +4,7 @@
     <div class="portlet box green ">
         <div class="portlet-title">
             <div class="caption">
-                <i class="fa fa-gift"></i> New Cash Transaction
+                <i class="fa fa-gift"></i> New Cash Transfer
             </div>
             <div>
                 <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="{{ url('/cash_transaction' )}}">Back</a>

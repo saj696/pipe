@@ -20,6 +20,13 @@ use Illuminate\Support\Facades\Redirect;
 
 class SalesOrderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('perm');
+    }
+
+
+
     public function index()
     {
         $salesOrders = SalesOrder::select('*')->where('status', '!=', 4)->with(['salesOrderItems' => function ($q) {

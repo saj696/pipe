@@ -18,6 +18,11 @@ use Illuminate\Support\Facades\Redirect;
 
 class SalaryPaymentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('perm');
+    }
+
     public function index()
     {
         $salaryPayments = SalaryPayment::orderBy('year', 'desc')->orderBy('month', 'desc')->with('employee')->paginate(15);

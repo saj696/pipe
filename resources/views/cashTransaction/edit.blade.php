@@ -3,7 +3,7 @@
     <div class="portlet box green">
         <div class="portlet-title">
             <div class="caption">
-                <i class="fa fa-gift"></i> Edit Transaction
+                <i class="fa fa-gift"></i> Edit Cash Transfer
             </div>
             <div class="tools">
                 <a href="" class="collapse">
