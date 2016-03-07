@@ -23,28 +23,21 @@ class ReportPermission
 
         if (Auth::check())
         {
-            if ($request->ajax())
+            $permission = UserHelper::get_route_permission($route);
+            if (isset($permission->list) && ($permission->list == 1 || $permission->view == 1))
             {
-                return response('Unauthorized.', 401);
+                return $next($request);
             }
             else
             {
-                $permission = UserHelper::get_route_permission($route);
-                if (isset($permission->list) && ($permission->list == 1 || $permission->view == 1))
+                Session()->flash('flash_message', 'You do not have permission to access!');
+                if (isset($permission->list) && $permission->list == 1)
                 {
-                    return $next($request);
+                    return redirect($route);
                 }
                 else
                 {
-                    Session()->flash('flash_message', 'You do not have permission to access!');
-                    if (isset($permission->list) && $permission->list == 1)
-                    {
-                        return redirect($route);
-                    }
-                    else
-                    {
-                        return redirect('/home');
-                    }
+                    return redirect('/home');
                 }
             }
         }
