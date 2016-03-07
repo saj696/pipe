@@ -16,13 +16,9 @@
 
                             <div class="form-group">
                                 {{ Form::label('workspace_id', 'Workspace', ['class'=>'col-md-3 control-label']) }}
-                                <div class="col-md-7{{ $errors->has('workspace_id') ? ' has-error' : '' }}">
-                                    {{ Form::select('workspace_id', $workspace, null, ['class'=>'form-control','id'=>'workspace_id','placeholder'=>'Select']) }}
-                                    @if ($errors->has('workspace_id'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('workspace_id') }}</strong>
-                                        </span>
-                                    @endif
+                                <div class="col-md-7">
+                                    {{ Form::select('workspace_id', $workspace, null, ['class'=>'form-control','id'=>'workspace_id','placeholder'=>'Select','required']) }}
+                                    <div class="error"></div>
                                 </div>
                             </div>
 
@@ -89,22 +85,37 @@
                 }
             });
 
-        $(document).on('click','#submit', function(e){
+            $(document).on('click', '#submit', function (e) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('ajax.sales_report') }}',
+                    data: $('form').serialize(),
+                    success: function (data, status) {
 
-            e.preventDefault();
-            $.ajax({
-                type:'POST',
-                url: '{{ route('ajax.sales_report') }}',
-                data: $('form').serialize(),
-                success: function (data, status) {
+                        $('.col-md-7').removeClass('has-error')
+                        $('.error').empty()
 
-                },
-                error: function(xhr, desc, err)
-                {
+                    },
+                    error: function (data) {
+                        var errors = $.parseJSON(data.responseText);
 
-                }
-            })
-        });
+
+                        $.each(errors, function (index, value) {
+                            console.log(value);
+                            var obj = $('#workspace_id');
+                            console.log(obj)
+                            obj.closest('.form-group').find('.col-md-7').addClass('has-error');
+                            var html = '<span class="help-block">' +
+                                    '<strong>' + value + '</strong>' +
+                                    '</span>';
+                            obj.closest('.form-group').find('.error').html(html)
+
+                        });
+                    }
+                })
+
+                e.preventDefault();
+            });
 
         });
     </script>

@@ -17,12 +17,16 @@ class SalesReportController extends Controller
 
     public function index()
     {
-        $workspace=Workspace::where('status','=',1)->lists('name','id');
+        $workspace = Workspace::where('status','=',1)->lists('name','id');
         return view('reports.salesReport.index')->with(compact('workspace'));
     }
 
     public function getReport(Request $request)
     {
+        $this->validate($request, [
+            'workspace_id' => 'required',
+        ]);
+
         dd($request->input());
     }
 
