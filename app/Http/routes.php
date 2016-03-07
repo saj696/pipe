@@ -58,8 +58,21 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('year_closing', 'Account\YearClosingController');
     Route::resource('profile_update', 'User\ProfileUpdateController');
     Route::resource('cash_transaction', 'Account\CashTransactionController');
+    Route::resource('purchases_return', 'Setup\PurchasesReturnController');
+    Route::resource('salary_generator', 'Payroll\SalaryGeneratorController');
+    Route::resource('salary_payment', 'Payroll\SalaryPaymentController');
+
+    // Report route
+    Route::get('sales_report', 'Report\SalesReportController@index');
+    Route::post('sales_report', array('as' => 'ajax.sales_report', 'uses' => 'Report\SalesReportController@getReport'));
+
 
     Route::post('adjustment_amounts', array('as' => 'ajax.adjustment_amounts', 'uses' => 'AjaxController@getAdjustmentAmounts'));
+    Route::post('product_select', array('as' => 'ajax.product_select', 'uses' => 'AjaxController@getProducts'));
+    Route::post('get_person_due_amount', array('as' => 'ajax.get_person_due_amount', 'uses' => 'AjaxController@getPersonDueAmount'));
+    Route::post('get_person_balance_amount', array('as' => 'ajax.get_person_balance_amount', 'uses' => 'AjaxController@getPersonBalanceAmount'));
+    Route::post('get_employee_list', array('as' => 'ajax.get_employee_list', 'uses' => 'AjaxController@getEmployeeList'));
+    Route::post('get_employee_payment_list', array('as' => 'ajax.get_employee_payment_list', 'uses' => 'AjaxController@getEmployeePaymentList'));
 });
 
 Route::post('module_select', array('as' => 'ajax.module_select', 'uses' => 'AjaxController@getModules'));
@@ -67,11 +80,13 @@ Route::post('parent_select', array('as' => 'ajax.parent_select', 'uses' => 'Ajax
 Route::post('customer_select', array('as' => 'ajax.customer_select', 'uses' => 'AjaxController@getCustomers'));
 Route::post('supplier_select', array('as' => 'ajax.supplier_select', 'uses' => 'AjaxController@getSuppliers'));
 Route::post('employee_select', array('as' => 'ajax.employee_select', 'uses' => 'AjaxController@getEmployees'));
-Route::post('product_select', array('as' => 'ajax.product_select', 'uses' => 'AjaxController@getProducts'));
-Route::post('get_person_due_amount', array('as' => 'ajax.get_person_due_amount', 'uses' => 'AjaxController@getPersonDueAmount'));
+
 Route::post('transaction_recorder_amount', array('as' => 'ajax.transaction_recorder_amount', 'uses' => 'AjaxController@getTransactionRecorderAmount'));
 
 Route::controllers([
     'auth' => 'Auth\AuthController',
     'password' => 'Auth\PasswordController',
 ]);
+
+
+
