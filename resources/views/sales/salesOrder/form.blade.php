@@ -181,6 +181,11 @@
 //            minLength: 3,
             select: function (event, ui) {
 //                console.log(ui);
+                var quantity=0;
+                if(ui.item.quantity>0)
+                {
+                    quantity=ui.item.quantity;
+                }
                 var index = $('.product_list').data('product-id');
                 var html = "<div class='form-group single_product'>" +
                         "<div class='col-md-offset-1 col-md-2'>" +
@@ -188,7 +193,7 @@
                         "<input class='product_id' type='hidden' value='" + ui.item.value + "' name='product[" + index + "][product_id]'> " +
                         "</div>" +
                         "<div class='col-md-2'>" +
-                        "<input  class='form-control' disabled value='" + ui.item.quantity + "'> " +
+                        "<input  class='form-control' disabled value='" + quantity + "'> " +
                         "</div>" +
                         "<div class='col-md-2'>" +
                         "<input required type='text' class='form-control pcal single_p_quantity' name='product[" + index + "][sales_quantity]' placeholder='Sales Quantity'> " +

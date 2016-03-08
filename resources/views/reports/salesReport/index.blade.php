@@ -63,6 +63,9 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-12" id="load_report">
+
+        </div>
     </div>
 
     <script>
@@ -91,7 +94,7 @@
                     url: '{{ route('ajax.sales_report') }}',
                     data: $('form').serialize(),
                     success: function (data, status) {
-
+                        $('#load_report').html(data)
                         $('.col-md-7').removeClass('has-error')
                         $('.error').empty()
 

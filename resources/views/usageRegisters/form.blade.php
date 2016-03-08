@@ -1,12 +1,11 @@
 {!! csrf_field() !!}
-
 <table class="table table-bordered">
     <tr>
         <td>
             <div class="form-group">
                 {{ Form::label('date', 'Date', ['class'=>'col-md-4 control-label']) }}
                 <div class="col-md-4{{ $errors->has('date') ? ' has-error' : '' }}">
-                    {{ Form::text('date', null,['class'=>'form-control col-md-2']) }}
+                    {{ Form::text('date', null,['class'=>'form-control col-md-2','required']) }}
                     @if ($errors->has('date'))
                         <span class="help-block">
                             <strong>{{ $errors->first('date') }}</strong>

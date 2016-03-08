@@ -29,9 +29,7 @@ class UsageRegisterRequest extends Request
             }
             case 'POST': {
                 return [
-                    'material_id' => 'required|array',
-                    'date' => 'required|date',
-                    'usage' => 'required|array'
+                    'date' => 'required'
                 ];
             }
             case 'PUT':

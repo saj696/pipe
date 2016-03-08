@@ -58,7 +58,7 @@ class SalesDeliveryController extends Controller
         return view('sales.salesDelivery.edit')->with(compact('productLists', 'id'));
     }
 
-    public function save(Request $request)
+    public function store(Request $request)
     {
         try {
 

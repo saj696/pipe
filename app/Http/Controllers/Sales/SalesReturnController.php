@@ -59,8 +59,14 @@ class SalesReturnController extends Controller
                 $time = time();
                 $year = CommonHelper::get_current_financial_year();
                 $data['customer_id'] = $inputs['customer_id'];
+                $data['workspace_id'] = $workspace_id;
                 $data['customer_type'] = $inputs['customer_type'];
                 $data['total_amount'] = $inputs['total'];
+                if ($inputs['return_type'] == 3) {
+                    $data['due'] = $inputs['total'];;
+                }elseif ($inputs['return_type'] == 4) {
+                    $data['due'] = $inputs['total']-$inputs['due_paid'];
+                }
                 if (isset($inputs['due_paid'])) {
                     $data['due_paid'] = $inputs['due_paid'];
                 }

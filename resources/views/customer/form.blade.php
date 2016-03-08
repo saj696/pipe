@@ -1,5 +1,4 @@
 {!! csrf_field() !!}
-
 <div class="form-group">
     {{ Form::label('name', 'Name', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('name') ? ' has-error' : '' }}">

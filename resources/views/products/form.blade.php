@@ -33,9 +33,9 @@
         @endif
     </div>
 </div>
-<div class="form-group}">
+<div class="form-group">
     {{ Form::label('weight', 'Weight', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7{{ $errors->has('weight') ? ' has-error' : '' }">
+    <div class="col-md-7{{ $errors->has('weight') ? ' has-error' : '' }}">
         {{ Form::text('weight', null,['class'=>'form-control']) }}
         @if ($errors->has('weight'))
             <span class="help-block">

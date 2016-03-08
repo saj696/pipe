@@ -14,7 +14,7 @@
         <div class="portlet-body form">
             <div class="form-horizontal" role="form">
                 <div class="form-body">
-                    {{ Form::open(['url'=>'sales_delivery_details']) }}
+                    {{ Form::open(['url'=>'salesDelivery']) }}
                     @include('sales.salesDelivery.form', ['submitText'=>'Deliver'])
                     {{ Form::close() }}
                 </div>

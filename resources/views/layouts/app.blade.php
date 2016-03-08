@@ -353,12 +353,10 @@
     });
 
     function print_rpt(){
-        var divToPrint = document.getElementById('printArea');
-        var newWin = window.open();
-        newWin.document.write(divToPrint.innerHTML);
-        newWin.document.close();
-        newWin.print();
-        newWin.close();
+        URL= '{{ url('report_print') }}';
+        day = new Date();
+        id = day.getTime();
+        eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=yes,scrollbars=yes ,location=0,statusbar=0 ,menubar=yes,resizable=1,width=880,height=600,left = 20,top = 50');");
     }
 </script>
 

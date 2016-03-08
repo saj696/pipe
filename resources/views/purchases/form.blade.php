@@ -154,8 +154,8 @@ $old_items = isset($purchase) ? $purchase['purchaseDetails'] : false;
 </div>
 <div class="form-actions">
     <div class="row">
-        <div class="col-md-offset-5 col-md-9">
-            {{ Form::submit($submitText, ['class'=>'btn green']) }}
+        <div class="text-center col-md-12">
+            {{ Form::submit($submitText, ['class'=>'btn btn-circle green']) }}
         </div>
     </div>
 </div>

@@ -15,7 +15,7 @@
     <div class="form-group">
         {{ Form::label('customer_id', 'Customer', ['class'=>'col-md-3 control-label']) }}
         <div class="col-md-7{{ $errors->has('customer_id') ? ' has-error' : '' }}">
-            {{ Form::select('customer_id', $customers, null,['class'=>'form-control','placeholder'=>'Select']) }}
+            {{ Form::select('customer_id', $customers, null,['class'=>'form-control','placeholder'=>'Select','required']) }}
             @if ($errors->has('customer_id'))
                 <span class="help-block">
                 <strong>{{ $errors->first('customer_id') }}</strong>
@@ -55,7 +55,7 @@
 <div class="form-group">
     {{ Form::label('total', 'Total Amount', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('total') ? ' has-error' : '' }}">
-        {{ Form::text('total', null,['class'=>'form-control']) }}
+        {{ Form::text('total', null,['class'=>'form-control','readonly']) }}
         @if ($errors->has('total'))
             <span class="help-block">
                 <strong>{{ $errors->first('total') }}</strong>
@@ -67,7 +67,7 @@
 <div class="form-group">
     {{ Form::label('return_type', 'Return Type', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('return_type') ? ' has-error' : '' }}">
-        {{ Form::select('return_type', Config::get('common.product_return_type'), null,['class'=>'form-control','id'=>'product_return_type','placeholder'=>'Select']) }}
+        {{ Form::select('return_type', Config::get('common.product_return_type'), null,['class'=>'form-control','id'=>'product_return_type','placeholder'=>'Select','required']) }}
         @if ($errors->has('return_type'))
             <span class="help-block">
                 <strong>{{ $errors->first('return_type') }}</strong>
@@ -140,10 +140,10 @@
                         "<input class='product_id' type='hidden' value='" + ui.item.value + "' name='product[" + index + "][product_id]'> " +
                         "</div>" +
                         "<div class='col-md-2'>" +
-                        "<input required type='text' class='form-control pcal single_p_quantity' name='product[" + index + "][quantity_returned]' placeholder='Sales Quantity'> " +
+                        "<input required type='number' min='1' step='0.01' class='form-control pcal single_p_quantity' name='product[" + index + "][quantity_returned]' placeholder='Sales Quantity'> " +
                         "</div>" +
                         "<div class='col-md-2'>" +
-                        "<input required title='W: " + ui.item.wholesale_price + ", R: " + ui.item.retail_price + "' type='text' class='form-control pcal single_p_rate' name='product[" + index + "][unit_price]' placeholder='Unit Price'> " +
+                        "<input required title='W: " + ui.item.wholesale_price + ", R: " + ui.item.retail_price + "' type='number' min='1' step='0.01' class='form-control pcal single_p_rate' name='product[" + index + "][unit_price]' placeholder='Unit Price'> " +
                         "</div>" +
                         "<div class='col-md-2'>" +
                         "<input  type='text' class='form-control single_p_total'> " +
@@ -188,13 +188,22 @@
         $(document).on('change', '#product_return_type', function (e) {
             var return_type = $(this).val();
             if (return_type == 2 || return_type == 4) {
+
+                var person_id = $('#customer_id option:selected').val();
+
+                if (person_id <= 0) {
+                    $('#product_return_type').prop('selectedIndex',0);
+                }
+
+
                 $.ajax({
                     url: '{{ route('ajax.get_person_due_amount') }}',
                     type: 'POST',
                     dataType: "JSON",
                     data: {
-                        person_id: $('#customer_id option:selected').val(),
-                        person_type: $('#sales_customer_type option:selected').val()
+                        person_id: person_id,
+                        person_type: $('#sales_customer_type option:selected').val(),
+                        '_token': $('input[name=_token]').val()
                     },
                     success: function (data, status) {
                         var name = $('#customer_id option:selected').text()
@@ -206,14 +215,14 @@
                                 '<div class="form-group">' +
                                 '<label class="col-md-3 control-label" for="total">Due Paid</label>' +
                                 '<div class="col-md-7">' +
-                                '<input type="text" id="due_paid" name="due_paid" class="form-control" required>' +
+                                '<input type="number" step="0.01" min="0" max="'+ data +'" id="due_paid" name="due_paid" class="form-control" required>' +
                                 '</div>' +
                                 '</div>';
                         $('.pay_due').html(html);
                         var total_amount = parseFloat($('#total').val());
                         if (return_type == 2 && total_amount > data) {
                             alert('Total amount cannot be greater than Due amount. Please select the Return type "Pay Due & Cash Return"');
-                            e.preventDefault();
+                            $('#product_return_type').prop('selectedIndex',0);
                         }
                     },
                     error: function (xhr, desc, err) {

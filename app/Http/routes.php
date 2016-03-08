@@ -50,7 +50,6 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('charts', 'Account\ChartOfAccountsController');
     Route::resource('recorders', 'Account\TransactionRecordersController');
     Route::resource('initializations', 'Account\InitializationsController');
-    Route::post('sales_delivery_details', 'Sales\SalesDeliveryController@save');
     Route::resource('salesDelivery', 'Sales\SalesDeliveryController');
     Route::resource('sales_return', 'Sales\SalesReturnController');
     Route::resource('adjustments', 'Account\AdjustmentsController');
@@ -63,6 +62,8 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('salary_payment', 'Payroll\SalaryPaymentController');
 
     // Report route
+    Route::get('report_print', 'Report\PrintReportController@index');
+
     Route::get('sales_report', 'Report\SalesReportController@index');
     Route::post('sales_report', array('as' => 'ajax.sales_report', 'uses' => 'Report\SalesReportController@getReport'));
 
