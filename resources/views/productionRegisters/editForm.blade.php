@@ -27,7 +27,7 @@
 <div class="form-group">
     {{ Form::label('production', 'production', ['class'=>'col-md-4 control-label']) }}
     <div class="col-md-4{{ $errors->has('production') ? ' has-error' : '' }}">
-        {{ Form::text('production', null,['class'=>'form-control col-md-2']) }}
+        {{ Form::number('production', null,['class'=>'form-control col-md-2','min'=>1]) }}
         @if ($errors->has('production'))
             <span class="help-block">
                 <strong>{{ $errors->first('production') }}</strong>

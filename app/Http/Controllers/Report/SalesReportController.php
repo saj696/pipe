@@ -120,7 +120,7 @@ class SalesReportController extends Controller
             $view= view('reports.salesReport.report')->with(compact('results'))->render();
             return response()->json($view);
 
-            
+
         } elseif ($sales_type == Config::get('report.sales_type.Sales: Partially delivered')) {
             $salesOrders = SalesOrder::with('workspaces')
                 ->where('workspace_id', '=', $workspace_id)

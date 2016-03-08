@@ -59,7 +59,7 @@
 <div class="form-group">
     {{ Form::label('total', 'Total Amount', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('total') ? ' has-error' : '' }}">
-        {{ Form::text('total', null,['class'=>'form-control']) }}
+        {{ Form::text('total', null,['class'=>'form-control','readonly']) }}
         @if ($errors->has('total'))
             <span class="help-block">
                 <strong>{{ $errors->first('total') }}</strong>
@@ -72,7 +72,7 @@
 <div class="form-group">
     {{ Form::label('discount', 'Discount', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('discount') ? ' has-error' : '' }}">
-        {{ Form::text('discount', null,['class'=>'form-control']) }}
+        {{ Form::number('discount', null,['class'=>'form-control','min'=>0,'step'=>0.01]) }}
         @if ($errors->has('discount'))
             <span class="help-block">
                 <strong>{{ $errors->first('discount') }}</strong>
@@ -84,7 +84,7 @@
 <div class="form-group">
     {{ Form::label('transport_cost', 'Transport Cost', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('transport_cost') ? ' has-error' : '' }}">
-        {{ Form::text('transport_cost', null,['class'=>'form-control']) }}
+        {{ Form::number('transport_cost', null,['class'=>'form-control','min'=>0,'step'=>0.01]) }}
         @if ($errors->has('transport_cost'))
             <span class="help-block">
                 <strong>{{ $errors->first('transport_cost') }}</strong>
@@ -95,7 +95,7 @@
 <div class="form-group">
     {{ Form::label('paid', 'Paid Amount', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('paid') ? ' has-error' : '' }}">
-        {{ Form::text('paid', null,['class'=>'form-control']) }}
+        {{ Form::number('paid', null,['class'=>'form-control','min'=>0,'step'=>0.01]) }}
         @if ($errors->has('paid'))
             <span class="help-block">
                 <strong>{{ $errors->first('paid') }}</strong>
@@ -106,7 +106,7 @@
 <div class="form-group">
     {{ Form::label('due', 'Due', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('due') ? ' has-error' : '' }}">
-        {{ Form::text('due', null,['class'=>'form-control']) }}
+        {{ Form::number('due', null,['class'=>'form-control','min'=>0,'step'=>0.01]) }}
         @if ($errors->has('due'))
             <span class="help-block">
                 <strong>{{ $errors->first('due') }}</strong>
@@ -196,13 +196,13 @@
                         "<input  class='form-control' disabled value='" + quantity + "'> " +
                         "</div>" +
                         "<div class='col-md-2'>" +
-                        "<input required type='text' class='form-control pcal single_p_quantity' name='product[" + index + "][sales_quantity]' placeholder='Sales Quantity'> " +
+                        "<input required type='number' min='1' step='0.01' max='" + quantity + "' class='form-control pcal single_p_quantity' name='product[" + index + "][sales_quantity]' placeholder='Sales Quantity'> " +
                         "</div>" +
                         "<div class='col-md-2'>" +
-                        "<input required title='W: " + ui.item.wholesale_price + ", R: " + ui.item.retail_price + "' type='text' class='form-control pcal single_p_rate' name='product[" + index + "][unit_price]' placeholder='Unit Price'> " +
+                        "<input required title='W: " + ui.item.wholesale_price + ", R: " + ui.item.retail_price + "' type='number' min='0.01' step='0.01' class='form-control pcal single_p_rate' name='product[" + index + "][unit_price]' placeholder='Unit Price'> " +
                         "</div>" +
                         "<div class='col-md-2'>" +
-                        "<input  type='text' class='form-control single_p_total'> " +
+                        "<input  type='text' readonly class='form-control single_p_total'> " +
                         "</div>" +
                         "<div class='col-md-1'>" +
                         "<span class='btn btn-danger remove_product'>X</span>" +
@@ -265,7 +265,7 @@
     function rowTotal(ele) {
         var q = $(ele).closest('.single_product').find('.single_p_quantity').val();
         var r = $(ele).closest('.single_product').find('.single_p_rate').val();
-        if (q && r) {
+        if (q && r && (q*r)>0) {
             $(ele).closest('.single_product').find('.single_p_total').val((parseFloat(q) * parseFloat(r)).toFixed(2));
             findTotal();
         }

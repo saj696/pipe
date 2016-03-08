@@ -25,7 +25,7 @@
 <div class="form-group">
     {{ Form::label('diameter', 'Diameter', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('diameter') ? ' has-error' : '' }}">
-        {{ Form::number('diameter', null,['class'=>'form-control']) }}
+        {{ Form::number('diameter', null,['class'=>'form-control','min'=>0.01,'step'=>0.01]) }}
         @if ($errors->has('diameter'))
             <span class="help-block">
                 <strong>{{ $errors->first('diameter') }}</strong>
@@ -36,7 +36,7 @@
 <div class="form-group">
     {{ Form::label('weight', 'Weight', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('weight') ? ' has-error' : '' }}">
-        {{ Form::text('weight', null,['class'=>'form-control']) }}
+        {{ Form::text('weight', null,['class'=>'form-control','min'=>0.01,'step'=>0.01]) }}
         @if ($errors->has('weight'))
             <span class="help-block">
                 <strong>{{ $errors->first('weight') }}</strong>
@@ -47,7 +47,7 @@
 <div class="form-group">
     {{ Form::label('length', 'Length', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('length') ? ' has-error' : '' }}">
-        {{ Form::number('length', null,['class'=>'form-control']) }}
+        {{ Form::number('length', null,['class'=>'form-control','min'=>0.01,'step'=>0.01]) }}
         @if ($errors->has('length'))
             <span class="help-block">
                 <strong>{{ $errors->first('length') }}</strong>
@@ -69,7 +69,7 @@
 <div class="form-group">
     {{ Form::label('wholesale_price', 'Wholesale Price', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('wholesale_price') ? ' has-error' : '' }}">
-        {{ Form::text('wholesale_price',null,['class'=>'form-control']) }}
+        {{ Form::number('wholesale_price',null,['class'=>'form-control','min'=>0.01,'step'=>0.01]) }}
         @if ($errors->has('length'))
             <span class="help-block">
                 <strong>{{ $errors->first('wholesale_price') }}</strong>
@@ -80,7 +80,7 @@
 <div class="form-group">
     {{ Form::label('retail_price', 'Retail Price', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('retail_price') ? ' has-error' : '' }}">
-        {{ Form::text('retail_price',null,['class'=>'form-control']) }}
+        {{ Form::number('retail_price',null,['class'=>'form-control','min'=>0.01,'step'=>0.01]) }}
         @if ($errors->has('length'))
             <span class="help-block">
                 <strong>{{ $errors->first('retail_price') }}</strong>

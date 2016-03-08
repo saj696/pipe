@@ -38,7 +38,7 @@ class EmployeeRequest extends Request
                     'joining_date' => 'required|date',
                     'designation_id' => 'required|integer',
                     'workspace_id' => 'required|integer',
-                    'employee_type' => 'required|integer',
+//                    'employee_type' => 'required|integer',
                     'photo' => 'image',
                     'username' => 'required_if:as_user,1|alpha_dash|min:3|unique:users',
                     'email' => 'required|email|unique:users',
@@ -54,7 +54,7 @@ class EmployeeRequest extends Request
                 'joining_date' => 'required|date',
                 'designation_id' => 'required|integer',
                 'workspace_id' => 'required|integer',
-                'employee_type' => 'required|integer',
+//                'employee_type' => 'required|integer',
                 'photo' => 'image',
                 'email' => 'required|email|unique:employees,email,' . $employee->id,
             ];
