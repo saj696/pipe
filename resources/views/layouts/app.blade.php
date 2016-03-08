@@ -351,6 +351,15 @@
         TableAdvanced.init();
         UIToastr.init();
     });
+
+    function print_rpt(){
+        var divToPrint = document.getElementById('printArea');
+        var newWin = window.open();
+        newWin.document.write(divToPrint.innerHTML);
+        newWin.document.close();
+        newWin.print();
+        newWin.close();
+    }
 </script>
 
 <script type="text/javascript">

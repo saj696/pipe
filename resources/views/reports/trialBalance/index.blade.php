@@ -36,6 +36,9 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-12" id="load_view">
+
+        </div>
     </div>
 
     <script>
@@ -49,10 +52,12 @@
 
                         $('.col-md-7').removeClass('has-error');
                         $('.error').empty();
+
+                        $('#load_view').html(data);
                     },
                     error: function (data) {
                         var errors = $.parseJSON(data.responseText);
-
+                        $('#load_view').html('');
                         $.each(errors, function (index, value) {
                             console.log(value);
                             var obj = $('#workspace_id');
@@ -62,7 +67,6 @@
                                     '<strong>' + value + '</strong>' +
                                     '</span>';
                             obj.closest('.form-group').find('.error').html(html)
-
                         });
                     }
                 });
