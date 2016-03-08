@@ -9,7 +9,7 @@
                     <a style="margin: 7px; padding: 5px;" onclick="print_rpt()" class="btn btn-circle btn-danger pull-right"  href="#">Print</a>
                 </div>
             </div>
-            
+
             <div class="portlet-body form">
                 <div class="form-horizontal" role="form">
                     <div class="form-body">
@@ -17,7 +17,7 @@
                             <table class="table table-bordered">
                                 @if(sizeof($arrangedArray)>0)
                                     <tr>
-                                        <td>&nbsp;</td>
+                                        <td>Date</td>
                                     @for($i=0; $i<sizeof($uniqueMaterials); $i++)
                                         <td>
                                             {{ $uniqueMaterials[$i] }}
