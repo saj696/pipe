@@ -163,45 +163,57 @@
                     </li>
 
                     <?php
+
                     $route_uri = Route::getCurrentRoute()->getName();
-                    $routeName = strstr($route_uri, '.', true);
+                    $routeNameResource = strstr($route_uri, '.', true);
+                    $routeOther = Route::getCurrentRoute()->uri();
+
+                    if(!empty($routeNameResource))
+                    {
+                        $routeName = $routeNameResource;
+                    }
+                    else
+                    {
+                        $routeName = $routeOther;
+                    }
+
                     $activeModuleId = App\Helpers\UserHelper::get_module_name($routeName);
 
                     if(is_array($menus) && sizeof($menus)>0)
                     {
-                    foreach($menus as $key1=>$component)
-                    {
-                    foreach($component['modules'] as $key2=>$module)
-                    {
-                    ?>
-                    <li class="{{ (isset($activeModuleId) && $activeModuleId==$module['id'])?'active open':''}} module">
-                        <a href="javascript:;">
-                            <i class="{{ $module['module_icon'] }}"></i>
-                            <span class="title">{{ $module['module_name'] }}</span>
-                            <span class="selected"></span>
-                            <span class="arrow open"></span>
-                        </a>
-                        <ul class="sub-menu">
-                            <?php
-                            foreach($module['tasks'] as $task)
+                        foreach($menus as $key1=>$component)
+                        {
+                            foreach($component['modules'] as $key2=>$module)
                             {
                             ?>
-                            <li class="active open task">
-                                <a href="{{ url('/'.$task->route) }}" style="color:{{ $task->route==$routeName? '#1caf9a':''}}">
-                                    <i class="{{ $task->task_icon }}"></i>
-                                    {{ $task->task_name }}
+                            <li class="{{ (isset($activeModuleId) && $activeModuleId==$module['id'])?'active open':''}} module">
+                                <a href="javascript:;">
+                                    <i class="{{ $module['module_icon'] }}"></i>
+                                    <span class="title">{{ $module['module_name'] }}</span>
+                                    <span class="selected"></span>
+                                    <span class="arrow open"></span>
                                 </a>
+                                <ul class="sub-menu">
+                                    <?php
+                                    foreach($module['tasks'] as $task)
+                                    {
+                                    ?>
+                                    <li class="active open task">
+                                        <a href="{{ url('/'.$task->route) }}" style="color:{{ $task->route==$routeName? '#1caf9a':''}}">
+                                            <i class="{{ $task->task_icon }}"></i>
+                                            {{ $task->task_name }}
+                                        </a>
+                                    </li>
+                                    <?php
+                                    }
+                                    ?>
+                                </ul>
                             </li>
                             <?php
                             }
                             ?>
-                        </ul>
-                    </li>
-                    <?php
-                    }
-                    ?>
-                    <?php
-                    }
+                        <?php
+                        }
                     }
                     ?>
                 </ul>
