@@ -53,6 +53,9 @@ class MaterialUsageReportController extends Controller
 
         $arrangedArray = [];
 
+        $dates = [];
+        $materials = [];
+
         foreach($usages as $usage)
         {
             $dates[] = date('d.m.Y', $usage->date);
