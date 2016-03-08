@@ -53,13 +53,25 @@ class UsageRegistersController extends Controller
                     $rawStock = RawStock::where(['material_id' => $materialInput[$i], 'year' => CommonHelper::get_current_financial_year(), 'stock_type' => Config::get('common.balance_type_intermediate')])->first();
 
                     if ($rawStock->quantity >= $usageInput[$i]) {
-                        $UsageRegister = New UsageRegister;
-                        $UsageRegister->date = $request->input('date');
-                        $UsageRegister->material_id = $materialInput[$i];
-                        $UsageRegister->usage = $usageInput[$i];
-                        $UsageRegister->created_by = Auth::user()->id;
-                        $UsageRegister->created_at = time();
-                        $UsageRegister->save();
+
+                        $today = UsageRegister::where(['date'=>strtotime($request->input('date')), 'material_id'=>$materialInput[$i]])->first();
+                        if($today)
+                        {
+                            $today->usage += $usageInput[$i];
+                            $today->updated_by = Auth::user()->id;
+                            $today->updated_by = time();
+                            $today->update();
+                        }
+                        else
+                        {
+                            $UsageRegister = New UsageRegister;
+                            $UsageRegister->date = $request->input('date');
+                            $UsageRegister->material_id = $materialInput[$i];
+                            $UsageRegister->usage = $usageInput[$i];
+                            $UsageRegister->created_by = Auth::user()->id;
+                            $UsageRegister->created_at = time();
+                            $UsageRegister->save();
+                        }
 
                         // Raw Stock Update
                         $rawStock->quantity -= $usageInput[$i];

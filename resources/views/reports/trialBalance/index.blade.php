@@ -52,21 +52,24 @@
 
                         $('.col-md-7').removeClass('has-error');
                         $('.error').empty();
-
                         $('#load_view').html(data);
                     },
                     error: function (data) {
                         var errors = $.parseJSON(data.responseText);
+
                         $('#load_view').html('');
+                        $('.col-md-7').removeClass('has-error');
+                        $('.error').empty();
+
                         $.each(errors, function (index, value) {
-                            console.log(value);
-                            var obj = $('#workspace_id');
-                            console.log(obj)
+                            console.log(index);
+                            var obj = $('#'+index);
+                            console.log(obj);
                             obj.closest('.form-group').find('.col-md-7').addClass('has-error');
                             var html = '<span class="help-block">' +
                                     '<strong>' + value + '</strong>' +
                                     '</span>';
-                            obj.closest('.form-group').find('.error').html(html)
+                            obj.closest('.form-group').find('.error').html(html);
                         });
                     }
                 });
