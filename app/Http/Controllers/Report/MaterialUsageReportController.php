@@ -60,14 +60,14 @@ class MaterialUsageReportController extends Controller
         }
 
         $uniqueDates = collect($dates)->unique()->values()->all();
-        $uniqueMaterial = collect($materials)->unique()->values()->all();
+        $uniqueMaterials = collect($materials)->unique()->values()->all();
 
         foreach($usages as $usage)
         {
             $arrangedArray[date('d.m.Y', $usage->date)][$usage->name] = $usage->usage;
         }
 
-        $ajaxView = view('reports.materialUsage.view', compact('uniqueDates', 'uniqueMaterial', 'arrangedArray'))->render();
+        $ajaxView = view('reports.materialUsage.view', compact('uniqueDates', 'uniqueMaterials', 'arrangedArray'))->render();
         return response()->json($ajaxView);
     }
 
