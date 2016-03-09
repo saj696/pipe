@@ -64,11 +64,21 @@ Route::group(['middleware' => ['web']], function () {
     // Report route
     Route::get('report_print', 'Report\PrintReportController@index');
 
-    Route::get('sales_report', 'Report\SalesReportController@index');
     Route::get('purchase_report', 'Report\PurchasesReportController@index');
-    Route::post('sales_report', array('as' => 'ajax.sales_report', 'uses' => 'Report\SalesReportController@getReport'));
     Route::post('purchase_report', array('as' => 'ajax.purchase_report', 'uses' => 'Report\PurchasesReportController@getReport'));
+    Route::get('sales_report', 'Report\SalesReportController@index');
+    Route::post('sales_report', array('as' => 'ajax.sales_report', 'uses' => 'Report\SalesReportController@getReport'));
 
+    Route::get('trial_balance', 'Report\TrialBalanceController@index');
+    Route::post('trial_balance', array('as' => 'ajax.trial_balance', 'uses' => 'Report\TrialBalanceController@getReport'));
+    Route::get('material_usage_report', 'Report\MaterialUsageReportController@index');
+    Route::post('material_usage_report', array('as' => 'ajax.material_usage_report', 'uses' => 'Report\MaterialUsageReportController@getReport'));
+    Route::get('production_register_report', 'Report\ProductionRegisterReportController@index');
+    Route::post('production_register_report', array('as' => 'ajax.production_register_report', 'uses' => 'Report\ProductionRegisterReportController@getReport'));
+    Route::get('stock_report', 'Report\StockReportController@index');
+    Route::post('stock_report', array('as' => 'ajax.stock_report', 'uses' => 'Report\StockReportController@getReport'));
+    Route::get('personal_accounts_report', 'Report\PersonalAccountsReportController@index');
+    Route::post('personal_accounts_report', array('as' => 'ajax.personal_accounts_report', 'uses' => 'Report\PersonalAccountsReportController@getReport'));
 
     Route::post('adjustment_amounts', array('as' => 'ajax.adjustment_amounts', 'uses' => 'AjaxController@getAdjustmentAmounts'));
     Route::post('product_select', array('as' => 'ajax.product_select', 'uses' => 'AjaxController@getProducts'));
