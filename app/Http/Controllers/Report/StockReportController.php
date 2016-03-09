@@ -32,23 +32,26 @@ class StockReportController extends Controller
         ]);
 
         $stock_type = $request->stock_type;
+        $currentYear = CommonHelper::get_current_financial_year();
 
         if($stock_type==1)
         {
             $stocks = DB::table('raw_stocks')
-                ->select('raw_stocks.*', 'products.title')
+                ->select('raw_stocks.*', 'materials.name')
+                ->where(['stock_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear])
                 ->join('materials', 'materials.id', '=', 'raw_stocks.material_id')
                 ->get();
         }
         elseif($stock_type==2)
         {
-            $stocks = DB::table('production_registers')
-                ->select('production_registers.*', 'products.title')
-                ->join('products', 'products.id', '=', 'production_registers.product_id')
+            $stocks = DB::table('stocks')
+                ->select('stocks.*', 'products.title')
+                ->where(['stock_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear, 'workspace_id' =>1])
+                ->join('products', 'products.id', '=', 'stocks.product_id')
                 ->get();
         }
 
-        $ajaxView = view('reports.stocks.view', compact('stocks'))->render();
+        $ajaxView = view('reports.stocks.view', compact('stocks', 'stock_type'))->render();
         return response()->json($ajaxView);
     }
 

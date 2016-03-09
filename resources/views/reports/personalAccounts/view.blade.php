@@ -19,24 +19,34 @@
                                 Serial
                             </th>
                             <th>
-                                {{ $stock_type==1?'Material Name':'Product Name' }}
+                                @if($person_type==1)
+                                    {{ 'Employee name' }}
+                                @elseif($person_type==2)
+                                    {{ 'Supplier name' }}
+                                @elseif($person_type==3)
+                                    {{ 'Customer name' }}
+                                @endif
                             </th>
                             <th>
-                                Year
+                                Contact No.
                             </th>
-                            <th>
-                                Quantity
+                            <th class="text-center">
+                                Balance
+                            </th>
+                            <th class="text-center">
+                                Due
                             </th>
                         </tr>
                         </thead>
                         <tbody>
-                        @if(sizeof($stocks)>0)
-                            @foreach($stocks as $key=>$stock)
+                        @if(sizeof($persons)>0)
+                            @foreach($persons as $key=>$person)
                                 <tr>
                                     <td>{{ $key+1 }}</td>
-                                    <td>{{ $stock_type==1?$stock->name:$stock->title }}</td>
-                                    <td>{{ $stock->year }}</td>
-                                    <td>{{ $stock->quantity }}</td>
+                                    <td>{{ $person->person_name }}</td>
+                                    <td>{{ $person->phone }}</td>
+                                    <td class="text-center">{{ $person->balance }}</td>
+                                    <td class="text-center">{{ $person->due }}</td>
                                 </tr>
                             @endforeach
                         @else
