@@ -17,4 +17,10 @@ return [
         'Sales: All'=>5,
         'Sales Returns'=>6,
     ],
+
+    'purchase_type' => [
+        'All'=>1,
+        'Purchases'=>2,
+        'Purchases Return'=>3
+    ]
 ];

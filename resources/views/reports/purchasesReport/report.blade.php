@@ -23,19 +23,16 @@
                                 Date
                             </th>
                             <th>
-                                Workspace
+                                Purchases Type
                             </th>
                             <th>
-                                Sales Type
-                            </th>
-                            <th>
-                                Customer
+                                Supplier
                             </th>
                             <th>
                                 Total
                             </th>
                             <th>
-                                Discount
+                                Transportation Cost
                             </th>
                             <th>
                                 Net
@@ -55,11 +52,10 @@
                                 <tr>
                                     <td>{{ $i++ }}</td>
                                     <td>{{ $result['date'] }}</td>
-                                    <td>{{ $result['workspace'] }}</td>
-                                    <td>{{ $result['sales_type'] }}</td>
-                                    <td>{{ $result['customer'] }}</td>
+                                    <td>{{ $result['purchase_type'] }}</td>
+                                    <td>{{ $result['supplier'] }}</td>
                                     <td>{{ $result['total'] }}</td>
-                                    <td>{{ $result['discount'] }}</td>
+                                    <td>{{ $result['transport_cost'] }}</td>
                                     <td>{{ $result['net'] }}</td>
                                     <td>{{ $result['paid'] }}</td>
                                     <td>{{ $result['due'] }}</td>
@@ -70,9 +66,8 @@
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
-                                <td>&nbsp;</td>
                                 <th>{{ array_sum(array_column($results,'total')) }}</th>
-                                <th>{{ array_sum(array_column($results,'discount')) }}</th>
+                                <th>{{ array_sum(array_column($results,'transport_cost')) }}</th>
                                 <th>{{ array_sum(array_column($results,'net')) }}</th>
                                 <th>{{ array_sum(array_column($results,'paid')) }}</th>
                                 <th>{{ array_sum(array_column($results,'due')) }}</th>
