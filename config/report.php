@@ -27,4 +27,10 @@ return [
         'Raw Material Stock'=>1,
         'Product Stock'=>2
     ],
+
+    'customer_sales_type'=>[
+        'All'=>1,
+        'Sales'=>2,
+        'Sales Return'
+    ],
 ];
