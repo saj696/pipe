@@ -49,6 +49,13 @@
                                     <td class="text-center">{{ $person->due }}</td>
                                 </tr>
                             @endforeach
+                                <tr>
+                                    <th>Total</th>
+                                    <td>&nbsp;</td>
+                                    <td>&nbsp;</td>
+                                    <th class="text-center">{{ collect($persons)->sum('balance') }}</th>
+                                    <th class="text-center">{{ collect($persons)->sum('due') }}</th>
+                                </tr>
                         @else
                             <tr>
                                 <td colspan="12" class="text-center danger">No Data Found</td>
