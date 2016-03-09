@@ -18,17 +18,17 @@
                                 @if(sizeof($arrangedArray)>0)
                                     <tr>
                                         <td>Date</td>
-                                        @for($i=0; $i<sizeof($uniqueMaterials); $i++)
-                                            <td>
-                                                {{ $uniqueMaterials[$i] }}
-                                            </td>
-                                        @endfor
+                                    @for($i=0; $i<sizeof($uniqueProducts); $i++)
+                                        <td>
+                                            {{ $uniqueProducts[$i] }}
+                                        </td>
+                                    @endfor
                                     </tr>
                                     @foreach($arrangedArray as $key=>$arranged)
                                         <tr>
                                             <td>{{ $key }}</td>
-                                            @foreach($uniqueMaterials as $uniqueMaterial)
-                                                <td>{{ isset($arranged[$uniqueMaterial])?$arranged[$uniqueMaterial]:0 }}</td>
+                                            @foreach($uniqueProducts as $uniqueProduct)
+                                                <td>{{ isset($arranged[$uniqueProduct])?$arranged[$uniqueProduct]:0 }}</td>
                                             @endforeach
                                         </tr>
                                     @endforeach

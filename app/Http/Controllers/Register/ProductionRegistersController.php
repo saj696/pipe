@@ -51,14 +51,25 @@ class ProductionRegistersController extends Controller
                 $productionInput = $request->input('production');
 
                 for ($i = 0; $i < $count; $i++) {
-                    $productionRegister = New ProductionRegister;
-                    $productionRegister->date = $request->input('date');
-                    $productionRegister->year = $currentYear;
-                    $productionRegister->product_id = $productInput[$i];
-                    $productionRegister->production = $productionInput[$i];
-                    $productionRegister->created_by = Auth::user()->id;
-                    $productionRegister->created_at = time();
-                    $productionRegister->save();
+                    $today = ProductionRegister::where(['date'=>strtotime($request->input('date')), 'product_id'=>$productInput[$i]])->first();
+                    if($today)
+                    {
+                        $today->production += $productionInput[$i];
+                        $today->updated_by = Auth::user()->id;
+                        $today->updated_by = time();
+                        $today->update();
+                    }
+                    else
+                    {
+                        $productionRegister = New ProductionRegister;
+                        $productionRegister->date = $request->input('date');
+                        $productionRegister->year = $currentYear;
+                        $productionRegister->product_id = $productInput[$i];
+                        $productionRegister->production = $productionInput[$i];
+                        $productionRegister->created_by = Auth::user()->id;
+                        $productionRegister->created_at = time();
+                        $productionRegister->save();
+                    }
 
                     $existingStock = DB::table('stocks')->where(['stock_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear, 'workspace_id' => 1, 'product_id' => $productInput[$i]])->first();
 
