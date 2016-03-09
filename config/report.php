@@ -22,5 +22,9 @@ return [
         'All'=>1,
         'Purchases'=>2,
         'Purchases Return'=>3
-    ]
+    ],
+    'stock_type'=>[
+        'Raw Material Stock'=>1,
+        'Product Stock'=>2
+    ],
 ];
