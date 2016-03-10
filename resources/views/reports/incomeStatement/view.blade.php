@@ -23,7 +23,7 @@
                             @foreach($revenues as $revenue)
                                 <tr><td>{{ $revenue->name }}</td><td>{{ $revenue->sum_amount }}</td><td>&nbsp;</td></tr>
                             @endforeach
-                            <tr><td colspan="2">Total Revenue</td><td>{{ collect($revenues)->sum('sum_amount') }}</td></tr>
+                            <tr><td colspan="2">Total Revenue</td><td>{{ App\Helpers\CommonHelper::get_revised_balance_for_contra($revenues) }}</td></tr>
                             @else
                                 <td colspan="12" class="text-center danger">No Data Found</td>
                             @endif
@@ -33,12 +33,12 @@
                             @foreach($expenses as $expense)
                                 <tr><td>{{ $expense->name }}</td><td>{{ $expense->sum_amount }}</td><td>&nbsp;</td></tr>
                             @endforeach
-                            <tr><td colspan="2">Total Expenses</td><td>{{ collect($expenses)->sum('sum_amount') }}</td></tr>
+                            <tr><td colspan="2">Total Expenses</td><td>{{ App\Helpers\CommonHelper::get_revised_balance_for_contra($expenses) }}</td></tr>
                             @else
                                 <td colspan="12" class="text-center danger">No Data Found</td>
                             @endif
                             <tr><td colspan="3">&nbsp;</td></tr>
-                            <tr><td colspan="2">Net Income</td><td></td></tr>
+                            <tr><td colspan="2">Net Income</td><td>{{ App\Helpers\CommonHelper::get_revised_balance_for_contra($revenues)-App\Helpers\CommonHelper::get_revised_balance_for_contra($expenses) }}</td></tr>
                         </thead>
                     </table>
                 </div>

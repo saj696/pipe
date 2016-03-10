@@ -62,4 +62,29 @@ class CommonHelper extends Facade
         return $result->delivered_quantity;
     }
 
+    public static function get_revised_balance_for_contra($array)
+    {
+        $totalNormal = 0;
+        $totalContra = 0;
+        $gross = 0;
+
+        if(sizeof($array)>0)
+        {
+            foreach($array as $data)
+            {
+                if($data->contra_status==0)
+                {
+                    $totalNormal += $data->sum_amount;
+                }
+                elseif($data->contra_status==1)
+                {
+                    $totalContra += $data->sum_amount;
+                }
+            }
+            $gross = $totalNormal - $totalContra;
+        }
+
+        return $gross;
+    }
+
 }

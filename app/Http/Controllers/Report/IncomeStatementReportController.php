@@ -59,6 +59,7 @@ class IncomeStatementReportController extends Controller
             ->groupBy('general_journals.account_code')
             ->get();
 
+
         $ajaxView = view('reports.incomeStatement.view', compact('revenues', 'expenses', 'ending_date'))->render();
         return response()->json($ajaxView);
     }
