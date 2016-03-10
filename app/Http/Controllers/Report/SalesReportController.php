@@ -21,7 +21,15 @@ class SalesReportController extends Controller
 
     public function index()
     {
-        $workspace = Workspace::where('status', '=', 1)->lists('name', 'id');
+        $workspace_id = Auth::user()->workspace_id;
+        if($workspace_id==1)
+        {
+            $workspace = Workspace::where('status','=',1)->lists('name','id');
+        }
+        else
+        {
+            $workspace = Workspace::where(['id'=>$workspace_id])->lists('name','id');
+        }
         return view('reports.salesReport.index')->with(compact('workspace'));
     }
 
@@ -29,25 +37,55 @@ class SalesReportController extends Controller
     {
         $this->validate($request, [
             'workspace_id' => 'required',
-        ]);
+            'customer_id' => 'required_if:customer_type,1,2,3',
+        ],
+            [
+                'customer_id.required_if' => 'This field is required'
+            ]
+
+        );
 
         $workspace_id = $request->input('workspace_id');
-        $from_date = strtotime($request->input('from_date') . ' 12:00:01 AM');
+        $from_date = strtotime($request->input('from_date'));
         $to_date = strtotime($request->input('to_date') . ' 11:59:59 PM');
         $sales_type = $request->input('sales_type');
+        $customer_type = $request->input('customer_type');
+
 
         if ($sales_type == Config::get('report.sales_type.All')) {
-            $salesReturns = SalesReturn::with('workspaces')
-                ->where('workspace_id', '=', $workspace_id)
-                ->where('date', '>=', $from_date)
-                ->where('date', '<=', $to_date)
-                ->get();
 
-            $salesOrders = SalesOrder::with('workspaces')
-                ->where('workspace_id', '=', $workspace_id)
-                ->where('created_at', '>=', $from_date)
-                ->where('created_at', '<=', $to_date)
-                ->get();
+            if ($customer_type == 0) {
+                $salesReturns = SalesReturn::with('workspaces')
+                    ->where('workspace_id', '=', $workspace_id)
+                    ->where('date', '>=', $from_date)
+                    ->where('date', '<=', $to_date)
+                    ->get();
+
+                $salesOrders = SalesOrder::with('workspaces')
+                    ->where('workspace_id', '=', $workspace_id)
+                    ->where('created_at', '>=', $from_date)
+                    ->where('created_at', '<=', $to_date)
+                    ->get();
+            } else {
+                $customer_id = $request->input('customer_id');
+
+                $salesReturns = SalesReturn::with('workspaces')
+                    ->where('workspace_id', '=', $workspace_id)
+                    ->where('customer_id', '=', $customer_id)
+                    ->where('customer_type', '=', $customer_type)
+                    ->where('date', '>=', $from_date)
+                    ->where('date', '<=', $to_date)
+                    ->get();
+
+                $salesOrders = SalesOrder::with('workspaces')
+                    ->where('workspace_id', '=', $workspace_id)
+                    ->where('customer_id', '=', $customer_id)
+                    ->where('customer_type', '=', $customer_type)
+                    ->where('created_at', '>=', $from_date)
+                    ->where('created_at', '<=', $to_date)
+                    ->get();
+            }
+
 
             $results = [];
             $i = 0;
@@ -87,16 +125,30 @@ class SalesReportController extends Controller
                 $i++;
             }
 
-            $view= view('reports.salesReport.report')->with(compact('results'))->render();
+            $view = view('reports.salesReport.report')->with(compact('results'))->render();
             return response()->json($view);
 
         } elseif ($sales_type == Config::get('report.sales_type.Sales: Fully delivered')) {
-            $salesOrders = SalesOrder::with('workspaces')
-                ->where('workspace_id', '=', $workspace_id)
-                ->where('created_at', '>=', $from_date)
-                ->where('created_at', '<=', $to_date)
-                ->where('status', '=', 4)
-                ->get();
+            if ($customer_type == 0) {
+                $salesOrders = SalesOrder::with('workspaces')
+                    ->where('workspace_id', '=', $workspace_id)
+                    ->where('created_at', '>=', $from_date)
+                    ->where('created_at', '<=', $to_date)
+                    ->where('status','=',4)
+                    ->get();
+            } else {
+                $customer_id = $request->input('customer_id');
+                $salesOrders = SalesOrder::with('workspaces')
+                    ->where('workspace_id', '=', $workspace_id)
+                    ->where('customer_id', '=', $customer_id)
+                    ->where('customer_type', '=', $customer_type)
+                    ->where('created_at', '>=', $from_date)
+                    ->where('created_at', '<=', $to_date)
+                    ->where('status','=',4)
+                    ->get();
+            }
+
+//            dd($salesOrders);
 
             $results = [];
             $i = 0;
@@ -117,17 +169,29 @@ class SalesReportController extends Controller
             }
 
 
-            $view= view('reports.salesReport.report')->with(compact('results'))->render();
+            $view = view('reports.salesReport.report')->with(compact('results'))->render();
             return response()->json($view);
 
 
         } elseif ($sales_type == Config::get('report.sales_type.Sales: Partially delivered')) {
-            $salesOrders = SalesOrder::with('workspaces')
-                ->where('workspace_id', '=', $workspace_id)
-                ->where('created_at', '>=', $from_date)
-                ->where('created_at', '<=', $to_date)
-                ->where('status', '=', 2)
-                ->get();
+            if ($customer_type == 0) {
+                $salesOrders = SalesOrder::with('workspaces')
+                    ->where('workspace_id', '=', $workspace_id)
+                    ->where('created_at', '>=', $from_date)
+                    ->where('created_at', '<=', $to_date)
+                    ->where('status','=',2)
+                    ->get();
+            } else {
+                $customer_id = $request->input('customer_id');
+                $salesOrders = SalesOrder::with('workspaces')
+                    ->where('workspace_id', '=', $workspace_id)
+                    ->where('customer_id', '=', $customer_id)
+                    ->where('customer_type', '=', $customer_type)
+                    ->where('created_at', '>=', $from_date)
+                    ->where('created_at', '<=', $to_date)
+                    ->where('status','=',2)
+                    ->get();
+            }
 
             $results = [];
             $i = 0;
@@ -148,17 +212,29 @@ class SalesReportController extends Controller
             }
 
 
-            $view= view('reports.salesReport.report')->with(compact('results'))->render();
+            $view = view('reports.salesReport.report')->with(compact('results'))->render();
             return response()->json($view);
 
 
-        }elseif ($sales_type == Config::get('report.sales_type.Sales: Not yet delivered')){
-            $salesOrders = SalesOrder::with('workspaces')
-                ->where('workspace_id', '=', $workspace_id)
-                ->where('created_at', '>=', $from_date)
-                ->where('created_at', '<=', $to_date)
-                ->where('status', '=', 1)
-                ->get();
+        } elseif ($sales_type == Config::get('report.sales_type.Sales: Not yet delivered')) {
+            if ($customer_type == 0) {
+                $salesOrders = SalesOrder::with('workspaces')
+                    ->where('workspace_id', '=', $workspace_id)
+                    ->where('created_at', '>=', $from_date)
+                    ->where('created_at', '<=', $to_date)
+                    ->where('status','=',1)
+                    ->get();
+            } else {
+                $customer_id = $request->input('customer_id');
+                $salesOrders = SalesOrder::with('workspaces')
+                    ->where('workspace_id', '=', $workspace_id)
+                    ->where('customer_id', '=', $customer_id)
+                    ->where('customer_type', '=', $customer_type)
+                    ->where('created_at', '>=', $from_date)
+                    ->where('created_at', '<=', $to_date)
+                    ->where('status','=',1)
+                    ->get();
+            }
 
             $results = [];
             $i = 0;
@@ -179,16 +255,27 @@ class SalesReportController extends Controller
             }
 
 
-            $view= view('reports.salesReport.report')->with(compact('results'))->render();
+            $view = view('reports.salesReport.report')->with(compact('results'))->render();
             return response()->json($view);
 
 
-        }elseif ($sales_type == Config::get('report.sales_type.Sales: All')){
-            $salesOrders = SalesOrder::with('workspaces')
-                ->where('workspace_id', '=', $workspace_id)
-                ->where('created_at', '>=', $from_date)
-                ->where('created_at', '<=', $to_date)
-                ->get();
+        } elseif ($sales_type == Config::get('report.sales_type.Sales: All')) {
+            if ($customer_type == 0) {
+                $salesOrders = SalesOrder::with('workspaces')
+                    ->where('workspace_id', '=', $workspace_id)
+                    ->where('created_at', '>=', $from_date)
+                    ->where('created_at', '<=', $to_date)
+                    ->get();
+            } else {
+                $customer_id = $request->input('customer_id');
+                $salesOrders = SalesOrder::with('workspaces')
+                    ->where('workspace_id', '=', $workspace_id)
+                    ->where('customer_id', '=', $customer_id)
+                    ->where('customer_type', '=', $customer_type)
+                    ->where('created_at', '>=', $from_date)
+                    ->where('created_at', '<=', $to_date)
+                    ->get();
+            }
 
             $results = [];
             $i = 0;
@@ -214,16 +301,27 @@ class SalesReportController extends Controller
             }
 
 
-            $view= view('reports.salesReport.report')->with(compact('results'))->render();
+            $view = view('reports.salesReport.report')->with(compact('results'))->render();
             return response()->json($view);
 
 
-        }elseif ($sales_type == Config::get('report.sales_type.Sales Returns')){
-            $salesReturns = SalesReturn::with('workspaces')
-                ->where('workspace_id', '=', $workspace_id)
-                ->where('date', '>=', $from_date)
-                ->where('date', '<=', $to_date)
-                ->get();
+        } elseif ($sales_type == Config::get('report.sales_type.Sales Returns')) {
+            if ($customer_type == 0) {
+                $salesReturns = SalesReturn::with('workspaces')
+                    ->where('workspace_id', '=', $workspace_id)
+                    ->where('date', '>=', $from_date)
+                    ->where('date', '<=', $to_date)
+                    ->get();
+            } else {
+                $customer_id = $request->input('customer_id');
+                $salesReturns = SalesReturn::with('workspaces')
+                    ->where('workspace_id', '=', $workspace_id)
+                    ->where('customer_id', '=', $customer_id)
+                    ->where('customer_type', '=', $customer_type)
+                    ->where('date', '>=', $from_date)
+                    ->where('date', '<=', $to_date)
+                    ->get();
+            }
 
             $results = [];
             $i = 0;
@@ -242,7 +340,7 @@ class SalesReportController extends Controller
                 $i++;
             }
 
-            $view= view('reports.salesReport.report')->with(compact('results'))->render();
+            $view = view('reports.salesReport.report')->with(compact('results'))->render();
             return response()->json($view);
         }
 

@@ -47,8 +47,8 @@ class MaterialUsageReportController extends Controller
         $usages = DB::table('usage_registers')
             ->select('usage_registers.*', 'materials.name')
             ->join('materials', 'materials.id', '=', 'usage_registers.material_id')
-            ->where('usage_registers.created_at', '>=', $from_date)
-            ->where('usage_registers.created_at', '<=', $to_date)
+            ->where('usage_registers.date', '>=', $from_date)
+            ->where('usage_registers.date', '<=', $to_date)
             ->get();
 
         $arrangedArray = [];

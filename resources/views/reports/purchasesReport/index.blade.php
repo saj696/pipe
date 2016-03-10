@@ -6,7 +6,7 @@
             <div class="portlet box green-seagreen">
                 <div class="portlet-title">
                     <div class="caption">
-                        <i class="fa fa-globe"></i>Sales Report
+                        <i class="fa fa-globe"></i>Purchases Report
                     </div>
                 </div>
                 <div class="portlet-body form">
@@ -29,14 +29,21 @@
                             </div>
 
                             <div class="form-group">
+                                {{ Form::label('supplier_id', 'Supplier', ['class'=>'col-md-3 control-label']) }}
+                                <div class="col-md-7">
+                                    <select name="supplier_id" id="" class="form-control select2me">
+                                        <option selected="selected" value="0">All</option>
+                                        @foreach($suppliers as $key=>$value)
+                                            <option value="{{ $key }}">{{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 {{ Form::label('purchase_type', 'Purchases Type', ['class'=>'col-md-3 control-label']) }}
                                 <div class="col-md-7{{ $errors->has('purchase_type') ? ' has-error' : '' }}">
                                     {{ Form::select('purchase_type', array_flip(Config::get('report.purchase_type')), null, ['class'=>'form-control','id'=>'']) }}
-                                    @if ($errors->has('purchase_type'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('purchase_type') }}</strong>
-                                        </span>
-                                    @endif
                                 </div>
                             </div>
 

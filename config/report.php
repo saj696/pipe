@@ -31,6 +31,6 @@ return [
     'customer_sales_type'=>[
         'All'=>1,
         'Sales'=>2,
-        'Sales Return'
+        'Sales Return'=>3
     ],
 ];

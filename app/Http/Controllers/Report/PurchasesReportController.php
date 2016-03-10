@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Report;
 use App\Helpers\CommonHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\Models\Supplier;
 use Config;
 use DB;
 use Illuminate\Http\Request;
@@ -18,13 +19,15 @@ class PurchasesReportController extends Controller
 
     public function index()
     {
-        return view('reports.purchasesReport.index');
+        $suppliers = Supplier::where('status', '=', 1)->lists('company_name', 'id');
+        return view('reports.purchasesReport.index')->with(compact('suppliers'));
     }
 
     public function getReport(Request $request)
     {
-        $from_date = strtotime($request->input('from_date') . ' 12:00:01 AM');
+        $from_date = strtotime($request->input('from_date'));
         $to_date = strtotime($request->input('to_date') . ' 11:59:59 PM');
+        $supplier_id = $request->input('supplier_id');
         $purchase_type = $request->input('purchase_type');
 
         if ($purchase_type == Config::get('report.purchase_type.All')) {
@@ -32,11 +35,22 @@ class PurchasesReportController extends Controller
             $results = [];
             $i = 0;
 
-            $purchases = DB::table('purchases')
-                ->where('purchase_date', '>=', $from_date)
-                ->where('purchase_date', '<=', $to_date)
-                ->orderBy('created_at', 'desc')
-                ->get();
+            if($supplier_id==0)
+            {
+                $purchases = DB::table('purchases')
+                    ->where('purchase_date', '>=', $from_date)
+                    ->where('purchase_date', '<=', $to_date)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            }else{
+                $purchases = DB::table('purchases')
+                    ->where('supplier_id', '=', $supplier_id)
+                    ->where('purchase_date', '>=', $from_date)
+                    ->where('purchase_date', '<=', $to_date)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            }
+
 
             foreach ($purchases as $purchase) {
                 $results[$i]['date'] = date('d-m-Y', $purchase->purchase_date);
@@ -50,11 +64,23 @@ class PurchasesReportController extends Controller
                 $i++;
             }
 
-            $purchasesReturns = DB::table('purchases_return')
-                ->where('purchase_return_date', '>=', $from_date)
-                ->where('purchase_return_date', '<=', $to_date)
-                ->orderBy('created_at', 'desc')
-                ->get();
+            if($supplier_id==0)
+            {
+                $purchasesReturns = DB::table('purchases_return')
+                    ->where('purchase_return_date', '>=', $from_date)
+                    ->where('purchase_return_date', '<=', $to_date)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            }else
+            {
+                $purchasesReturns = DB::table('purchases_return')
+                    ->where('supplier_id', '=', $supplier_id)
+                    ->where('purchase_return_date', '>=', $from_date)
+                    ->where('purchase_return_date', '<=', $to_date)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            }
+
 
             foreach ($purchasesReturns as $purchase) {
                 $results[$i]['date'] = date('d-m-Y', $purchase->purchase_return_date);
@@ -76,11 +102,21 @@ class PurchasesReportController extends Controller
             $results = [];
             $i = 0;
 
-            $purchases = DB::table('purchases')
-                ->where('purchase_date', '>=', $from_date)
-                ->where('purchase_date', '<=', $to_date)
-                ->orderBy('created_at', 'desc')
-                ->get();
+            if($supplier_id==0)
+            {
+                $purchases = DB::table('purchases')
+                    ->where('purchase_date', '>=', $from_date)
+                    ->where('purchase_date', '<=', $to_date)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            }else{
+                $purchases = DB::table('purchases')
+                    ->where('supplier_id', '=', $supplier_id)
+                    ->where('purchase_date', '>=', $from_date)
+                    ->where('purchase_date', '<=', $to_date)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            }
 
             foreach ($purchases as $purchase) {
                 $results[$i]['date'] = date('d-m-Y', $purchase->purchase_date);
@@ -100,11 +136,22 @@ class PurchasesReportController extends Controller
             $results = [];
             $i = 0;
 
-            $purchasesReturns = DB::table('purchases_return')
-                ->where('purchase_return_date', '>=', $from_date)
-                ->where('purchase_return_date', '<=', $to_date)
-                ->orderBy('created_at', 'desc')
-                ->get();
+            if($supplier_id==0)
+            {
+                $purchasesReturns = DB::table('purchases_return')
+                    ->where('purchase_return_date', '>=', $from_date)
+                    ->where('purchase_return_date', '<=', $to_date)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            }else
+            {
+                $purchasesReturns = DB::table('purchases_return')
+                    ->where('supplier_id', '=', $supplier_id)
+                    ->where('purchase_return_date', '>=', $from_date)
+                    ->where('purchase_return_date', '<=', $to_date)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            }
 
             foreach ($purchasesReturns as $purchase) {
                 $results[$i]['date'] = date('d-m-Y', $purchase->purchase_return_date);

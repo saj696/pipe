@@ -64,7 +64,7 @@
     <link href="{{ URL::asset('css/simple-line-icons.min.css') }}" rel="stylesheet" type="text/css"/>
 
     <link href="{{ URL::asset('css/bootstrap.min.css') }}" rel="stylesheet" type="text/css"/>
-    <link href="{{ URL::asset('css/select2.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ URL::asset('public/image/select2.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ URL::asset('css/dataTables.colReorder.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ URL::asset('css/dataTables.scroller.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ URL::asset('css/dataTables.tableTools.min.css') }}" rel="stylesheet" type="text/css"/>

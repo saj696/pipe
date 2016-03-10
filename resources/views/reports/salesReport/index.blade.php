@@ -37,6 +37,22 @@
                             </div>
 
                             <div class="form-group">
+                                {{ Form::label('customer_type', 'Customer Type', ['class'=>'col-md-3 control-label']) }}
+                                <div class="col-md-7">
+                                    <select name="customer_type" id="customer_type" class="form-control">
+                                        <option selected="selected" value="0">All</option>
+                                        @foreach(Config::get('common.sales_customer_type') as $key=>$value )
+                                            <option value="{{ $key }}">{{ $value }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="customer_id">
+
+                            </div>
+
+                            <div class="form-group">
                                 {{ Form::label('sales_type', 'Sales Type', ['class'=>'col-md-3 control-label']) }}
                                 <div class="col-md-7{{ $errors->has('sales_type') ? ' has-error' : '' }}">
                                     {{ Form::select('sales_type', array_flip(Config::get('report.sales_type')), null, ['class'=>'form-control','id'=>'sales_customer_type']) }}
@@ -88,6 +104,38 @@
                 }
             });
 
+            $(document).on('change', '#customer_type', function () {
+                var type = parseInt($(this).val());
+                var url = "";
+                if (type == 2) {
+                    url = "{{ route('ajax.supplier_select') }}";
+                } else if (type == 1) {
+                    url = "{{ route('ajax.employee_select') }}";
+                } else if (type == 3) {
+                    url = "{{ route('ajax.customer_select') }}";
+                } else {
+                    $('.customer_id').empty();
+                }
+
+                if (type > 0) {
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        dataType: "JSON",
+                        success: function (data, status) {
+                            $('.customer_id').empty();
+                            $('.customer_id').html(data);
+
+                            $('.select2me').select2();
+                        },
+                        error: function (xhr, desc, err) {
+                            console.log("error");
+                        }
+                    });
+                }
+            });
+
+
             $(document).on('click', '#submit', function (e) {
                 $.ajax({
                     type: 'POST',
@@ -102,17 +150,19 @@
                     error: function (data) {
                         var errors = $.parseJSON(data.responseText);
 
+                        $('#load_view').html('');
+                        $('.col-md-7').removeClass('has-error');
+                        $('.error').empty();
 
                         $.each(errors, function (index, value) {
-                            console.log(value);
-                            var obj = $('#workspace_id');
-                            console.log(obj)
+                            console.log(index);
+                            var obj = $('#' + index);
+                            console.log(obj);
                             obj.closest('.form-group').find('.col-md-7').addClass('has-error');
                             var html = '<span class="help-block">' +
                                     '<strong>' + value + '</strong>' +
                                     '</span>';
-                            obj.closest('.form-group').find('.error').html(html)
-
+                            obj.closest('.form-group').find('.error').html(html);
                         });
                     }
                 })

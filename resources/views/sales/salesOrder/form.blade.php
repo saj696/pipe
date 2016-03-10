@@ -16,7 +16,7 @@
     <div class="form-group">
         {{ Form::label('customer_id', 'Customer', ['class'=>'col-md-3 control-label']) }}
         <div class="col-md-7{{ $errors->has('customer_id') ? ' has-error' : '' }}">
-            {{ Form::select('customer_id', $customers, null,['class'=>'form-control','placeholder'=>'Select']) }}
+            {{ Form::select('customer_id', $customers, null,['class'=>'form-control select2me','placeholder'=>'Select']) }}
             @if ($errors->has('customer_id'))
                 <span class="help-block">
                 <strong>{{ $errors->first('customer_id') }}</strong>
@@ -156,6 +156,8 @@
                 success: function (data, status) {
                     $('.customer_id').empty();
                     $('.customer_id').html(data);
+
+                    $('.select2me').select2();
                 },
                 error: function (xhr, desc, err) {
                     console.log("error");

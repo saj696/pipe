@@ -13,11 +13,32 @@
                     <div class="form-horizontal" role="form">
                         <div class="form-body">
                             {{ Form::open() }}
+                            @if(Auth::user()->workspace_id==1)
+                                <div class="form-group">
+                                    {{ Form::label('stock_type', 'Stock Type', ['class'=>'col-md-3 control-label']) }}
+                                    <div class="col-md-7">
+                                        {{ Form::select('stock_type', array_flip(Config::get('report.stock_type')), null, ['class'=>'form-control','id'=>'stock_type','placeholder'=>'Select','required']) }}
+                                        <div class="error"></div>
+                                    </div>
+                                </div>
+                            @else
+                                <?php
+                                $stock_type = array_flip(Config::get('report.stock_type'));
+                                unset($stock_type[1]);
+                                ?>
+                                <div class="form-group">
+                                    {{ Form::label('stock_type', 'Stock Type', ['class'=>'col-md-3 control-label']) }}
+                                    <div class="col-md-7">
+                                        {{ Form::select('stock_type',$stock_type , null, ['class'=>'form-control','id'=>'stock_type','placeholder'=>'Select','required']) }}
+                                        <div class="error"></div>
+                                    </div>
+                                </div>
+                            @endif
 
-                            <div class="form-group">
-                                {{ Form::label('stock_type', 'Stock Type', ['class'=>'col-md-3 control-label']) }}
+                            <div id="workspace" class="form-group" style="display: @if(Auth::user()->workspace_id==1) none @else block @endif">
+                                {{ Form::label('workspace_id', 'Workspace', ['class'=>'col-md-3 control-label']) }}
                                 <div class="col-md-7">
-                                    {{ Form::select('stock_type', array_flip(Config::get('report.stock_type')), null, ['class'=>'form-control','id'=>'stock_type','placeholder'=>'Select','required']) }}
+                                    {{ Form::select('workspace_id',$workspace , null, ['class'=>'form-control','id'=>'workspace_id','placeholder'=>'Select','required']) }}
                                     <div class="error"></div>
                                 </div>
                             </div>
@@ -43,6 +64,17 @@
 
     <script>
         $(document).ready(function () {
+
+            $(document).on('change', '#stock_type', function(){
+               var stock_type= parseInt($(this).val());
+                if(stock_type==1){
+                    $('#workspace').hide();
+                }else {
+                    $('#workspace').show();
+                }
+            });
+
+
             $(document).on('click', '#submit', function (e) {
                 $.ajax({
                     type: 'POST',
@@ -64,7 +96,7 @@
 
                         $.each(errors, function (index, value) {
                             console.log(index);
-                            var obj = $('#'+index);
+                            var obj = $('#' + index);
                             console.log(obj);
                             obj.closest('.form-group').find('.col-md-7').addClass('has-error');
                             var html = '<span class="help-block">' +
