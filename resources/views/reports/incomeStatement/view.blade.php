@@ -12,39 +12,34 @@
 
             <div class="portlet-body">
                 <div class="table-scrollable">
-                    <table class="table table-hover">
+                    <table class="table table-bordered table-hover">
                         <thead>
-                        <tr>
-                            <th>
-                                Serial
-                            </th>
-                            <th>
-                                {{ $stock_type==1?'Material Name':'Product Name' }}
-                            </th>
-                            <th>
-                                Year
-                            </th>
-                            <th>
-                                Quantity
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @if(sizeof($stocks)>0)
-                            @foreach($stocks as $key=>$stock)
-                                <tr>
-                                    <td>{{ $key+1 }}</td>
-                                    <td>{{ $stock_type==1?$stock->name:$stock->title }}</td>
-                                    <td>{{ $stock->year }}</td>
-                                    <td>{{ $stock->quantity }}</td>
-                                </tr>
+                            <tr><td colspan="3">Sumon PVC Pipe</td></tr>
+                            <tr><td colspan="3">Income Statement</td></tr>
+                            <tr><td colspan="3">{{ 'For the period ending '. date('jS F, Y', $ending_date) }}</td></tr>
+                            <tr><td colspan="3">&nbsp;</td></tr>
+                            <tr><td colspan="3">Revenues</td></tr>
+                            @if(sizeof($revenues)>0)
+                            @foreach($revenues as $revenue)
+                                <tr><td>{{ $revenue->name }}</td><td>{{ $revenue->sum_amount }}</td><td>&nbsp;</td></tr>
                             @endforeach
-                        @else
-                            <tr>
+                            <tr><td colspan="2">Total Revenue</td><td>{{ collect($revenues)->sum('sum_amount') }}</td></tr>
+                            @else
                                 <td colspan="12" class="text-center danger">No Data Found</td>
-                            </tr>
-                        @endif
-                        </tbody>
+                            @endif
+                            <tr><td colspan="3">&nbsp;</td></tr>
+                            <tr><td colspan="3">Expenses</td></tr>
+                            @if(sizeof($expenses)>0)
+                            @foreach($expenses as $expense)
+                                <tr><td>{{ $expense->name }}</td><td>{{ $expense->sum_amount }}</td><td>&nbsp;</td></tr>
+                            @endforeach
+                            <tr><td colspan="2">Total Expenses</td><td>{{ collect($expenses)->sum('sum_amount') }}</td></tr>
+                            @else
+                                <td colspan="12" class="text-center danger">No Data Found</td>
+                            @endif
+                            <tr><td colspan="3">&nbsp;</td></tr>
+                            <tr><td colspan="2">Net Income</td><td></td></tr>
+                        </thead>
                     </table>
                 </div>
             </div>

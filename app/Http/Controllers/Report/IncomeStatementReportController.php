@@ -22,36 +22,44 @@ class IncomeStatementReportController extends Controller
 
     public function index()
     {
-        return view('reports.incomeStatement.index');
+        $workspace_id = Auth::user()->workspace_id;
+        if ($workspace_id == 1) {
+            $workspaces = Workspace::where('status', '=', 1)->lists('name', 'id');
+        } else {
+            $workspaces = Workspace::where(['id' => $workspace_id])->lists('name', 'id');
+        }
+        return view('reports.incomeStatement.index', compact('workspaces'));
     }
 
     public function getReport(Request $request)
     {
         $this->validate($request, [
-            'stock_type' => 'required',
+            'workspace' => 'required',
+            'ending_date' => 'required',
         ]);
 
-        $stock_type = $request->stock_type;
-        $currentYear = CommonHelper::get_current_financial_year();
+        $workspace_id = $request->workspace;
+        $ending_date = strtotime($request->ending_date);
 
-        if($stock_type==1)
-        {
-            $stocks = DB::table('raw_stocks')
-                ->select('raw_stocks.*', 'materials.name')
-                ->where(['stock_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear])
-                ->join('materials', 'materials.id', '=', 'raw_stocks.material_id')
-                ->get();
-        }
-        elseif($stock_type==2)
-        {
-            $stocks = DB::table('stocks')
-                ->select('stocks.*', 'products.title')
-                ->where(['stock_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear, 'workspace_id' =>1])
-                ->join('products', 'products.id', '=', 'stocks.product_id')
-                ->get();
-        }
+        $revenues = DB::table('general_journals')
+            ->select('general_journals.*', DB::raw('SUM(amount) as sum_amount'), 'chart_of_accounts.name', 'chart_of_accounts.contra_status')
+            ->join('chart_of_accounts', 'chart_of_accounts.code', '=', 'general_journals.account_code')
+            ->where(['workspace_id'=>$workspace_id, 'year'=>CommonHelper::get_current_financial_year(), 'general_journals.status'=>1])
+            ->where('general_journals.account_code', 'like', '3%')
+            ->where('general_journals.date', '<=', $ending_date)
+            ->groupBy('general_journals.account_code')
+            ->get();
 
-        $ajaxView = view('reports.stocks.view', compact('stocks', 'stock_type'))->render();
+        $expenses = DB::table('general_journals')
+            ->select('general_journals.*', DB::raw('SUM(amount) as sum_amount'), 'chart_of_accounts.name', 'chart_of_accounts.contra_status')
+            ->join('chart_of_accounts', 'chart_of_accounts.code', '=', 'general_journals.account_code')
+            ->where(['workspace_id'=>$workspace_id, 'year'=>CommonHelper::get_current_financial_year(), 'general_journals.status'=>1])
+            ->where('general_journals.account_code', 'like', '2%')
+            ->where('general_journals.date', '<=', $ending_date)
+            ->groupBy('general_journals.account_code')
+            ->get();
+
+        $ajaxView = view('reports.incomeStatement.view', compact('revenues', 'expenses', 'ending_date'))->render();
         return response()->json($ajaxView);
     }
 

@@ -15,9 +15,17 @@
                             {{ Form::open() }}
 
                             <div class="form-group">
-                                {{ Form::label('stock_type', 'Stock Type', ['class'=>'col-md-3 control-label']) }}
+                                {{ Form::label('workspace', 'Workspace', ['class'=>'col-md-3 control-label']) }}
                                 <div class="col-md-7">
-                                    {{ Form::select('stock_type', array_flip(Config::get('report.stock_type')), null, ['class'=>'form-control','id'=>'stock_type','placeholder'=>'Select','required']) }}
+                                    {{ Form::select('workspace', $workspaces, null, ['class'=>'form-control','id'=>'workspace','placeholder'=>'Select','required']) }}
+                                    <div class="error"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Period Ending Date</label>
+                                <div class="col-md-7">
+                                    <input name="ending_date" type="text" value="{{ date('d-m-Y') }}" size="16" id='ending_date' class="form-control from_datepicker">
                                     <div class="error"></div>
                                 </div>
                             </div>
@@ -43,6 +51,15 @@
 
     <script>
         $(document).ready(function () {
+            $('.from_datepicker').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'dd-mm-yy',
+                onClose: function (selectedDate) {
+                    $(".to_datepicker").datepicker("option", "minDate", selectedDate);
+                }
+            });
+
             $(document).on('click', '#submit', function (e) {
                 $.ajax({
                     type: 'POST',
