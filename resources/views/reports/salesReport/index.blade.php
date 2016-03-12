@@ -100,7 +100,7 @@
                 changeYear: true,
                 dateFormat: 'dd-mm-yy',
                 onClose: function (selectedDate) {
-                    $(".from_datepicker").datepicker("option", "minDate", selectedDate);
+                    $(".from_datepicker").datepicker("option", "maxDate", selectedDate);
                 }
             });
 

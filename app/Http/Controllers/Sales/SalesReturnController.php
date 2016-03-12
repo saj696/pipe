@@ -97,14 +97,12 @@ class SalesReturnController extends Controller
 
                     // Update Workspace Ledger
                     $workspace = WorkspaceLedger::where(['account_code' => 11000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                    $workspace->year = $year;
                     $workspace->balance -= $inputs['total']; //Subtract Cash
                     $workspace->updated_by = $user_id;
                     $workspace->updated_at = $time;
                     $workspace->save();
 
                     $workspace = WorkspaceLedger::where(['account_code' => 32000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                    $workspace->year = $year;
                     $workspace->balance += $inputs['total']; //Add Product Sales Return
                     $workspace->updated_by = $user_id;
                     $workspace->updated_at = $time;
@@ -158,13 +156,11 @@ class SalesReturnController extends Controller
 
                     // Update Workspace Ledger
                     $workspace = WorkspaceLedger::where(['account_code' => 12000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                    $workspace->year = $year;
                     $workspace->balance -= $inputs['total']; //Subtract Account Receivable
                     $workspace->updated_by = $user_id;
                     $workspace->updated_at = $time;
                     $workspace->save();
                     $workspace = WorkspaceLedger::where(['account_code' => 32000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                    $workspace->year = $year;
                     $workspace->balance += $inputs['total']; //Add Product Sales Return
                     $workspace->updated_by = $user_id;
                     $workspace->updated_at = $time;
@@ -227,13 +223,11 @@ class SalesReturnController extends Controller
 
                     // Update Workspace Ledger
                     $workspace = WorkspaceLedger::where(['account_code' => 41000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                    $workspace->year = $year;
                     $workspace->balance += $inputs['total']; //Add Account Payable
                     $workspace->updated_by = $user_id;
                     $workspace->updated_at = $time;
                     $workspace->save();
                     $workspace = WorkspaceLedger::where(['account_code' => 32000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                    $workspace->year = $year;
                     $workspace->balance += $inputs['total']; //Add Product Sales Return
                     $workspace->updated_by = $user_id;
                     $workspace->updated_at = $time;
@@ -292,20 +286,17 @@ class SalesReturnController extends Controller
 
                     // Update Workspace Ledger
                     $workspace = WorkspaceLedger::where(['account_code' => 11000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                    $workspace->year = $year;
                     $workspace->balance -= ($inputs['total'] - $inputs['due_paid']); //Subtract Cash
                     $workspace->updated_by = $user_id;
                     $workspace->updated_at = $time;
                     $workspace->save();
                     $workspace = WorkspaceLedger::where(['account_code' => 32000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                    $workspace->year = $year;
                     $workspace->balance += $inputs['total']; //Add Product Sales Return
                     $workspace->updated_by = $user_id;
                     $workspace->updated_at = $time;
                     $workspace->save();
 
                     $workspace = WorkspaceLedger::where(['account_code' => 12000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                    $workspace->year = $year;
                     $workspace->balance -= $inputs['due_paid']; //Subtract Account Receivable
                     $workspace->updated_by = $user_id;
                     $workspace->updated_at = $time;
@@ -387,7 +378,7 @@ class SalesReturnController extends Controller
 
         } catch (\Exception $e) {
 
-            Session()->flash('flash_message', 'Sales Returned Failed.');
+            Session()->flash('error_message', 'Sales Returned Failed.');
             return Redirect::back();
         }
 

@@ -96,20 +96,17 @@ class SalesOrderController extends Controller
 
                 // Update Workspace Ledger
                 $workspace = WorkspaceLedger::where(['account_code' => 11000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                $workspace->year = $year;
                 $workspace->balance += $inputs['paid'];  //Add Cash
                 $workspace->updated_by = $user_id;
                 $workspace->updated_at = $time;
                 $workspace->save();
                 $workspace = WorkspaceLedger::where(['account_code' => 12000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                $workspace->year = $year;
                 $workspace->balance += $inputs['due']; //Add Account Receivable
                 $workspace->updated_by = $user_id;
                 $workspace->updated_at = $time;
                 $workspace->save();
 
                 $workspace = WorkspaceLedger::where(['account_code' => 31000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                $workspace->year = $year;
                 $workspace->balance += $inputs['total']; //Add Product Sales
                 $workspace->updated_by = $user_id;
                 $workspace->updated_at = $time;
@@ -333,7 +330,6 @@ class SalesOrderController extends Controller
                     $general_journal->delete();
 
                     $workspace = WorkspaceLedger::where(['account_code' => 11000, 'workspace_id' => $user->workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                    $workspace->year = $year;
                     $workspace->balance -= $old_paid_amount; //sub Cash
                     $workspace->updated_by = $user->id;
                     $workspace->updated_at = $time;
@@ -374,7 +370,6 @@ class SalesOrderController extends Controller
                     $general_journal->save();
 
                     $workspace = WorkspaceLedger::where(['account_code' => 11000, 'workspace_id' => $user->workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                    $workspace->year = $year;
                     $workspace->balance += ($new_paid_amount - $old_paid_amount); //Add Cash
                     $workspace->updated_by = $user->id;
                     $workspace->updated_at = $time;
@@ -393,7 +388,6 @@ class SalesOrderController extends Controller
                     $general_journal->save();
 
                     $workspace = WorkspaceLedger::where(['account_code' => 11000, 'workspace_id' => $user->workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                    $workspace->year = $year;
                     $workspace->balance -= ($old_paid_amount - $new_paid_amount); //sub Cash
                     $workspace->updated_by = $user->id;
                     $workspace->updated_at = $time;
@@ -417,7 +411,6 @@ class SalesOrderController extends Controller
                     $journal->save();
 
                     $workspace = WorkspaceLedger::where(['account_code' => 12000, 'workspace_id' => $user->workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                    $workspace->year = date('Y');
                     $workspace->balance += $new_due_amount; //add account receivable debit
                     $workspace->updated_by = $user->id;
                     $workspace->updated_at = $time;
@@ -439,7 +432,6 @@ class SalesOrderController extends Controller
                     $general_journal->delete();
 
                     $workspace = WorkspaceLedger::where(['account_code' => 12000, 'workspace_id' => $user->workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                    $workspace->year = date('Y');
                     $workspace->balance -= $old_due_amount; //sub account receivable credit
                     $workspace->updated_by = $user->id;
                     $workspace->updated_at = $time;
@@ -465,7 +457,6 @@ class SalesOrderController extends Controller
                     $general_journal->save();
 
                     $workspace = WorkspaceLedger::where(['account_code' => 12000, 'workspace_id' => $user->workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                    $workspace->year = date('Y');
                     $workspace->balance += ($new_due_amount - $old_due_amount); //add account receivable debit
                     $workspace->updated_by = $user->id;
                     $workspace->updated_at = $time;
@@ -491,7 +482,6 @@ class SalesOrderController extends Controller
                     $general_journal->save();
 
                     $workspace = WorkspaceLedger::where(['account_code' => 12000, 'workspace_id' => $user->workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                    $workspace->year = $year;
                     $workspace->balance -= ($old_due_amount - $new_due_amount); //add account receivable credit
                     $workspace->updated_by = $user->id;
                     $workspace->updated_at = $time;

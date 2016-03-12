@@ -10,6 +10,7 @@ use App\Models\SalesReturn;
 use App\Models\Workspace;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 
 class SalesReportController extends Controller
