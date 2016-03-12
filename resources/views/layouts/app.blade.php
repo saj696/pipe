@@ -120,7 +120,7 @@
             <ul class="nav navbar-nav pull-right">
                 <li class="dropdown dropdown-user">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                        @if(Auth::user()->photo)
+                        @if(isset(Auth::user()->photo))
                             <img alt="" class="img-circle" src="{{ URL::asset('public/image/user/'.Auth::user()->photo) }}" alt="logo" class="logo-default" style="width: 30px; height: 30px;"/>
                         @else
                             <img alt="" class="img-circle" src="{{ URL::asset('public/image/jr_small.jpg') }}"/>
