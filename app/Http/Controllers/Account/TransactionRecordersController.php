@@ -20,7 +20,7 @@ class TransactionRecordersController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('transactionPermission');
+        $this->middleware('transactionPermission', ['except' => ['index']]);
     }
 
     public function index()

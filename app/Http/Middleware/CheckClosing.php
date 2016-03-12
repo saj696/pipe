@@ -47,7 +47,14 @@ class CheckClosing
                     else
                     {
                         Session()->flash('warning_message', 'Year Closed Already! If you want to do any transaction, please request for Rollback!');
-                        return redirect('/home');
+                        if (isset($permission->list) && $permission->list == 1)
+                        {
+                            return redirect($route);
+                        }
+                        else
+                        {
+                            return redirect('/home');
+                        }
                     }
                 }
                 elseif ($route_uri == $route . '.show' && isset($permission->view) && $permission->view == 1)
@@ -59,7 +66,14 @@ class CheckClosing
                     else
                     {
                         Session()->flash('warning_message', 'Year Closed Already! If you want to do any transaction, please request for Rollback!');
-                        return redirect('/home');
+                        if (isset($permission->list) && $permission->list == 1)
+                        {
+                            return redirect($route);
+                        }
+                        else
+                        {
+                            return redirect('/home');
+                        }
                     }
                 }
                 elseif ($route_uri == $route . '.create' && isset($permission->add) && $permission->add == 1)
@@ -71,7 +85,14 @@ class CheckClosing
                     else
                     {
                         Session()->flash('warning_message', 'Year Closed Already! If you want to do any transaction, please request for Rollback!');
-                        return redirect('/home');
+                        if (isset($permission->list) && $permission->list == 1)
+                        {
+                            return redirect($route);
+                        }
+                        else
+                        {
+                            return redirect('/home');
+                        }
                     }
                 }
                 elseif ($route_uri == $route . '.store' && isset($permission->add) && $permission->add == 1)
@@ -83,7 +104,14 @@ class CheckClosing
                     else
                     {
                         Session()->flash('warning_message', 'Year Closed Already! If you want to do any transaction, please request for Rollback!');
-                        return redirect('/home');
+                        if (isset($permission->list) && $permission->list == 1)
+                        {
+                            return redirect($route);
+                        }
+                        else
+                        {
+                            return redirect('/home');
+                        }
                     }
                 }
                 elseif ($route_uri == $route . '.edit' && isset($permission->edit) && $permission->edit == 1)
@@ -95,7 +123,14 @@ class CheckClosing
                     else
                     {
                         Session()->flash('warning_message', 'Year Closed Already! If you want to do any transaction, please request for Rollback!');
-                        return redirect('/home');
+                        if (isset($permission->list) && $permission->list == 1)
+                        {
+                            return redirect($route);
+                        }
+                        else
+                        {
+                            return redirect('/home');
+                        }
                     }
                 }
                 elseif ($route_uri == $route . '.update' && isset($permission->edit) && $permission->edit == 1)
@@ -107,7 +142,14 @@ class CheckClosing
                     else
                     {
                         Session()->flash('warning_message', 'Year Closed Already! If you want to do any transaction, please request for Rollback!');
-                        return redirect('/home');
+                        if (isset($permission->list) && $permission->list == 1)
+                        {
+                            return redirect($route);
+                        }
+                        else
+                        {
+                            return redirect('/home');
+                        }
                     }
                 }
                 else
