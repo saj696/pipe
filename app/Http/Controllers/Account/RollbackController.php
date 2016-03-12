@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Account;
 use App\Helpers\CommonHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
-use App\Http\Requests\AdjustmentRequest;
-use App\Models\Adjustment;
+use App\Models\AccountClosing;
 use App\Models\ChartOfAccount;
 use App\Models\GeneralJournal;
 use App\Models\Workspace;
+use App\Models\Stock;
 use App\Models\WorkspaceLedger;
 use DB;
 use Illuminate\Http\Request;
@@ -32,7 +32,41 @@ class RollbackController extends Controller
 
     public function store(Request $request)
     {
-        dd('nknknk');
+        $workspace_id = $request->workspace_id;
+        if($workspace_id>0)
+        {
+            $currentYear = CommonHelper::get_current_financial_year();
+            $closingStatus = DB::table('account_closings')->where(['year'=> $currentYear, 'workspace_id'=>$workspace_id])->value('status');
+            $existingYearDetail = DB::table('financial_years')->where('year', $currentYear)->first();
+
+            if ($closingStatus==1)
+            {
+                if($existingYearDetail->end_date > strtotime(date('Y-m-d')))
+                {
+                    // Workspace Ledger Operations
+                    // Delete Workspace Closing Balance Data of Current Year
+                    WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'balance_type'=>Config::get('common.balance_type_closing'), 'year'=>CommonHelper::get_current_financial_year()])->delete();
+                    // Delete Next Year Opening Balance Data
+                    WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'balance_type'=>Config::get('common.balance_type_opening'), 'year'=>CommonHelper::get_next_financial_year()])->delete();
+                    // Delete Next Year Intermediate Balance Data
+                    WorkspaceLedger::where(['workspace_id'=>$workspace_id, 'balance_type'=>Config::get('common.balance_type_intermediate'), 'year'=>CommonHelper::get_next_financial_year()])->delete();
+                    // Stocks Table Operations
+                    //  Delete Stock Table Current Year Closing Balance Data
+                    Stock::where(['workspace_id'=>$workspace_id, 'stock_type'=>Config::get('common.balance_type_closing'), 'year'=>CommonHelper::get_current_financial_year()])->delete();
+                    // Delete Next Year Opening Balance Data
+                    Stock::where(['workspace_id'=>$workspace_id, 'stock_type'=>Config::get('common.balance_type_opening'), 'year'=>CommonHelper::get_next_financial_year()])->delete();
+                    // Delete Stock Table Next Year Intermediate Balance Data
+                    Stock::where(['workspace_id'=>$workspace_id, 'stock_type'=>Config::get('common.balance_type_intermediate'), 'year'=>CommonHelper::get_next_financial_year()])->delete();
+                    // Delete Account Closing Data
+                    AccountClosing::where(['workspace_id'=>$workspace_id, 'year'=>CommonHelper::get_current_financial_year(), 'type'=>1])->delete();
+                }
+            }
+        }
+        else
+        {
+
+        }
+
         try {
             DB::transaction(function () use ($request) {
                 $currentYear = CommonHelper::get_current_financial_year();

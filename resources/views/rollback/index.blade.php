@@ -41,10 +41,12 @@
                 var x = confirm("Are you sure you want to rollback?");
             }
 
-            if (x) {
+            if (x)
+            {
                 return true;
             }
-            else {
+            else
+            {
                 event.preventDefault();
                 return false;
             }
