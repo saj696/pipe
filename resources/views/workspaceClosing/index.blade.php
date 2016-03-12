@@ -33,4 +33,18 @@
             </div>
         </div>
     </div>
+    <script>
+        $('form').submit(function (event)
+        {
+            var x = confirm("Are you sure you want to close your workspace for this year?");
+
+            if (x) {
+                return true;
+            }
+            else {
+                event.preventDefault();
+                return false;
+            }
+        });
+    </script>
 @stop

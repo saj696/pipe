@@ -61,6 +61,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('salary_generator', 'Payroll\SalaryGeneratorController');
     Route::resource('salary_payment', 'Payroll\SalaryPaymentController');
     Route::resource('financial_year', 'System\FinancialYearSetupController');
+    Route::resource('rollback', 'Account\RollbackController');
 
     // Report route
     Route::get('report_print', 'Report\PrintReportController@index');
