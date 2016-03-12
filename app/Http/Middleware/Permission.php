@@ -39,7 +39,7 @@ class Permission
                 } elseif ($route_uri == $route . '.update' && isset($permission->edit) && $permission->edit == 1) {
                     return $next($request);
                 } else {
-                    Session()->flash('flash_message', 'You do not have permission to access!');
+                    Session()->flash('warning_message', 'You do not have permission to access!');
                     if (isset($permission->list) && $permission->list == 1) {
                         return redirect($route);
                     } else {
