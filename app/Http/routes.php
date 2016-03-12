@@ -60,6 +60,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('purchases_return', 'Setup\PurchasesReturnController');
     Route::resource('salary_generator', 'Payroll\SalaryGeneratorController');
     Route::resource('salary_payment', 'Payroll\SalaryPaymentController');
+    Route::resource('financial_year', 'System\FinancialYearSetupController');
 
     // Report route
     Route::get('report_print', 'Report\PrintReportController@index');
@@ -68,6 +69,8 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('purchase_report', array('as' => 'ajax.purchase_report', 'uses' => 'Report\PurchasesReportController@getReport'));
     Route::get('sales_report', 'Report\SalesReportController@index');
     Route::post('sales_report', array('as' => 'ajax.sales_report', 'uses' => 'Report\SalesReportController@getReport'));
+    Route::get('customer_report', 'Report\CustomerReportController@index');
+    Route::post('customer_report', array('as' => 'ajax.customer_report', 'uses' => 'Report\CustomerReportController@getReport'));
 
     Route::get('trial_balance', 'Report\TrialBalanceController@index');
     Route::post('trial_balance', array('as' => 'ajax.trial_balance', 'uses' => 'Report\TrialBalanceController@getReport'));
