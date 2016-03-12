@@ -19,7 +19,7 @@ class WorkspaceClosingController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('perm');
+        $this->middleware('transactionPermission');
     }
 
     public function index()
@@ -80,7 +80,7 @@ class WorkspaceClosingController extends Controller
                         // Initial Balance Next Year
                         $workspaceLedger = New WorkspaceLedger;
                         $workspaceLedger->workspace_id = $workspace_id;
-                        $workspaceLedger->year = CommonHelper::get_current_financial_year() + 1;
+                        $workspaceLedger->year = CommonHelper::get_next_financial_year();
                         $workspaceLedger->account_code = $a[$ci][1];
                         $workspaceLedger->balance_type = Config::get('common.balance_type_opening');
                         $workspaceLedger->balance = $a[$ci][3];
@@ -90,7 +90,7 @@ class WorkspaceClosingController extends Controller
                         // Intermediate Balance Next Year
                         $workspaceLedger = New WorkspaceLedger;
                         $workspaceLedger->workspace_id = $workspace_id;
-                        $workspaceLedger->year = CommonHelper::get_current_financial_year() + 1;
+                        $workspaceLedger->year = CommonHelper::get_next_financial_year();
                         $workspaceLedger->account_code = $a[$ci][1];
                         $workspaceLedger->balance_type = Config::get('common.balance_type_intermediate');
                         $workspaceLedger->balance = $a[$ci][3];
@@ -120,7 +120,7 @@ class WorkspaceClosingController extends Controller
                             $stock->save();
                             // Next Year Opening Balance
                             $stock = New Stock;
-                            $stock->year = CommonHelper::get_current_financial_year() + 1;
+                            $stock->year = CommonHelper::get_next_financial_year();
                             $stock->stock_type = Config::get('common.balance_type_opening');
                             $stock->workspace_id = $workspace_id;
                             $stock->product_id = $existingStock->product_id;
@@ -130,7 +130,7 @@ class WorkspaceClosingController extends Controller
                             $stock->save();
                             // Next Year Intermediate Balance
                             $stock = New Stock;
-                            $stock->year = CommonHelper::get_current_financial_year() + 1;
+                            $stock->year = CommonHelper::get_next_financial_year();
                             $stock->stock_type = Config::get('common.balance_type_intermediate');
                             $stock->workspace_id = $workspace_id;
                             $stock->product_id = $existingStock->product_id;

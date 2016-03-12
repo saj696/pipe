@@ -21,7 +21,7 @@ class YearClosingController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('perm');
+        $this->middleware('transactionPermission');
     }
 
     public function index()
@@ -55,7 +55,7 @@ class YearClosingController extends Controller
                             $generalLedger->save();
                             // Opening Balance Set for Next Financial Year
                             $generalLedger = New GeneralLedger;
-                            $generalLedger->year = $currentYear + 1;
+                            $generalLedger->year = CommonHelper::get_next_financial_year();;
                             $generalLedger->account_code = $head;
                             $generalLedger->balance_type = Config::get('common.balance_type_opening');
                             $generalLedger->balance = $headTotal;
@@ -83,7 +83,7 @@ class YearClosingController extends Controller
                             $rawStock->created_at = time();
                             // Next Year Opening Balance
                             $rawStock = New RawStock;
-                            $rawStock->year = $currentYear + 1;
+                            $rawStock->year = CommonHelper::get_next_financial_year();
                             $rawStock->stock_type = Config::get('common.balance_type_opening');
                             $rawStock->material_id = $rawMaterial->material_id;
                             $rawStock->quantity = $rawMaterial->quantity;
@@ -91,7 +91,7 @@ class YearClosingController extends Controller
                             $rawStock->created_at = time();
                             // Next Year Intermediate Balance
                             $rawStock = New RawStock;
-                            $rawStock->year = $currentYear + 1;
+                            $rawStock->year = CommonHelper::get_next_financial_year();
                             $rawStock->stock_type = Config::get('common.balance_type_intermediate');
                             $rawStock->material_id = $rawMaterial->material_id;
                             $rawStock->quantity = $rawMaterial->quantity;
@@ -99,10 +99,19 @@ class YearClosingController extends Controller
                             $rawStock->created_at = time();
                         }
 
-                        // Next Fiscal Year Entry
+                        // Current Year Data Fetch
+                        $existingYearDetail = DB::table('financial_years')->where('year', $currentYear)->first();
+                        // Current Year Inactive
                         DB::table('financial_years')->where('year', $currentYear)->update(['status' => 0]);
+                        // New Year Insert
                         DB::table('financial_years')->insert(
-                            ['year' => $currentYear + 1]
+                            [
+                                'year' => CommonHelper::get_next_financial_year(),
+                                'start_date'=>strtotime(date("Y-m-d", $existingYearDetail->start_date) . " + 1 year"),
+                                'end_date'=>strtotime(date("Y-m-d", $existingYearDetail->end_date) . " + 1 year"),
+                                'created_by'=>Auth::user()->id,
+                                'created_at'=>time()
+                            ]
                         );
                     });
                 } catch (\Exception $e) {

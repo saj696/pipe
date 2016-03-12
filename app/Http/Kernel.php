@@ -51,5 +51,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'perm' => \App\Http\Middleware\Permission::class,
         'reportPerm' => \App\Http\Middleware\ReportPermission::class,
+        'transactionPermission' => \App\Http\Middleware\CheckClosing::class,
     ];
 }

@@ -82,6 +82,9 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('stock_report', array('as' => 'ajax.stock_report', 'uses' => 'Report\StockReportController@getReport'));
     Route::get('personal_accounts_report', 'Report\PersonalAccountsReportController@index');
     Route::post('personal_accounts_report', array('as' => 'ajax.personal_accounts_report', 'uses' => 'Report\PersonalAccountsReportController@getReport'));
+    Route::get('income_statement_report', 'Report\IncomeStatementReportController@index');
+    Route::post('income_statement_report', array('as' => 'ajax.income_statement_report', 'uses' => 'Report\IncomeStatementReportController@getReport'));
+
 
     Route::post('adjustment_amounts', array('as' => 'ajax.adjustment_amounts', 'uses' => 'AjaxController@getAdjustmentAmounts'));
     Route::post('product_select', array('as' => 'ajax.product_select', 'uses' => 'AjaxController@getProducts'));
