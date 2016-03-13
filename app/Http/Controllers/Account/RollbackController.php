@@ -111,14 +111,15 @@ class RollbackController extends Controller
                         Stock::where(['workspace_id'=>$workspace_id, 'stock_type'=>Config::get('common.balance_type_intermediate'), 'year'=>CommonHelper::get_current_financial_year()])->delete();
                         // Delete Account Closing Data
                         AccountClosing::where(['workspace_id'=>$workspace_id, 'year'=>CommonHelper::get_previous_financial_year(), 'type'=>1])->delete();
-                        // Fiscal Year Table Operations
-                        $previous = CommonHelper::get_previous_financial_year();
-                        $current = CommonHelper::get_current_financial_year();
-                        // Previous Year Activate
-                        DB::table('financial_years')->where('year', $previous)->update(['status' => 1]);
-                        // Delete Current Financial Year
-                        FinancialYear::where(['year'=>$current])->delete();
                     }
+
+                    // Fiscal Year Table Operations
+                    $previous = CommonHelper::get_previous_financial_year();
+                    $current = CommonHelper::get_current_financial_year();
+                    // Previous Year Activate
+                    DB::table('financial_years')->where('year', $previous)->update(['status' => 1]);
+                    // Delete Current Financial Year
+                    FinancialYear::where(['year'=>$current])->delete();
                 }
             });
         } catch (\Exception $e) {
