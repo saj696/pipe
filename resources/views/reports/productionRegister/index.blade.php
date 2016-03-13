@@ -15,6 +15,14 @@
                             {{ Form::open() }}
 
                             <div class="form-group">
+                                {{ Form::label('year', 'Year', ['class'=>'col-md-3 control-label']) }}
+                                <div class="col-md-7">
+                                    {{ Form::select('year', $years, null, ['class'=>'form-control','id'=>'year','placeholder'=>'Select','required']) }}
+                                    <div class="error"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 {{ Form::label('month', 'Month', ['class'=>'col-md-3 control-label']) }}
                                 <div class="col-md-7">
                                     {{ Form::select('month', array_flip(Config::get('common.month')), null, ['class'=>'form-control','id'=>'month','placeholder'=>'Select','required']) }}

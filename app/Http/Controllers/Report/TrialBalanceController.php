@@ -53,6 +53,9 @@ class TrialBalanceController extends Controller
             ->where(['workspace_id'=>$workspace_id, 'dr_cr_indicator'=>Config::get('common.debit_credit_indicator.credit'), 'year'=>CommonHelper::get_current_financial_year(), 'general_journals.status'=>1])
             ->get();
 
+        $debits = json_decode(json_encode($debits), true);
+        $credits = json_decode(json_encode($credits), true);
+
         $ajaxView = view('reports.trialBalance.view', compact('debits', 'credits'))->render();
         return response()->json($ajaxView);
     }

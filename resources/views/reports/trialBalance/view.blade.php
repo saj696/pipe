@@ -1,3 +1,11 @@
+<?php
+$row = sizeof($debits);
+if ($row < sizeof($credits)) {
+    $row = sizeof($credits);
+}
+?>
+
+
 <div class="row" id="printArea">
     <div class="col-md-12">
         <div class="portlet box green-seagreen">
@@ -6,7 +14,8 @@
                     <i class="fa fa-globe"></i>Report View
                 </div>
                 <div>
-                    <a style="margin: 7px; padding: 5px;" onclick="print_rpt()" class="btn btn-circle btn-danger pull-right"  href="#">Print</a>
+                    <a style="margin: 7px; padding: 5px;" onclick="print_rpt()"
+                       class="btn btn-circle btn-danger pull-right" href="#">Print</a>
                 </div>
             </div>
             <div class="portlet-body form">
@@ -41,23 +50,23 @@
                                                 </thead>
                                                 <tbody>
                                                 @if(sizeof($debits)>0)
-                                                    <?php $totalDebit = 0;?>
-                                                    @foreach($debits as $key=>$debit)
+                                                    @for($i=0; $i< $row; $i++)
                                                         <tr>
-                                                            <td>{{ $key+1 }}</td>
-                                                            <td>{{ $debit->name }}</td>
-                                                            <td>{{ date('d-m-Y', $debit->date) }}</td>
-                                                            <td>{{ $debit->amount }}</td>
+                                                            <td>{!! (sizeof($debits)>$i)? $i+1 : "&nbsp" !!}</td>
+                                                            <td>{!! isset($debits[$i]['name'])? $debits[$i]['name'] : "&nbsp" !!}</td>
+                                                            <td>{!! isset($debits[$i]['date'])?date('d-m-Y',$debits[$i]['date']) : "&nbsp" !!}</td>
+                                                            <td>{!! isset($debits[$i]['amount'])? $debits[$i]['amount'] : "&nbsp" !!}</td>
                                                         </tr>
-                                                        <?php $totalDebit += $debit->amount;?>
-                                                    @endforeach
+                                                    @endfor
                                                     <tr>
-                                                        <td colspan="3">Total</td>
-                                                        <td>{{ $totalDebit }}</td>
+                                                        <th colspan="3">Total</th>
+                                                        <th>{!! array_sum(array_column($debits,'amount'))? array_sum(array_column($debits,'amount')) : "&nbsp" !!}</th>
                                                     </tr>
                                                 @else
                                                     <tr>
-                                                        <td colspan="12" class="text-center danger">No Data Found</td>
+                                                        <td colspan="12" class="text-center danger">No Data
+                                                            Found
+                                                        </td>
                                                     </tr>
                                                 @endif
                                                 </tbody>
@@ -94,23 +103,23 @@
                                                 </thead>
                                                 <tbody>
                                                 @if(sizeof($credits)>0)
-                                                    <?php $totalCredit = 0;?>
-                                                    @foreach($credits as $key=>$credit)
+                                                    @for($i=0; $i< $row; $i++)
                                                         <tr>
-                                                            <td>{{ $key+1 }}</td>
-                                                            <td>{{ $credit->name }}</td>
-                                                            <td>{{ date('d-m-Y', $credit->date) }}</td>
-                                                            <td>{{ $credit->amount }}</td>
+                                                            <td>{!! (sizeof($credits)>$i)? $i+1 : "&nbsp" !!}</td>
+                                                            <td>{!! isset($credits[$i]['name'])? $credits[$i]['name'] : "&nbsp" !!}</td>
+                                                            <td>{!! isset($credits[$i]['date'])?date('d-m-Y',$credits[$i]['date']) : "&nbsp" !!}</td>
+                                                            <td>{!! isset($credits[$i]['amount'])? $credits[$i]['amount'] : "&nbsp" !!}</td>
                                                         </tr>
-                                                        <?php $totalCredit += $credit->amount;?>
-                                                    @endforeach
+                                                    @endfor
                                                     <tr>
-                                                        <td colspan="3">Total</td>
-                                                        <td>{{ $totalCredit }}</td>
+                                                        <th colspan="3">Total</th>
+                                                        <th>{!! array_sum(array_column($credits,'amount'))? array_sum(array_column($credits,'amount')) : "&nbsp" !!}</th>
                                                     </tr>
                                                 @else
                                                     <tr>
-                                                        <td colspan="12" class="text-center danger">No Data Found</td>
+                                                        <td colspan="12" class="text-center danger">No Data
+                                                            Found
+                                                        </td>
                                                     </tr>
                                                 @endif
                                                 </tbody>

@@ -86,6 +86,8 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('income_statement_report', 'Report\IncomeStatementReportController@index');
     Route::post('income_statement_report', array('as' => 'ajax.income_statement_report', 'uses' => 'Report\IncomeStatementReportController@getReport'));
 
+    Route::get('payroll_report', 'Report\PayrollReportController@index');
+    Route::post('payroll_report',array('as'=>'ajax.payroll_report', 'uses'=>'Report\PayrollReportController@getReport')) ;
 
     Route::post('adjustment_amounts', array('as' => 'ajax.adjustment_amounts', 'uses' => 'AjaxController@getAdjustmentAmounts'));
     Route::post('product_select', array('as' => 'ajax.product_select', 'uses' => 'AjaxController@getProducts'));

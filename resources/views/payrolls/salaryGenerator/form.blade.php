@@ -77,7 +77,7 @@
             var obj = $(this);
             var over_time = parseFloat($(this).val());
             var over_time_rate = parseFloat($(this).data('hourly_rate'));
-            if ((over_time * over_time_rate) > 0) {
+            if ((over_time * over_time_rate) >= 0) {
                 var total = over_time * over_time_rate;
                 obj.closest('tr').find('.over_time_amount').val(total)
             }

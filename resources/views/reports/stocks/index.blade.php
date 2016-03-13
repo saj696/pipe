@@ -35,13 +35,7 @@
                                 </div>
                             @endif
 
-                            <div id="workspace" class="form-group" style="display: @if(Auth::user()->workspace_id==1) none @else block @endif">
-                                {{ Form::label('workspace_id', 'Workspace', ['class'=>'col-md-3 control-label']) }}
-                                <div class="col-md-7">
-                                    {{ Form::select('workspace_id',$workspace , null, ['class'=>'form-control','id'=>'workspace_id','placeholder'=>'Select','required']) }}
-                                    <div class="error"></div>
-                                </div>
-                            </div>
+
 
                             <div class="form-actions">
                                 <div class="row">
