@@ -56,7 +56,7 @@ class YearClosingController extends Controller
                             $generalLedger->save();
                             // Opening Balance Set for Next Financial Year
                             $generalLedger = New GeneralLedger;
-                            $generalLedger->year = CommonHelper::get_next_financial_year();;
+                            $generalLedger->year = CommonHelper::get_next_financial_year();
                             $generalLedger->account_code = $head;
                             $generalLedger->balance_type = Config::get('common.balance_type_opening');
                             $generalLedger->balance = $headTotal;

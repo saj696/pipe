@@ -103,4 +103,20 @@ class CommonHelper extends Facade
         return $yearStr;
     }
 
+    public static function get_previous_financial_year()
+    {
+        $year = DB::table('financial_years')->where('status', '=', 1)->first();
+        $exploded = explode('-', $year->year);
+        if(is_array($exploded) && sizeof($exploded)>1)
+        {
+            $yearStr = (intval($exploded[0])-1).'-'.(intval($exploded[1])-1);
+        }
+        else
+        {
+            $yearStr = intval($year->year)-1;
+        }
+
+        return $yearStr;
+    }
+
 }

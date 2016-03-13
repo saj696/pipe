@@ -14,7 +14,7 @@
                     <div class="form-group">
                         {{ Form::label('workspace_id', 'Workspace', ['class'=>'col-md-3 control-label']) }}
                         <div class="col-md-6">
-                            {{ Form::select('workspace_id',$workspaces , null, ['class'=>'form-control','id'=>'workspace_id','placeholder'=>'Select']) }}
+                            {{ Form::select('workspace_id',$workspaces , null, ['class'=>'form-control','id'=>'workspace_id','placeholder'=>'All']) }}
                         </div>
                     </div>
 
