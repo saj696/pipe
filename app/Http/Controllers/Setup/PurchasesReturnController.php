@@ -24,6 +24,7 @@ class PurchasesReturnController extends Controller
     public function __construct()
     {
         $this->middleware('perm');
+        $this->middleware('transactionPermission', ['except' => ['index']]);
     }
 
     /**
