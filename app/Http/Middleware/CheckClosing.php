@@ -31,7 +31,7 @@ class CheckClosing
 
         $permission = UserHelper::get_route_permission($route);
 
-        if ($closingStatus==1 && ($existingYearDetail->end_date < strtotime(date('Y-m-d'))))
+        if (!isset($closingStatus) || ($closingStatus==1 && ($existingYearDetail->end_date < strtotime(date('Y-m-d')))))
         {
             return $next($request);
         }
