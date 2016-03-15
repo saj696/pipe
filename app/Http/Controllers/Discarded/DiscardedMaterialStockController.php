@@ -9,7 +9,6 @@ use App\Http\Requests\DiscardedStockRequest;
 use App\Http\Requests\Request;
 use App\Models\Material;
 use App\Models\RawStock;
-use App\Models\UsageRegister;
 use DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;

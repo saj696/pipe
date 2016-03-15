@@ -63,6 +63,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('financial_year', 'System\FinancialYearSetupController');
     Route::resource('rollback', 'Account\RollbackController');
     Route::resource('discarded_stock', 'Discarded\DiscardedMaterialStockController');
+    Route::resource('discarded_sale', 'Discarded\DiscardedMaterialSaleController');
 
     // Report route
     Route::get('report_print', 'Report\PrintReportController@index');
