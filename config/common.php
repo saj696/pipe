@@ -13,7 +13,7 @@ return [
     'workspace_type' => ['1' => 'Showroom', '2' => 'Delivery Center', '3' => 'Factory'],
     'pagination' => 10,
     'status' => ['1'=>'Active','0'=>'Inactive'],
-    'material_type' => ['1'=>'Normal', '2'=>'Color', '3'=>'Mixer'],
+    'material_type' => ['1'=>'Normal', '2'=>'Color', '3'=>'Mixer', '4'=>'Discarded'],
     'customer_type' =>['1'=>'Dealer','2'=>'Non Dealer'],
     'sales_customer_type' => [1=>'Employee',2 =>'Supplier',3=>'Customer'],
     'supplier_types'=>[1=>'Local',2=>'International'],

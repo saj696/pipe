@@ -18,7 +18,6 @@
     </tr>
 </table>
 
-
 <div class="row" id="wrapper" data-current-index="0">
     <div class="col-md-offset-1 col-md-10 main_row">
         <table class="table table-bordered">
@@ -30,7 +29,7 @@
                     {{ Form::text('production[]', null,['class'=>'form-control quantity production', 'required'=>'required', 'placeholder'=>'Input Production Quantity']) }}
                 </td>
                 <td width="2%">
-                    <i class="fa fa-close" onclick="closeIt(this)" style="color: red;margin-top: 10px; cursor: pointer"></i>
+                    <i class="fa fa-close" onclick="closeIt(this)" style="color: red; margin-top: 10px; cursor: pointer;"></i>
                 </td>
             </tr>
         </table>
@@ -92,8 +91,8 @@
 
         var rowHtml = $('#wrapper :first').clone();
         $('#wrapper').append(rowHtml);
-        $('#wrapper:last').find('.product_id:last').attr('name', 'items[' + newIndex + '][product_id]');
-        $('#wrapper:last').find('.production:last').attr('name', 'items[' + newIndex + '][production]');
+        $('#wrapper:last').find('.product_id:last').attr('name', 'product_id[]');
+        $('#wrapper:last').find('.production:last').attr('name', 'production[]');
         $('#wrapper:last').find('.product_id:last').val('');
         $('#wrapper:last').find('.production:last').val('');
     }
@@ -101,7 +100,7 @@
     function closeIt(ele) {
         var noOfChild = $('#wrapper .main_row').length;
         if (noOfChild < 2) {
-            alert('You Can\'t remove all items');
+            alert('You Can\'t remove all items!');
             return false;
         }
         ele.closest('.main_row').remove();

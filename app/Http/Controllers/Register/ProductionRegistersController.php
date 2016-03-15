@@ -72,10 +72,11 @@ class ProductionRegistersController extends Controller
                     }
 
                     $existingStock = DB::table('stocks')->where(['stock_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear, 'workspace_id' => 1, 'product_id' => $productInput[$i]])->first();
+                    $product_length = DB::table('products')->where('id', $productInput[$i])->value('length');
 
                     if ($existingStock) {
                         $stock = Stock::findOrFail($existingStock->id);
-                        $stock->quantity = $productionInput[$i] + $existingStock->quantity;
+                        $stock->quantity = $productionInput[$i]*$product_length + $existingStock->quantity;
                         $stock->updated_by = Auth::user()->id;
                         $stock->updated_at = time();
                         $stock->update();
@@ -86,7 +87,7 @@ class ProductionRegistersController extends Controller
                         $stock->stock_type = Config::get('common.balance_type_opening');
                         $stock->workspace_id = $workspace_id;
                         $stock->product_id = $productInput[$i];
-                        $stock->quantity = $productionInput[$i];
+                        $stock->quantity = $productionInput[$i]*$product_length;
                         $stock->created_by = Auth::user()->id;
                         $stock->created_at = time();
                         $stock->save();
@@ -96,7 +97,7 @@ class ProductionRegistersController extends Controller
                         $stock->stock_type = Config::get('common.balance_type_intermediate');
                         $stock->workspace_id = $workspace_id;
                         $stock->product_id = $productInput[$i];
-                        $stock->quantity = $productionInput[$i];
+                        $stock->quantity = $productionInput[$i]*$product_length;
                         $stock->created_by = Auth::user()->id;
                         $stock->created_at = time();
                         $stock->save();
@@ -104,11 +105,11 @@ class ProductionRegistersController extends Controller
                 }
             });
         } catch (\Exception $e) {
-            Session()->flash('error_message', 'Production Register not created!');
+            Session()->flash('error_message', 'Production Register not done!');
             return redirect('productionRegisters');
         }
 
-        Session()->flash('flash_message', 'Production Register has been created!');
+        Session()->flash('flash_message', 'Production Registered Successfully!');
         return redirect('productionRegisters');
     }
 
@@ -133,19 +134,20 @@ class ProductionRegistersController extends Controller
                 $productionRegister->update();
 
                 $existingStock = DB::table('stocks')->where(['year' => CommonHelper::get_current_financial_year(), 'stock_type' => Config::get('common.balance_type_intermediate'), 'workspace_id' => $user->workspace_id, 'product_id' => $existingRegister->product_id])->first();
+                $product_length = DB::table('products')->where('id', $id)->value('length');
 
                 if ($existingRegister->production != $request->input('production')) {
                     if ($existingRegister->production > $request->input('production')) {
                         $difference = $existingRegister->production - $request->input('production');
                         $stock = Stock::findOrFail($existingStock->id);
-                        $stock->quantity = $existingStock->quantity - $difference;
+                        $stock->quantity = $existingStock->quantity - $difference*$product_length;
                         $stock->updated_by = Auth::user()->id;
                         $stock->updated_at = time();
                         $stock->update();
                     } elseif ($existingRegister->production < $request->input('production')) {
                         $difference = $request->input('production') - $existingRegister->production;
                         $stock = Stock::findOrFail($existingStock->id);
-                        $stock->quantity = $existingStock->quantity + $difference;
+                        $stock->quantity = $existingStock->quantity + $difference*$product_length;
                         $stock->updated_by = Auth::user()->id;
                         $stock->updated_at = time();
                         $stock->update();
