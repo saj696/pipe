@@ -54,8 +54,7 @@
                                             {{ $status[$productionRegister->status] }}
                                         </td>
                                         <td>
-                                            <a class="label label-danger"
-                                               href="{{ url('/productionRegisters/'.$productionRegister->id.'/edit' )}}">Edit</a>
+                                            <a class="label label-danger" href="{{ url('/productionRegisters/'.$productionRegister->id.'/edit' )}}">Edit</a>
                                         </td>
                                     </tr>
                                 @endforeach

@@ -2,7 +2,7 @@
 
 <table class="table table-bordered">
     <tr>
-        <td>
+        <th>
             <div class="form-group">
                 {{ Form::label('date', 'Date', ['class'=>'col-md-4 control-label input_date']) }}
                 <div class="col-md-4{{ $errors->has('date') ? ' has-error' : '' }}">
@@ -14,41 +14,34 @@
                     @endif
                 </div>
             </div>
-        </td>
+        </th>
     </tr>
 </table>
 
-<table class="table table-bordered" id="adding_elements">
-    <thead>
-    <tr>
-        <th>Product</th>
-        <th>Production</th>
-    </tr>
-    </thead>
-    <tbody id="main_body">
-    <tr>
-        <td>
-            {{ Form::select('product_id[]', $products, null,['class'=>'form-control product_id', 'id'=>'product_id', 'placeholder'=>'Select', 'required'=>'required']) }}
-        </td>
 
-        <td>
-            {{ Form::text('production[]', null,['class'=>'form-control quantity', 'required'=>'required']) }}
-        </td>
-        <td style="width: 25px; height: 34px;">
+<div class="row" id="wrapper" data-current-index="0">
+    <div class="col-md-offset-1 col-md-10 main_row">
+        <table class="table table-bordered">
+            <tr>
+                <td width="25%">
+                    {{ Form::select('product_id[]', $products, null,['class'=>'form-control product_id', 'id'=>'product_id', 'placeholder'=>'Select Product', 'required'=>'required']) }}
+                </td>
+                <td width="20%">
+                    {{ Form::text('production[]', null,['class'=>'form-control quantity production', 'required'=>'required', 'placeholder'=>'Input Production Quantity']) }}
+                </td>
+                <td width="2%">
+                    <i class="fa fa-close" onclick="closeIt(this)" style="color: red;margin-top: 10px; cursor: pointer"></i>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
 
-        </td>
-    </tr>
-    </tbody>
-</table>
-
-<table class="table">
-    <tr>
-        <td class="pull-right" style="border: 0px;">
-            <img style="width: 25px; height: 25px;" src="{{ URL::asset('public/image/plus.png') }}"
-                 onclick="RowIncrement()"/>
-        </td>
-    </tr>
-</table>
+<div class="row text-center">
+    <button type="button" onclick="addMore()" class="btn-circle btn btn-success" style="margin: 0px 0 20px 0">
+        <img style="width: 15px; height: 15px;" src="{{ URL::asset('public/image/plus.png') }}" />
+    </button>
+</div>
 
 <div class="form-actions">
     <div class="row">
@@ -70,7 +63,7 @@
         });
 
         $(document).on("change", ".product_id", function () {
-            var mat_attr = $(this).closest('#main_body').find('.product_id');
+            var mat_attr = $(this).closest('#wrapper').find('.product_id');
             var arr = [];
             mat_attr.each(function () {
                 arr.push($(this).val());
@@ -92,45 +85,25 @@
         return t;
     }
 
-    var ExId = 0;
-    function RowIncrement() {
-        var img_url = "{{ URL::asset('public/image/xmark.png') }}";
-        var table = document.getElementById('adding_elements');
-        var rowCount = table.rows.length;
-        //alert(rowCount);
-        var row = table.insertRow(rowCount);
-        row.id = "T" + ExId;
-        row.className = "tableHover";
-        //alert(row.id);
-        var cell1 = row.insertCell(0);
+    function addMore() {
+        var currentIndex = parseInt($('#wrapper').data('current-index'));
+        var newIndex = currentIndex + 1;
+        parseInt($('#wrapper').data('current-index', newIndex));
 
-        cell1.innerHTML = "<select name='product_id[]' id='product_id" + ExId + "' class='form-control product_id' required='required'>\n\
-        <option value=''>Select</option>\n\
-        <?php
-                        foreach ($products as $id => $product)
-                            echo "<option value='" . $id . "'>" . $product . "</option>";
-                        ?>";
-        var cell1 = row.insertCell(1);
-        cell1.innerHTML = "<input type='text' name='production[]' class='form-control quantity' required='required'/>" +
-                "<input type='hidden' id='elmIndex[]' name='elmIndex[]' value='" + ExId + "'/>";
-        cell1.style.cursor = "default";
-        cell1 = row.insertCell(2);
-        cell1.innerHTML = "<img style='width: 25px; height: 25px;'  onclick=\"RowDecrement('adding_elements', 'T" + ExId + "')\" src='{{ URL::asset('public/image/xmark.png') }}' />";
-        cell1.style.cursor = "default";
-        ExId = ExId + 1;
+        var rowHtml = $('#wrapper :first').clone();
+        $('#wrapper').append(rowHtml);
+        $('#wrapper:last').find('.product_id:last').attr('name', 'items[' + newIndex + '][product_id]');
+        $('#wrapper:last').find('.production:last').attr('name', 'items[' + newIndex + '][production]');
+        $('#wrapper:last').find('.product_id:last').val('');
+        $('#wrapper:last').find('.production:last').val('');
     }
 
-    function RowDecrement(adding_elements, id) {
-        try {
-            var table = document.getElementById(adding_elements);
-            for (var i = 1; i < table.rows.length; i++) {
-                if (table.rows[i].id == id) {
-                    table.deleteRow(i);
-                }
-            }
+    function closeIt(ele) {
+        var noOfChild = $('#wrapper .main_row').length;
+        if (noOfChild < 2) {
+            alert('You Can\'t remove all items');
+            return false;
         }
-        catch (e) {
-            alert(e);
-        }
+        ele.closest('.main_row').remove();
     }
 </script>
