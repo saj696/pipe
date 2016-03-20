@@ -346,11 +346,9 @@ class TransactionRecordersController extends Controller
                     $repairWorkspaceData->update();
 
                     // General Journals Insert
-                    $person_id = $request->from_whom;
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.donation');
-                    $generalJournal->reference_id = $person_id;
                     $generalJournal->year = $currentYear;
                     $generalJournal->account_code = $accountCode;
                     $generalJournal->workspace_id = $workspace_id;
@@ -364,7 +362,6 @@ class TransactionRecordersController extends Controller
                 {
                     // Workspace Ledger Cash Debit/Credit(+/-)
                     $cashWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => $cashCode, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear])->first();
-
                     if($request->cash_adjustment_type==1)
                     {
                         $cashWorkspaceData->balance += $request->amount;
@@ -373,7 +370,6 @@ class TransactionRecordersController extends Controller
                     {
                         $cashWorkspaceData->balance -= $request->amount;
                     }
-
                     $cashWorkspaceData->update();
 
                     // Workspace Ledger Cash Adjustment Account Debit(+)
@@ -382,11 +378,9 @@ class TransactionRecordersController extends Controller
                     $WorkspaceData->update();
 
                     // General Journals Insert
-                    $person_id = $request->from_whom;
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.cash_adjustment');
-                    $generalJournal->reference_id = $person_id;
                     $generalJournal->year = $currentYear;
                     $generalJournal->account_code = 29940;
                     $generalJournal->workspace_id = $workspace_id;
@@ -408,7 +402,7 @@ class TransactionRecordersController extends Controller
 
     public function edit($id)
     {
-        Session()->flash('flash_message', 'No Edit Permission!');
+        Session()->flash('warning_message', 'No Edit Permission!');
         return redirect('recorders');
 //        $accounts = ChartOfAccount::where('account_type', 1)->whereIn('code', Config::get('common.transaction_accounts'))->lists('name', 'code');
 //        $types = Config::get('common.sales_customer_type');
