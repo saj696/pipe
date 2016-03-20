@@ -24,9 +24,9 @@
     </div>
 </div>
 
-<div class="form-group cash_adjustment_type" style="display: none; }};">
+<div class="form-group cash_adjustment_type" style="display: {{ $errors->has('cash_adjustment_type')?'show':'none' }};">
     {{ Form::label('cash_adjustment_type', 'Cash Adjustment Type', ['class'=>'col-md-3 control-label']) }}
-    <div class="col-md-7{{ $errors->has('adjustment_type') ? ' has-error' : '' }}">
+    <div class="col-md-7{{ $errors->has('cash_adjustment_type') ? ' has-error' : '' }}">
         {{ Form::select('cash_adjustment_type', array_flip(Config::get('common.cash_adjustment_type')), null,['class'=>'form-control', 'id'=>'cash_adjustment_type', 'placeholder'=>'Select']) }}
         @if ($errors->has('cash_adjustment_type'))
             <span class="help-block">
@@ -137,7 +137,7 @@
      style="display: {{ (isset($recorder->amount) && $recorder->amount>0)?'show':'none' }};">
     {{ Form::label('amount', 'Amount', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('amount') ? ' has-error' : '' }}">
-        {{ Form::text('amount', null,['class'=>'form-control amount']) }}
+        {{ Form::text('amount', null,['class'=>'form-control amount', 'required'=>'required']) }}
         @if ($errors->has('amount'))
             <span class="help-block">
                 <strong>{{ $errors->first('amount') }}</strong>

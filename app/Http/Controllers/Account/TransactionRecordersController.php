@@ -360,6 +360,42 @@ class TransactionRecordersController extends Controller
                     $generalJournal->created_at = time();
                     $generalJournal->save();
                 }
+                elseif($request->account_code == 29940)
+                {
+                    // Workspace Ledger Cash Debit/Credit(+/-)
+                    $cashWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => $cashCode, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear])->first();
+
+                    if($request->cash_adjustment_type==1)
+                    {
+                        $cashWorkspaceData->balance += $request->amount;
+                    }
+                    elseif($request->cash_adjustment_type==2)
+                    {
+                        $cashWorkspaceData->balance -= $request->amount;
+                    }
+
+                    $cashWorkspaceData->update();
+
+                    // Workspace Ledger Cash Adjustment Account Debit(+)
+                    $WorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => 29940, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear])->first();
+                    $WorkspaceData->balance += $request->amount;
+                    $WorkspaceData->update();
+
+                    // General Journals Insert
+                    $person_id = $request->from_whom;
+                    $generalJournal = New GeneralJournal;
+                    $generalJournal->date = time();
+                    $generalJournal->transaction_type = Config::get('common.transaction_type.cash_adjustment');
+                    $generalJournal->reference_id = $person_id;
+                    $generalJournal->year = $currentYear;
+                    $generalJournal->account_code = 29940;
+                    $generalJournal->workspace_id = $workspace_id;
+                    $generalJournal->amount = $request->amount;
+                    $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
+                    $generalJournal->created_by = Auth::user()->id;
+                    $generalJournal->created_at = time();
+                    $generalJournal->save();
+                }
             });
         } catch (\Exception $e) {
             Session()->flash('error_message', 'Transaction Recorder Creation Failed.');
