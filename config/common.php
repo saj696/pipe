@@ -27,7 +27,7 @@ return [
     'balance_type_opening'=>0,
     'balance_type_intermediate'=>1,
     'balance_type_closing'=>2,
-    'transaction_type'=> ['general'=>1,'sales'=>2,'sales_return'=>3,'purchase'=>4,'purchase_return'=>5,'wage'=>6, 'personal'=>7, 'draw'=>8, 'investment'=>9, 'office_supply'=>10,'salary'=>11,'salary_payment'=>12,'cash_transfer'=>13],
+    'transaction_type'=> ['general'=>1,'sales'=>2,'sales_return'=>3,'purchase'=>4,'purchase_return'=>5,'wage'=>6, 'personal'=>7, 'draw'=>8, 'investment'=>9, 'office_supply'=>10,'salary'=>11,'salary_payment'=>12,'cash_transfer'=>13, 'jakat'=>14, 'donation'=>15],
     'debit_credit_indicator'=>['debit'=>1,'credit'=>2],
     'month' => [
         'January' => '01',
@@ -50,4 +50,5 @@ return [
     'adjustment_account_from' => ['25000', '27000'],
     'adjustment_account_to' => ['13000', '14000'],
     'salary_payment_status' => ['not_yet' => 0, 'partial' => 1, 'complete' => 2],
+    'cash_adjustment_type' => ['Add' => 1, 'Reduce' => 2],
 ];

@@ -14,7 +14,7 @@
         <div class="portlet-body form">
             <div class="form-horizontal" role="form">
                 <div class="form-body">
-                    {{ Form::open(['url'=>'usageRegisters']) }}
+                    {{ Form::open(['url'=>'discarded_sale']) }}
                     @include('discardedSales.form', ['submitText'=>'Save'])
                     {{ Form::close() }}
                 </div>

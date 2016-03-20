@@ -21,16 +21,19 @@
                             <thead>
                             <tr>
                                 <th>
+                                    Year
+                                </th>
+                                <th>
                                     Date
                                 </th>
                                 <th>
-                                    Discarded Material
+                                    Customer
                                 </th>
                                 <th>
-                                    Quantity
+                                    Total Amount
                                 </th>
                                 <th>
-                                    Amount
+                                    Paid Amount
                                 </th>
                                 <th>
                                     Action
@@ -42,26 +45,28 @@
                                 @foreach($discardedSales as $discardedSale)
                                     <tr>
                                         <td>
+                                            {{ $discardedSale->year }}
+                                        </td>
+                                        <td>
                                             {{ $discardedSale->date }}
                                         </td>
                                         <td>
-                                            {{ $discardedSale->material->name }}
+
                                         </td>
                                         <td>
-                                            {{ $discardedSale->quantity }}
+                                            {{ $discardedSale->total_amount }}
                                         </td>
                                         <td>
-                                            {{ $discardedSale->amount }}
+                                            {{ $discardedSale->paid_amount }}
                                         </td>
                                         <td>
-                                            <a class="label label-danger"
-                                               href="{{ url('/discarded_sale/'.$discardedSale->id.'/edit' )}}">Edit</a>
+                                            <a class="label label-danger" href="{{ url('/discarded_sale/'.$discardedSale->id.'/edit' )}}">Edit</a>
                                         </td>
                                     </tr>
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="6" class="text-center danger">No Data Found</td>
+                                    <td colspan='7' class="text-center danger">No Data Found</td>
                                 </tr>
                             @endif
                             </tbody>

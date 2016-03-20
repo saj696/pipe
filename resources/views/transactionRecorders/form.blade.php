@@ -24,6 +24,18 @@
     </div>
 </div>
 
+<div class="form-group cash_adjustment_type" style="display: none; }};">
+    {{ Form::label('cash_adjustment_type', 'Cash Adjustment Type', ['class'=>'col-md-3 control-label']) }}
+    <div class="col-md-7{{ $errors->has('adjustment_type') ? ' has-error' : '' }}">
+        {{ Form::select('cash_adjustment_type', array_flip(Config::get('common.cash_adjustment_type')), null,['class'=>'form-control', 'id'=>'cash_adjustment_type', 'placeholder'=>'Select']) }}
+        @if ($errors->has('cash_adjustment_type'))
+            <span class="help-block">
+                <strong>{{ $errors->first('cash_adjustment_type') }}</strong>
+            </span>
+        @endif
+    </div>
+</div>
+
 <div class="to_whom_type_div form-group"
      style="display: {{ (isset($recorder->to_whom_type) && $recorder->to_whom_type>0)?'show':'none' }};">
     {{ Form::label('to_whom_type', 'To Whom Type', ['class'=>'col-md-3 control-label']) }}
@@ -210,6 +222,43 @@
                 $('.amount_div').show();
                 $('.due_div').hide();
                 $('.transaction_detail_div').hide();
+            }
+
+            // Donation & Jakat
+            if(code==29930 || code==29960)
+            {
+                $('.to_whom_type_div').hide();
+                $('#to_whom_type').val('');
+                $('.to_whom_div').empty();
+
+                $('.from_whom_type_div').hide();
+                $('#from_whom_type').val('');
+                $('.from_whom_div').empty();
+
+                $('.total_amount_div').hide();
+                $('.amount_div').show();
+                $('.due_div').hide();
+            }
+
+            if(code==29940)
+            {
+                $('.to_whom_type_div').hide();
+                $('#to_whom_type').val('');
+                $('.to_whom_div').empty();
+
+                $('.from_whom_type_div').hide();
+                $('#from_whom_type').val('');
+                $('.from_whom_div').empty();
+
+                $('.total_amount_div').hide();
+                $('.amount_div').show();
+                $('.due_div').hide();
+                $('.cash_adjustment_type').show();
+            }
+            else
+            {
+                $('.cash_adjustment_type').hide();
+                $('#cash_adjustment_type').val('');
             }
         });
 

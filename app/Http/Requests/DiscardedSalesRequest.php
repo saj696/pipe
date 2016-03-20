@@ -23,10 +23,9 @@ class DiscardedSalesRequest extends Request
     public function rules()
     {
         return [
-            'material_id' => 'required|integer',
             'date' => 'required|date',
-            'quantity' => 'required|integer',
-            'amount' => 'required|numeric'
+            'total_amount' => 'required|integer',
+            'paid_amount' => 'required|numeric'
         ];
     }
 }
