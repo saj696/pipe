@@ -152,138 +152,162 @@ class DiscardedMaterialSaleController extends Controller
 
     public function update($id, DiscardedSalesRequest $request)
     {
-        dd($request->input('items'));
-
-        $workspace_id = Auth::user()->workspace_id;
-        $customer_id = $request->customer_id;
-        $total_amount = $request->total_amount;
-        $paid_amount = $request->paid_amount;
-        $due_amount = $total_amount-$paid_amount;
-
-        $items = $request->items;
-
-        if(($total_amount != $paid_amount) && empty($customer_id))
-        {
-            Session()->flash('warning_message', 'Amount not fully paid. Customer required!');
-            throw new \Exception('error');
-        }
-        else
-        {
-            $discardedSales = DiscardedSales::findOrFail($id);
-            $old_paid_amount = $discardedSales->paid_amount;
-            $old_due_amount = $discardedSales->due_amount;
-
-            $discardedSales->year = CommonHelper::get_current_financial_year();
-            $discardedSales->date = $request->date;
-            $discardedSales->customer_id = $request->customer_id;
-            $discardedSales->total_amount = $request->total_amount;
-            $discardedSales->paid_amount = $request->paid_amount;
-            $discardedSales->due_amount = $total_amount - $paid_amount;
-            $discardedSales->created_by = Auth::user()->id;
-            $discardedSales->created_at = time();
-            $discardedSales->update();
-
-            // Initial update sales details
-            DiscardedSalesDetail::where('discarded_sales_id', $id)->update(['status'=>0]);
-
-            foreach($items as $key=>$item)
-            {
-                $existingSalesDetail = DiscardedSalesDetail::where(['discarded_sales_id'=>$id, 'material_id'=>$item['material_id']])->first();
-                if($existingSalesDetail)
-                {
-                    $existingSalesDetail->material_id = $item['material_id'];
-                    $existingSalesDetail->quantity = $item['sale_quantity'];
-                    $existingSalesDetail->amount = $item['amount'];
-                    $existingSalesDetail->status = 1;
-                    $existingSalesDetail->updated_by = Auth::user()->id;
-                    $existingSalesDetail->updated_at = time();
-                    $existingSalesDetail->update();
-                }
-                else
-                {
-                    $saleDetail = New DiscardedSalesDetail;
-                    $saleDetail->discarded_sales_id = $discardedSales->id;
-                    $saleDetail->material_id = $item['material_id'];
-                    $saleDetail->quantity = $item['sale_quantity'];
-                    $saleDetail->amount = $item['amount'];
-                    $saleDetail->created_by = Auth::user()->id;
-                    $saleDetail->created_at = time();
-                    $saleDetail->save();
-                }
-            }
-
-            if($old_paid_amount != $paid_amount)
-            {
-                // Workspace Ledger Discarded Sale Account Debit(+)
-                $discardedWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => 33000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => CommonHelper::get_current_financial_year()])->first();
-                if($old_paid_amount>$paid_amount)
-                {
-                    $update_paid_amount = $old_paid_amount-$paid_amount;
-                    $discardedWorkspaceData->balance -= $update_paid_amount;
-                }
-                else
-                {
-                    $update_paid_amount = $paid_amount-$old_paid_amount;
-                    $discardedWorkspaceData->balance += $update_paid_amount;
-                }
-                $discardedWorkspaceData->update();
-
-                // General Journals Update
-                $generalJournal = GeneralJournal::where(['workspace_id' => $workspace_id, 'account_code' => 33000, 'year' => CommonHelper::get_current_financial_year()])->first();;
-                $generalJournal->date = time();
-                $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
-                $generalJournal->reference_id = isset($customer_id)?$customer_id:'';
-                $generalJournal->year = CommonHelper::get_current_financial_year();
-                $generalJournal->account_code = 33000;
-                $generalJournal->workspace_id = $workspace_id;
-                if($old_paid_amount>$paid_amount)
-                {
-                    $update_paid_amount = $old_paid_amount-$paid_amount;
-                    $generalJournal->amount -= $update_paid_amount;
-                }
-                else
-                {
-                    $update_paid_amount = $paid_amount-$old_paid_amount;
-                    $generalJournal->amount += $update_paid_amount;
-                }
-                $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
-                $generalJournal->updated_by = Auth::user()->id;
-                $generalJournal->updated_at = time();
-                $generalJournal->update();
-            }
-
-            if($old_due_amount != $due_amount)
-            {
-                // Workspace Ledger Account Receivable Account Debit(+)
-                $discardedWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => 12000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => CommonHelper::get_current_financial_year()])->first();
-                $discardedWorkspaceData->balance += $due_amount;
-                $discardedWorkspaceData->update();
-                // Personal Account Table
-                $person_type = Config::get('common.person_type_customer');
-                $person_id = $request->customer_id;
-                $personData = PersonalAccount::where(['person_id' => $person_id, 'person_type' => $person_type])->first();
-                $personData->balance += $due_amount;
-                $personData->update();
-                // General Journals Insert
-                $generalJournal = New GeneralJournal;
-                $generalJournal->date = time();
-                $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
-                $generalJournal->reference_id = isset($customer_id)?$customer_id:'';
-                $generalJournal->year = CommonHelper::get_current_financial_year();
-                $generalJournal->account_code = 12000;
-                $generalJournal->workspace_id = $workspace_id;
-                $generalJournal->amount = $due_amount;
-                $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
-                $generalJournal->created_by = Auth::user()->id;
-                $generalJournal->created_at = time();
-                $generalJournal->save();
-            }
-        }
-
-
         try {
             DB::transaction(function () use ($request, $id) {
+                $workspace_id = Auth::user()->workspace_id;
+                $customer_id = $request->customer_id;
+                $total_amount = $request->total_amount;
+                $paid_amount = $request->paid_amount;
+                $due_amount = $total_amount-$paid_amount;
 
+                $items = $request->items;
+
+                if(($total_amount != $paid_amount) && empty($customer_id))
+                {
+                    Session()->flash('warning_message', 'Amount not fully paid. Customer required!');
+                    throw new \Exception('error');
+                }
+                else
+                {
+                    $discardedSales = DiscardedSales::findOrFail($id);
+                    $old_paid_amount = $discardedSales->paid_amount;
+                    $old_due_amount = $discardedSales->due_amount;
+
+                    $discardedSales->year = CommonHelper::get_current_financial_year();
+                    $discardedSales->date = $request->date;
+                    $discardedSales->customer_id = $request->customer_id;
+                    $discardedSales->total_amount = $request->total_amount;
+                    $discardedSales->paid_amount = $request->paid_amount;
+                    $discardedSales->due_amount = $total_amount - $paid_amount;
+                    $discardedSales->created_by = Auth::user()->id;
+                    $discardedSales->created_at = time();
+                    $discardedSales->update();
+
+                    // Initial update sales details
+                    DiscardedSalesDetail::where('discarded_sales_id', $id)->update(['status'=>0]);
+
+                    foreach($items as $key=>$item)
+                    {
+                        $existingSalesDetail = DiscardedSalesDetail::where(['discarded_sales_id'=>$id, 'material_id'=>$item['material_id']])->first();
+                        if($existingSalesDetail)
+                        {
+                            $existingSalesDetail->material_id = $item['material_id'];
+                            $existingSalesDetail->quantity = $item['sale_quantity'];
+                            $existingSalesDetail->amount = $item['amount'];
+                            $existingSalesDetail->status = 1;
+                            $existingSalesDetail->updated_by = Auth::user()->id;
+                            $existingSalesDetail->updated_at = time();
+                            $existingSalesDetail->update();
+                        }
+                        else
+                        {
+                            $saleDetail = New DiscardedSalesDetail;
+                            $saleDetail->discarded_sales_id = $discardedSales->id;
+                            $saleDetail->material_id = $item['material_id'];
+                            $saleDetail->quantity = $item['sale_quantity'];
+                            $saleDetail->amount = $item['amount'];
+                            $saleDetail->created_by = Auth::user()->id;
+                            $saleDetail->created_at = time();
+                            $saleDetail->save();
+                        }
+                    }
+
+                    if($old_paid_amount != $paid_amount)
+                    {
+                        // Workspace Ledger Discarded Sale Account Debit(+)
+                        $discardedWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => 33000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => CommonHelper::get_current_financial_year()])->first();
+                        if($old_paid_amount>$paid_amount)
+                        {
+                            $update_paid_amount = $old_paid_amount-$paid_amount;
+                            $discardedWorkspaceData->balance -= $update_paid_amount;
+                        }
+                        else
+                        {
+                            $update_paid_amount = $paid_amount-$old_paid_amount;
+                            $discardedWorkspaceData->balance += $update_paid_amount;
+                        }
+                        $discardedWorkspaceData->update();
+
+                        // General Journals Update
+                        $generalJournal = GeneralJournal::where(['workspace_id' => $workspace_id, 'account_code' => 33000, 'year' => CommonHelper::get_current_financial_year()])->first();;
+                        $generalJournal->date = time();
+                        $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
+                        $generalJournal->reference_id = isset($customer_id)?$customer_id:'';
+                        $generalJournal->year = CommonHelper::get_current_financial_year();
+                        $generalJournal->account_code = 33000;
+                        $generalJournal->workspace_id = $workspace_id;
+                        if($old_paid_amount>$paid_amount)
+                        {
+                            $update_paid_amount = $old_paid_amount-$paid_amount;
+                            $generalJournal->amount -= $update_paid_amount;
+                        }
+                        else
+                        {
+                            $update_paid_amount = $paid_amount-$old_paid_amount;
+                            $generalJournal->amount += $update_paid_amount;
+                        }
+                        $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
+                        $generalJournal->updated_by = Auth::user()->id;
+                        $generalJournal->updated_at = time();
+                        $generalJournal->update();
+                    }
+
+                    if($old_due_amount != $due_amount)
+                    {
+                        // Workspace Ledger Account Receivable Account Debit(+)
+                        $discardedWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => 12000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => CommonHelper::get_current_financial_year()])->first();
+                        if($old_due_amount>$due_amount)
+                        {
+                            $update_due_amount = $old_due_amount-$due_amount;
+                            $discardedWorkspaceData->balance -= $update_due_amount;
+                        }
+                        else
+                        {
+                            $update_due_amount = $due_amount-$old_due_amount;
+                            $discardedWorkspaceData->balance += $update_due_amount;
+                        }
+                        $discardedWorkspaceData->update();
+
+                        // Personal Account Table
+                        $person_type = Config::get('common.person_type_customer');
+                        $person_id = $request->customer_id;
+                        $personData = PersonalAccount::where(['person_id' => $person_id, 'person_type' => $person_type])->first();
+                        if($old_due_amount>$due_amount)
+                        {
+                            $update_due_amount = $old_due_amount-$due_amount;
+                            $personData->balance -= $update_due_amount;
+                        }
+                        else
+                        {
+                            $update_due_amount = $due_amount-$old_due_amount;
+                            $personData->balance+= $update_due_amount;
+                        }
+                        $personData->update();
+
+                        // General Journals Update
+                        $generalJournal = GeneralJournal::where(['workspace_id' => $workspace_id, 'account_code' => 12000, 'year' => CommonHelper::get_current_financial_year()])->first();;
+                        $generalJournal->date = time();
+                        $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
+                        $generalJournal->reference_id = isset($customer_id)?$customer_id:'';
+                        $generalJournal->year = CommonHelper::get_current_financial_year();
+                        $generalJournal->account_code = 12000;
+                        $generalJournal->workspace_id = $workspace_id;
+                        if($old_due_amount>$due_amount)
+                        {
+                            $update_due_amount = $old_due_amount-$due_amount;
+                            $generalJournal->amount -= $update_due_amount;
+                        }
+                        else
+                        {
+                            $update_due_amount = $due_amount-$old_due_amount;
+                            $generalJournal->amount+= $update_due_amount;
+                        }
+                        $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
+                        $generalJournal->created_by = Auth::user()->id;
+                        $generalJournal->created_at = time();
+                        $generalJournal->save();
+                    }
+                }
             });
         } catch (\Exception $e) {
             Session()->flash('error_message', 'Discarded material sale not updated!');
