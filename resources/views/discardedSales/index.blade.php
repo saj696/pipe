@@ -51,7 +51,7 @@
                                             {{ $discardedSale->date }}
                                         </td>
                                         <td>
-
+                                            {{ isset($customers[$discardedSale->customer_id])?$customers[$discardedSale->customer_id]:'No Customer' }}
                                         </td>
                                         <td>
                                             {{ $discardedSale->total_amount }}
