@@ -311,10 +311,10 @@ class DiscardedMaterialSaleController extends Controller
             });
         } catch (\Exception $e) {
             Session()->flash('error_message', 'Discarded material sale not updated!');
-            return redirect('discardedSales');
+            return redirect('discarded_sale');
         }
 
         Session()->flash('flash_message', 'Discarded material sale has been updated!');
-        return redirect('discardedSales');
+        return redirect('discarded_sale');
     }
 }
