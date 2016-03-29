@@ -92,8 +92,8 @@ class DiscardedMaterialSaleController extends Controller
                         // General Journals Insert
                         $generalJournal = New GeneralJournal;
                         $generalJournal->date = time();
-                        $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
-                        $generalJournal->reference_id = isset($customer_id)?$customer_id:'';
+                        $generalJournal->transaction_type = Config::get('common.transaction_type.discarded_sale');
+                        $generalJournal->reference_id = $discardedSales->id;
                         $generalJournal->year = CommonHelper::get_current_financial_year();
                         $generalJournal->account_code = 33000;
                         $generalJournal->workspace_id = $workspace_id;
@@ -119,8 +119,8 @@ class DiscardedMaterialSaleController extends Controller
                         // General Journals Insert
                         $generalJournal = New GeneralJournal;
                         $generalJournal->date = time();
-                        $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
-                        $generalJournal->reference_id = isset($customer_id)?$customer_id:'';
+                        $generalJournal->transaction_type = Config::get('common.transaction_type.discarded_sale');
+                        $generalJournal->reference_id = $discardedSales->id;
                         $generalJournal->year = CommonHelper::get_current_financial_year();
                         $generalJournal->account_code = 12000;
                         $generalJournal->workspace_id = $workspace_id;
@@ -133,7 +133,6 @@ class DiscardedMaterialSaleController extends Controller
                 }
             });
         } catch (\Exception $e) {
-            dd($e);
             Session()->flash('error_message', 'Discarded Material Sales Not Done!');
             return redirect('discarded_sale');
         }
@@ -229,9 +228,9 @@ class DiscardedMaterialSaleController extends Controller
                         $discardedWorkspaceData->update();
 
                         // General Journals Update
-                        $generalJournal = GeneralJournal::where(['workspace_id' => $workspace_id, 'account_code' => 33000, 'year' => CommonHelper::get_current_financial_year()])->first();;
+                        $generalJournal = GeneralJournal::where(['reference_id'=>$id,'workspace_id' => $workspace_id, 'account_code' => 33000, 'year' => CommonHelper::get_current_financial_year()])->first();;
                         $generalJournal->date = time();
-                        $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
+                        $generalJournal->transaction_type = Config::get('common.transaction_type.discarded_sale');
                         $generalJournal->reference_id = isset($customer_id)?$customer_id:'';
                         $generalJournal->year = CommonHelper::get_current_financial_year();
                         $generalJournal->account_code = 33000;
@@ -280,14 +279,14 @@ class DiscardedMaterialSaleController extends Controller
                         else
                         {
                             $update_due_amount = $due_amount-$old_due_amount;
-                            $personData->balance+= $update_due_amount;
+                            $personData->balance += $update_due_amount;
                         }
                         $personData->update();
 
                         // General Journals Update
-                        $generalJournal = GeneralJournal::where(['workspace_id' => $workspace_id, 'account_code' => 12000, 'year' => CommonHelper::get_current_financial_year()])->first();;
+                        $generalJournal = GeneralJournal::where(['reference_id'=>$id,'workspace_id' => $workspace_id, 'account_code' => 12000, 'year' => CommonHelper::get_current_financial_year()])->first();;
                         $generalJournal->date = time();
-                        $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
+                        $generalJournal->transaction_type = Config::get('common.transaction_type.discarded_sale');
                         $generalJournal->reference_id = isset($customer_id)?$customer_id:'';
                         $generalJournal->year = CommonHelper::get_current_financial_year();
                         $generalJournal->account_code = 12000;
@@ -300,7 +299,7 @@ class DiscardedMaterialSaleController extends Controller
                         else
                         {
                             $update_due_amount = $due_amount-$old_due_amount;
-                            $generalJournal->amount+= $update_due_amount;
+                            $generalJournal->amount += $update_due_amount;
                         }
                         $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
                         $generalJournal->created_by = Auth::user()->id;
