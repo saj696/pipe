@@ -104,7 +104,7 @@ class TransactionRecordersController extends Controller
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.general');
-                    $generalJournal->reference_id = $person_id;
+                    $generalJournal->reference_id = $recorder->id;
                     $generalJournal->year = $currentYear;
                     $generalJournal->account_code = $accountReceivableCode;
                     $generalJournal->workspace_id = $workspace_id;
@@ -133,7 +133,7 @@ class TransactionRecordersController extends Controller
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.general');
-                    $generalJournal->reference_id = $person_id;
+                    $generalJournal->reference_id = $recorder->id;
                     $generalJournal->year = $currentYear;
                     $generalJournal->account_code = $accountPayableCode;
                     $generalJournal->workspace_id = $workspace_id;
@@ -169,7 +169,7 @@ class TransactionRecordersController extends Controller
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.general');
-                    $generalJournal->reference_id = $person_id;
+                    $generalJournal->reference_id = $recorder->id;
                     $generalJournal->year = $currentYear;
                     $generalJournal->account_code = $revenueCode;
                     $generalJournal->workspace_id = $workspace_id;
@@ -206,7 +206,7 @@ class TransactionRecordersController extends Controller
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.general');
-                    $generalJournal->reference_id = $person_id;
+                    $generalJournal->reference_id = $recorder->id;
                     $generalJournal->year = $currentYear;
                     $generalJournal->account_code = $expenseCode;
                     $generalJournal->workspace_id = $workspace_id;
@@ -229,6 +229,7 @@ class TransactionRecordersController extends Controller
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.draw');
+                    $generalJournal->reference_id = $recorder->id;
                     $generalJournal->year = $currentYear;
                     $generalJournal->account_code = $drawCode;
                     $generalJournal->workspace_id = $workspace_id;
@@ -251,6 +252,7 @@ class TransactionRecordersController extends Controller
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.investment');
+                    $generalJournal->reference_id = $recorder->id;
                     $generalJournal->year = $currentYear;
                     $generalJournal->account_code = $investmentCode;
                     $generalJournal->workspace_id = $workspace_id;
@@ -278,7 +280,7 @@ class TransactionRecordersController extends Controller
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.general');
-                    $generalJournal->reference_id = $person_id;
+                    $generalJournal->reference_id = $recorder->id;
                     $generalJournal->year = $currentYear;
                     $generalJournal->account_code = $officeSuppliesCode;
                     $generalJournal->workspace_id = $workspace_id;
@@ -318,7 +320,7 @@ class TransactionRecordersController extends Controller
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.general');
-                    $generalJournal->reference_id = $person_id;
+                    $generalJournal->reference_id = $recorder->id;
                     $generalJournal->year = $currentYear;
                     $generalJournal->account_code = $accountCode;
                     $generalJournal->workspace_id = $workspace_id;
@@ -349,6 +351,7 @@ class TransactionRecordersController extends Controller
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.donation');
+                    $generalJournal->reference_id = $recorder->id;
                     $generalJournal->year = $currentYear;
                     $generalJournal->account_code = $accountCode;
                     $generalJournal->workspace_id = $workspace_id;
@@ -381,6 +384,7 @@ class TransactionRecordersController extends Controller
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.cash_adjustment');
+                    $generalJournal->reference_id = $recorder->id;
                     $generalJournal->year = $currentYear;
                     $generalJournal->account_code = 29940;
                     $generalJournal->workspace_id = $workspace_id;
