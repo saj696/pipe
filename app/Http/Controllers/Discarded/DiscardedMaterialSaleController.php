@@ -231,7 +231,6 @@ class DiscardedMaterialSaleController extends Controller
                         $generalJournal = GeneralJournal::where(['reference_id'=>$id,'workspace_id' => $workspace_id, 'account_code' => 33000, 'year' => CommonHelper::get_current_financial_year()])->first();;
                         $generalJournal->date = time();
                         $generalJournal->transaction_type = Config::get('common.transaction_type.discarded_sale');
-                        $generalJournal->reference_id = isset($customer_id)?$customer_id:'';
                         $generalJournal->year = CommonHelper::get_current_financial_year();
                         $generalJournal->account_code = 33000;
                         $generalJournal->workspace_id = $workspace_id;
@@ -287,7 +286,6 @@ class DiscardedMaterialSaleController extends Controller
                         $generalJournal = GeneralJournal::where(['reference_id'=>$id,'workspace_id' => $workspace_id, 'account_code' => 12000, 'year' => CommonHelper::get_current_financial_year()])->first();;
                         $generalJournal->date = time();
                         $generalJournal->transaction_type = Config::get('common.transaction_type.discarded_sale');
-                        $generalJournal->reference_id = isset($customer_id)?$customer_id:'';
                         $generalJournal->year = CommonHelper::get_current_financial_year();
                         $generalJournal->account_code = 12000;
                         $generalJournal->workspace_id = $workspace_id;

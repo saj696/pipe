@@ -71,6 +71,7 @@ class AdjustmentsController extends Controller
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.purchase');
+                    $generalJournal->reference_id = $adjustment->id;
                     $generalJournal->year = $currentYear;
                     $generalJournal->account_code = 14000;
                     $generalJournal->workspace_id = 1; // Hard Coded 1 For Head Office (Raw Material)
@@ -92,6 +93,7 @@ class AdjustmentsController extends Controller
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = time();
                     $generalJournal->transaction_type = Config::get('common.transaction_type.office_supply');
+                    $generalJournal->reference_id = $adjustment->id;
                     $generalJournal->year = $currentYear;
                     $generalJournal->account_code = 13000;
                     $generalJournal->workspace_id = $workspace_id;
