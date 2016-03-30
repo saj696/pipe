@@ -332,7 +332,7 @@ class TransactionRecordersController extends Controller
                 }
                 elseif($request->account_code == 29930 || $request->account_code == 29960)
                 {
-                    // DONATION & Jakat
+                    // DONATION & JAKAT
                     $accountCode = $request->account_code;
                     // Workspace Ledger Cash Credit(-)
                     $cashWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => $cashCode, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear])->first();

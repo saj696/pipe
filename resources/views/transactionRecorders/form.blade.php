@@ -391,5 +391,35 @@
                 });
             }
         });
+
+        $("form").submit(function( event ) {
+            var code = $('#account_type').val();
+            var slice = code.substring(0, 1);
+
+            if (slice == 1 || slice == 2 || slice == 3)
+            {
+                if($('#from_whom').val()>0)
+                {
+
+                }
+                else
+                {
+                    alert("From whom required!");
+                    event.preventDefault();
+                }
+            }
+            else if (slice == 4)
+            {
+                if($('#to_whom').val()>0)
+                {
+
+                }
+                else
+                {
+                    alert("To whom required!");
+                    event.preventDefault();
+                }
+            }
+        });
     });
 </script>
