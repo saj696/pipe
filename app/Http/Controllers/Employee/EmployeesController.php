@@ -122,7 +122,7 @@ class EmployeesController extends Controller
 
                     // General Journal Table Impact
                     $generalJournal = New GeneralJournal;
-                    $generalJournal->date = time();
+                    $generalJournal->date = strtotime(date('d-m-Y'));
                     $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
                     $generalJournal->reference_id = $insertedId;
                     $generalJournal->year = date('Y');
@@ -143,7 +143,7 @@ class EmployeesController extends Controller
                     $accountReceivableWorkspaceData->update();
 
                     $generalJournal = New GeneralJournal;
-                    $generalJournal->date = time();
+                    $generalJournal->date = strtotime(date('d-m-Y'));
                     $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
                     $generalJournal->reference_id = $insertedId;
                     $generalJournal->year = date('Y');

@@ -28,7 +28,6 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/', 'HomeController@index');
     Route::auth();
     Route::get('/home', 'HomeController@index');
-    Route::resource('articles', 'ArticlesController');
     Route::resource('components', 'System\ComponentsController');
     Route::resource('modules', 'System\ModulesController');
     Route::resource('tasks', 'System\TasksController');

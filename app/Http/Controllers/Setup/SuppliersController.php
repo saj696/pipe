@@ -85,9 +85,10 @@ class SuppliersController extends Controller
                 $personal->created_at = time();
                 $personal->save();
 
-                $year=CommonHelper::get_current_financial_year();
-                $user=Auth::user();
-                $time=time();
+                $year = CommonHelper::get_current_financial_year();
+                $user = Auth::user();
+                $time = time();
+                $date = strtotime(date('d-m-Y'));
                 if (!empty($request->input('balance'))) {
                     //Update Workspace Ledger
                     $workspaceLedger = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 41000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $year])->first();
@@ -98,7 +99,7 @@ class SuppliersController extends Controller
 
                     // Insert into General Journal
                     $generalJournal = new GeneralJournal();
-                    $generalJournal->date = $time;
+                    $generalJournal->date = $date;
                     $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
                     $generalJournal->reference_id = $personal->id;
                     $generalJournal->year = $year;
@@ -121,7 +122,7 @@ class SuppliersController extends Controller
 
                     // Insert into General Journal
                     $generalJournal = new GeneralJournal();
-                    $generalJournal->date = $time;
+                    $generalJournal->date = $date;
                     $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
                     $generalJournal->reference_id = $personal->id;
                     $generalJournal->year = $year;
