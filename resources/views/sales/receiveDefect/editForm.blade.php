@@ -678,23 +678,43 @@
         });
 
         $(document).on('submit', 'form', function (e) {
-            var due = parseFloat($('#due').val());
-            if (due > 0) {
-                if ($('#sales_customer_type').val() === "") {
-                    e.preventDefault();
-                    $('#sales_customer_type').closest('.customer_type').find('.col-md-7').addClass('has-error')
-                    var html = '<span class="help-block">' +
-                            '<strong>Customer type required.</strong>' +
-                            '</span>';
-                    $('#sales_customer_type').closest('.customer_type').find('.error').html(html)
+            if (!$('#is_replacement').prop('checked')) {
+                var total = parseFloat($('#total').val());
+                var cash = parseFloat($('#cash').val());
+                if (!cash) {
+                    cash = 0;
                 }
-                if ($('#customer_id').val() === "") {
+                var due_paid = parseFloat($('#due_paid').val());
+                if (!due_paid) {
+                    due_paid = 0;
+                }
+                var due = parseFloat($('#due').val());
+                if (!due) {
+                    due = 0;
+                }
+
+                if ((cash + due_paid + due) != total) {
                     e.preventDefault();
-                    $('#customer_id').closest('.customer_id').find('.col-md-7').addClass('has-error')
-                    var html = '<span class="help-block">' +
-                            '<strong>Customer id required.</strong>' +
-                            '</span>';
-                    $('#customer_id').closest('.customer_id').find('.error').html(html)
+                    alert('Summation of cash, due paid and due should be equal to total amount.');
+                }
+            } else {
+                var total = parseFloat($('#total').val());
+                var cash = parseFloat($('#cash').val());
+                if (!cash) {
+                    cash = 0;
+                }
+                var due_paid = parseFloat($('#due_paid').val());
+                if (!due_paid) {
+                    due_paid = 0;
+                }
+                var due = parseFloat($('#due').val());
+                if (!due) {
+                    due = 0;
+                }
+
+                if ((cash + due_paid + due) > total) {
+                    e.preventDefault();
+                    alert('Summation of cash, due paid and due exceed\'s total amount.');
                 }
             }
         });

@@ -108,7 +108,7 @@
                            name='product[{{ $key }}][unit_price]' placeholder='Unit Price'>
                 </div>
                 <div class='col-md-2'>
-                    <input type='text' class='form-control single_p_total' disabled
+                    <input readonly type='text' class='form-control single_p_total' disabled
                            value="{{ $item->unit_price*$item->sales_quantity }}">
                 </div>
             </div>
@@ -164,7 +164,7 @@
                            name='product[{{ $key }}][unit_price]' placeholder='Unit Price'>
                 </div>
                 <div class='col-md-2'>
-                    <input type='text' class='form-control single_p_total'
+                    <input readonly type='text' class='form-control single_p_total'
                            value="{{ $item->unit_price*$item->sales_quantity }}">
                 </div>
                 @if(!isset($item->salesDelivery->id))
@@ -222,7 +222,7 @@
                            name='product[{{ $key }}][unit_price]' placeholder='Unit Price'>
                 </div>
                 <div class='col-md-2'>
-                    <input type='text' class='form-control single_p_total'
+                    <input readonly type='text' class='form-control single_p_total'
                            value="{{ $item->unit_price*$item->sales_quantity }}">
                 </div>
                 <div class='col-md-1'>
@@ -394,6 +394,10 @@
 //            minLength: 3,
             select: function (event, ui) {
 //                console.log(ui);
+                var quantity = 0;
+                if (ui.item.quantity > 0) {
+                    quantity = ui.item.quantity;
+                }
                 var index = $('.product_list').data('product-id');
                 var html = "<div class='form-group single_product'>" +
                         "<div class='col-md-2'>" +
@@ -401,7 +405,7 @@
                         "<input class='product_id' type='hidden' value='" + ui.item.value + "' name='product[" + index + "][product_id]'> " +
                         "</div>" +
                         "<div class='col-md-2'>" +
-                        "<input  class='form-control' disabled value='" + ui.item.quantity + " (ft)'> " +
+                        "<input  class='form-control' disabled value='" + quantity + " (ft) / "+ ((quantity/ui.item.length)*ui.item.weight).toFixed(1) +" (kg)'> " +
                         "</div>" +
                         "<div class='col-md-3'>" +
                         "<div style='width: 75%;float: left'>" +

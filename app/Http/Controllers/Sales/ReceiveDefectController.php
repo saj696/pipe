@@ -22,6 +22,7 @@ use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Redirect;
 
 class ReceiveDefectController extends Controller
 {
@@ -33,7 +34,7 @@ class ReceiveDefectController extends Controller
 
     public function index()
     {
-        $defects = Defect::paginate(15);
+        $defects = Defect::orderBy('created_at','desc')->paginate(15);
         return view('sales.receiveDefect.index')->with(compact('defects'));
     }
 
@@ -146,7 +147,7 @@ class ReceiveDefectController extends Controller
                     $workspace->update();
 
                     $journal = new GeneralJournal();
-                    $$journal->date = $date;
+                    $journal->date = $date;
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $defect->id;
                     $journal->year = $year;
@@ -163,7 +164,7 @@ class ReceiveDefectController extends Controller
 
                 if ($inputs['due_paid'] > 0) { //Due Pay
                     $journal = new GeneralJournal();
-                    $$journal->date = $date;
+                    $journal->date = $date;
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $defect->id;
                     $journal->year = $year;
@@ -180,6 +181,12 @@ class ReceiveDefectController extends Controller
                     $workspace->updated_by = $user->id;
                     $workspace->updated_at = $time;
                     $workspace->update();
+
+                    $personalAccount = PersonalAccount::where('person_type', '=', $inputs['customer_type'])->where('person_id', '=', $inputs['customer_id'])->first();
+                    $personalAccount->due -= $inputs['due_paid']; //Sub due
+                    $personalAccount->updated_by = $user->id;
+                    $personalAccount->updated_at = $time;
+                    $personalAccount->update();
                 }
 
                 if ($inputs['due'] > 0) {// Due
@@ -271,6 +278,8 @@ class ReceiveDefectController extends Controller
         } else {
             $customers = Customer::where('status', 1)->lists('name', 'id');
         }
+
+        $salesOrder=new SalesOrder();
 
         if ($defect->is_replacement) {
             $salesOrder = SalesOrder::where('defect_id', '=', $defect->id)->with(['salesOrderItems', 'salesOrderItems.product', 'salesOrderItems.salesDelivery'])->first();
