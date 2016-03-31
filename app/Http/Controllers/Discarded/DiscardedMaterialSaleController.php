@@ -91,7 +91,7 @@ class DiscardedMaterialSaleController extends Controller
                         $discardedWorkspaceData->update();
                         // General Journals Insert
                         $generalJournal = New GeneralJournal;
-                        $generalJournal->date = time();
+                        $generalJournal->date = strtotime($request->date);
                         $generalJournal->transaction_type = Config::get('common.transaction_type.discarded_sale');
                         $generalJournal->reference_id = $discardedSales->id;
                         $generalJournal->year = CommonHelper::get_current_financial_year();
@@ -118,7 +118,7 @@ class DiscardedMaterialSaleController extends Controller
                         $personData->update();
                         // General Journals Insert
                         $generalJournal = New GeneralJournal;
-                        $generalJournal->date = time();
+                        $generalJournal->date = strtotime($request->date);
                         $generalJournal->transaction_type = Config::get('common.transaction_type.discarded_sale');
                         $generalJournal->reference_id = $discardedSales->id;
                         $generalJournal->year = CommonHelper::get_current_financial_year();
@@ -229,11 +229,6 @@ class DiscardedMaterialSaleController extends Controller
 
                         // General Journals Update
                         $generalJournal = GeneralJournal::where(['reference_id'=>$id,'workspace_id' => $workspace_id, 'account_code' => 33000, 'year' => CommonHelper::get_current_financial_year()])->first();;
-                        $generalJournal->date = time();
-                        $generalJournal->transaction_type = Config::get('common.transaction_type.discarded_sale');
-                        $generalJournal->year = CommonHelper::get_current_financial_year();
-                        $generalJournal->account_code = 33000;
-                        $generalJournal->workspace_id = $workspace_id;
                         if($old_paid_amount>$paid_amount)
                         {
                             $update_paid_amount = $old_paid_amount-$paid_amount;
@@ -244,7 +239,6 @@ class DiscardedMaterialSaleController extends Controller
                             $update_paid_amount = $paid_amount-$old_paid_amount;
                             $generalJournal->amount += $update_paid_amount;
                         }
-                        $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
                         $generalJournal->updated_by = Auth::user()->id;
                         $generalJournal->updated_at = time();
                         $generalJournal->update();
@@ -284,11 +278,6 @@ class DiscardedMaterialSaleController extends Controller
 
                         // General Journals Update
                         $generalJournal = GeneralJournal::where(['reference_id'=>$id,'workspace_id' => $workspace_id, 'account_code' => 12000, 'year' => CommonHelper::get_current_financial_year()])->first();;
-                        $generalJournal->date = time();
-                        $generalJournal->transaction_type = Config::get('common.transaction_type.discarded_sale');
-                        $generalJournal->year = CommonHelper::get_current_financial_year();
-                        $generalJournal->account_code = 12000;
-                        $generalJournal->workspace_id = $workspace_id;
                         if($old_due_amount>$due_amount)
                         {
                             $update_due_amount = $old_due_amount-$due_amount;
@@ -299,9 +288,8 @@ class DiscardedMaterialSaleController extends Controller
                             $update_due_amount = $due_amount-$old_due_amount;
                             $generalJournal->amount += $update_due_amount;
                         }
-                        $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
-                        $generalJournal->created_by = Auth::user()->id;
-                        $generalJournal->created_at = time();
+                        $generalJournal->updated_by = Auth::user()->id;
+                        $generalJournal->updated_at = time();
                         $generalJournal->save();
                     }
                 }
