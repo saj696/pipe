@@ -99,7 +99,7 @@ class CashTransactionController extends Controller
                 // General Journal Impact
                 // Sender Cash Account Credit
                 $generalJournal = New GeneralJournal;
-                $generalJournal->date = time();
+                $generalJournal->date = strtotime(date('d-m-Y'));
                 $generalJournal->transaction_type = Config::get('common.transaction_type.cash_transfer');
                 $generalJournal->reference_id = $id;
                 $generalJournal->year = $currentYear;
@@ -112,7 +112,7 @@ class CashTransactionController extends Controller
                 $generalJournal->save();
                 // Receiver Cash Account Debit
                 $generalJournal = New GeneralJournal;
-                $generalJournal->date = time();
+                $generalJournal->date = strtotime(date('d-m-Y'));
                 $generalJournal->transaction_type = Config::get('common.transaction_type.cash_transfer');
                 $generalJournal->reference_id = $id;
                 $generalJournal->year = $currentYear;

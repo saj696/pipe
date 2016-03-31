@@ -69,7 +69,7 @@ class AdjustmentsController extends Controller
                     $assetWorkspaceData->update();
                     // General Journals Insert
                     $generalJournal = New GeneralJournal;
-                    $generalJournal->date = time();
+                    $generalJournal->date = strtotime(date('d-m-Y'));
                     $generalJournal->transaction_type = Config::get('common.transaction_type.purchase');
                     $generalJournal->reference_id = $adjustment->id;
                     $generalJournal->year = $currentYear;
@@ -91,7 +91,7 @@ class AdjustmentsController extends Controller
                     $assetWorkspaceData->update();
                     // General Journals Insert
                     $generalJournal = New GeneralJournal;
-                    $generalJournal->date = time();
+                    $generalJournal->date = strtotime(date('d-m-Y'));
                     $generalJournal->transaction_type = Config::get('common.transaction_type.office_supply');
                     $generalJournal->reference_id = $adjustment->id;
                     $generalJournal->year = $currentYear;
