@@ -43,6 +43,7 @@ class SalaryGeneratorController extends Controller
                 $inputs = $request->input();
                 $user = Auth::user();
                 $time = time();
+                $date = strtotime(date('d-m-Y'));
                 $transaction_type = Config::get('common.transaction_type.salary');
                 $balance_type = Config::get('common.balance_type_intermediate');
                 $year = CommonHelper::get_current_financial_year();
@@ -104,7 +105,7 @@ class SalaryGeneratorController extends Controller
                         $accountPayableWorkspaceData->update();
 
                         $generalJournal = New GeneralJournal;
-                        $generalJournal->date = $time;
+                        $generalJournal->date = $date;
                         $generalJournal->transaction_type = $transaction_type;
                         $generalJournal->reference_id = $salary->id;
                         $generalJournal->year = $year;
@@ -123,7 +124,7 @@ class SalaryGeneratorController extends Controller
                         $accountPayableWorkspaceData->update();
 
                         $generalJournal = New GeneralJournal;
-                        $generalJournal->date = $time;
+                        $generalJournal->date = $date;
                         $generalJournal->transaction_type = $transaction_type;
                         $generalJournal->reference_id = $salary->id;
                         $generalJournal->year = $year;
@@ -144,7 +145,7 @@ class SalaryGeneratorController extends Controller
                         $accountPayableWorkspaceData->update();
 
                         $generalJournal = New GeneralJournal;
-                        $generalJournal->date = $time;
+                        $generalJournal->date = $date;
                         $generalJournal->transaction_type = $transaction_type;
                         $generalJournal->reference_id = $salary->id;
                         $generalJournal->year = $year;
@@ -163,7 +164,7 @@ class SalaryGeneratorController extends Controller
                         $accountPayableWorkspaceData->update();
 
                         $generalJournal = New GeneralJournal;
-                        $generalJournal->date = $time;
+                        $generalJournal->date = $date;
                         $generalJournal->transaction_type = $transaction_type;
                         $generalJournal->reference_id = $salary->id;
                         $generalJournal->year = $year;
@@ -178,7 +179,7 @@ class SalaryGeneratorController extends Controller
 
                     // General Journal Table Impact
                     $generalJournal = New GeneralJournal;
-                    $generalJournal->date = $time;
+                    $generalJournal->date = $date;
                     $generalJournal->transaction_type = $transaction_type;
                     $generalJournal->reference_id = $salary->id;
                     $generalJournal->year = $year;
@@ -191,7 +192,7 @@ class SalaryGeneratorController extends Controller
                     $generalJournal->save();
 
                     $generalJournal = New GeneralJournal;
-                    $generalJournal->date = $time;
+                    $generalJournal->date = $date;
                     $generalJournal->transaction_type = $transaction_type;
                     $generalJournal->reference_id = $salary->id;
                     $generalJournal->year = $year;
@@ -233,6 +234,7 @@ class SalaryGeneratorController extends Controller
             DB::transaction(function () use ($request, $id) {
                 $user = Auth::user();
                 $time = time();
+                $date = strtotime(date('d-m-Y'));
                 $year = CommonHelper::get_current_financial_year();
                 $transaction_type = Config::get('common.transaction_type.salary');
                 $balance_type = Config::get('common.balance_type_intermediate');

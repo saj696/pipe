@@ -57,6 +57,7 @@ class CustomersController extends Controller
             DB::transaction(function () use ($request) {
                 $inputs = $request->input();
                 $time = time();
+                $date=strtotime(date('d-m-Y'));
                 $user = Auth::user();
                 $year = CommonHelper::get_current_financial_year();
                 $file = $request->file('picture');
@@ -103,7 +104,7 @@ class CustomersController extends Controller
 
                     // Insert into General Journal
                     $generalJournal = new GeneralJournal();
-                    $generalJournal->date = $time;
+                    $generalJournal->date = $date;
                     $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
                     $generalJournal->reference_id = $personal->id;
                     $generalJournal->year = $year;
@@ -126,7 +127,7 @@ class CustomersController extends Controller
 
                     // Insert into General Journal
                     $generalJournal = new GeneralJournal();
-                    $generalJournal->date = $time;
+                    $generalJournal->date = $date;
                     $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
                     $generalJournal->reference_id = $personal->id;
                     $generalJournal->year = $year;

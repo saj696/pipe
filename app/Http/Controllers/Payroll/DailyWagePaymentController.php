@@ -48,6 +48,7 @@ class DailyWagePaymentController extends Controller
                 $inputs = $request->input();
                 $user = Auth::user();
                 $time = time();
+                $date = strtotime(date('d-m-Y'));
                 $balance_type = Config::get('common.balance_type_intermediate');
                 $year = CommonHelper::get_current_financial_year();
 
@@ -72,7 +73,7 @@ class DailyWagePaymentController extends Controller
                         $workspaceLedger->update();
 
                         $generalJournal = New GeneralJournal;
-                        $generalJournal->date = $time;
+                        $generalJournal->date = $date;
                         $generalJournal->transaction_type = Config::get('common.transaction_type.wage_payment');
                         $generalJournal->reference_id = $wage->id;
                         $generalJournal->year = $year;
@@ -91,7 +92,7 @@ class DailyWagePaymentController extends Controller
                         $workspaceLedger->update();
 
                         $generalJournal = New GeneralJournal;
-                        $generalJournal->date = $time;
+                        $generalJournal->date = $date;
                         $generalJournal->transaction_type = Config::get('common.transaction_type.wage_payment');
                         $generalJournal->reference_id = $wage->id;
                         $generalJournal->year = $year;
@@ -112,7 +113,7 @@ class DailyWagePaymentController extends Controller
                         $workspaceLedger->update();
 
                         $generalJournal = New GeneralJournal;
-                        $generalJournal->date = $time;
+                        $generalJournal->date = $date;
                         $generalJournal->transaction_type = Config::get('common.transaction_type.wage_payment');
                         $generalJournal->reference_id = $wage->id;
                         $generalJournal->year = $year;
@@ -155,6 +156,7 @@ class DailyWagePaymentController extends Controller
             DB::transaction(function () use ($id, $request) {
                 $user = Auth::user();
                 $time = time();
+                $date = strtotime(date('d-m-Y'));
                 $balance_type = Config::get('common.balance_type_intermediate');
                 $year = CommonHelper::get_current_financial_year();
 
@@ -317,7 +319,7 @@ class DailyWagePaymentController extends Controller
                     $workspaceLedger->update();
 
                     $generalJournal = New GeneralJournal;
-                    $generalJournal->date = $time;
+                    $generalJournal->date = $date;
                     $generalJournal->transaction_type = Config::get('common.transaction_type.wage_payment');
                     $generalJournal->reference_id = $wage->id;
                     $generalJournal->year = $year;

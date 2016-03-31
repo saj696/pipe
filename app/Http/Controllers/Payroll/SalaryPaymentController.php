@@ -43,6 +43,7 @@ class SalaryPaymentController extends Controller
                 $inputs = $request->input();
                 $user = Auth::user();
                 $time = time();
+                $date = strtotime(date('d-m-Y'));
                 $year=CommonHelper::get_current_financial_year();
 
                 $oldPayment = SalaryPayment::where('salary_id', '=', $inputs['salary_id'])->where('status', '!=', 4)->first();
@@ -131,7 +132,7 @@ class SalaryPaymentController extends Controller
                         $accountPayableWorkspaceData->update();
 
                         $generalJournal = New GeneralJournal;
-                        $generalJournal->date = $time;
+                        $generalJournal->date = $date;
                         $generalJournal->transaction_type = Config::get('common.transaction_type.salary_payment');
                         $generalJournal->reference_id = $salaryPayment->id;
                         $generalJournal->year = $year;
@@ -150,7 +151,7 @@ class SalaryPaymentController extends Controller
                         $accountPayableWorkspaceData->update();
 
                         $generalJournal = New GeneralJournal;
-                        $generalJournal->date = $time;
+                        $generalJournal->date = $date;
                         $generalJournal->transaction_type = Config::get('common.transaction_type.salary_payment');
                         $generalJournal->reference_id = $salaryPayment->id;
                         $generalJournal->year = $year;
@@ -172,7 +173,7 @@ class SalaryPaymentController extends Controller
                         $accountPayableWorkspaceData->update();
 
                         $generalJournal = New GeneralJournal;
-                        $generalJournal->date = $time;
+                        $generalJournal->date = $date;
                         $generalJournal->transaction_type = Config::get('common.transaction_type.salary_payment');
                         $generalJournal->reference_id = $salaryPayment->id;
                         $generalJournal->year = $year;
@@ -191,7 +192,7 @@ class SalaryPaymentController extends Controller
                         $accountPayableWorkspaceData->update();
 
                         $generalJournal = New GeneralJournal;
-                        $generalJournal->date = $time;
+                        $generalJournal->date = $date;
                         $generalJournal->transaction_type = Config::get('common.transaction_type.salary_payment');
                         $generalJournal->reference_id = $salaryPayment->id;
                         $generalJournal->year = $year;
@@ -213,7 +214,7 @@ class SalaryPaymentController extends Controller
                         $accountPayableWorkspaceData->update();
 
                         $generalJournal = New GeneralJournal;
-                        $generalJournal->date = $time;
+                        $generalJournal->date = $date;
                         $generalJournal->transaction_type = Config::get('common.transaction_type.salary_payment');
                         $generalJournal->reference_id = $salaryPayment->id;
                         $generalJournal->year = $year;
@@ -232,7 +233,7 @@ class SalaryPaymentController extends Controller
                         $accountPayableWorkspaceData->update();
 
                         $generalJournal = New GeneralJournal;
-                        $generalJournal->date = $time;
+                        $generalJournal->date = $date;
                         $generalJournal->transaction_type = Config::get('common.transaction_type.salary_payment');
                         $generalJournal->reference_id = $salaryPayment->id;
                         $generalJournal->year = $year;
@@ -329,7 +330,7 @@ class SalaryPaymentController extends Controller
                         ];
 
                         $generalJournal = GeneralJournal::firstOrCreate($data);
-                        $generalJournal->date = $time;
+                        $generalJournal->date = $date;
                         $generalJournal->transaction_type = Config::get('common.transaction_type.salary_payment');
                         $generalJournal->reference_id = $oldPayment->id;
                         $generalJournal->year = $year;
@@ -356,7 +357,7 @@ class SalaryPaymentController extends Controller
                         ];
 
                         $generalJournal = GeneralJournal::firstOrCreate($data);
-                        $generalJournal->date = $time;
+                        $generalJournal->date = $date;
                         $generalJournal->transaction_type = Config::get('common.transaction_type.salary_payment');
                         $generalJournal->reference_id = $oldPayment->id;
                         $generalJournal->year = $year;
@@ -386,7 +387,7 @@ class SalaryPaymentController extends Controller
                         ];
 
                         $generalJournal = GeneralJournal::firstOrCreate($data);
-                        $generalJournal->date = $time;
+                        $generalJournal->date = $date;
                         $generalJournal->transaction_type = Config::get('common.transaction_type.salary_payment');
                         $generalJournal->reference_id = $oldPayment->id;
                         $generalJournal->year = $year;
@@ -413,7 +414,7 @@ class SalaryPaymentController extends Controller
                         ];
 
                         $generalJournal = GeneralJournal::firstOrCreate($data);
-                        $generalJournal->date = $time;
+                        $generalJournal->date = $date;
                         $generalJournal->transaction_type = Config::get('common.transaction_type.salary_payment');
                         $generalJournal->reference_id = $oldPayment->id;
                         $generalJournal->year = $year;
@@ -443,7 +444,7 @@ class SalaryPaymentController extends Controller
                         ];
 
                         $generalJournal = GeneralJournal::firstOrCreate($data);
-                        $generalJournal->date = $time;
+                        $generalJournal->date = $date;
                         $generalJournal->transaction_type = Config::get('common.transaction_type.salary_payment');
                         $generalJournal->reference_id = $oldPayment->id;
                         $generalJournal->year = $year;
@@ -470,7 +471,7 @@ class SalaryPaymentController extends Controller
                         ];
 
                         $generalJournal = GeneralJournal::firstOrCreate($data);
-                        $generalJournal->date = $time;
+                        $generalJournal->date = $date;
                         $generalJournal->transaction_type = Config::get('common.transaction_type.salary_payment');
                         $generalJournal->reference_id = $oldPayment->id;
                         $generalJournal->year = $year;
@@ -509,6 +510,7 @@ class SalaryPaymentController extends Controller
                 $inputs = $request->input();
                 $user = Auth::user();
                 $time = time();
+                $date = strtotime(date('d-m-Y'));
                 $balance_type = Config::get('common.balance_type_intermediate');
                 $year = CommonHelper::get_current_financial_year();
                 $salaryPayment = SalaryPayment::find($id);
