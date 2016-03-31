@@ -131,7 +131,7 @@ class PurchasesController extends Controller
 
                     //Insert data into General Journal
                     $journal = new GeneralJournal();
-                    $journal->date = $time;
+                    $journal->date = strtotime($request->input('purchase_date'));
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $purchase_id;
                     $journal->year = $year;
@@ -144,7 +144,7 @@ class PurchasesController extends Controller
                     $journal->save();
 
                     $journal = new GeneralJournal();
-                    $journal->date = $time;
+                    $journal->date = strtotime($request->input('purchase_date'));
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $purchase_id;
                     $journal->year = $year;
@@ -172,7 +172,7 @@ class PurchasesController extends Controller
 
                     //Insert data into General Journal
                     $journal = new GeneralJournal();
-                    $journal->date = $time;
+                    $journal->date = strtotime($request->input('purchase_date'));
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $purchase_id;
                     $journal->year = $year;
@@ -185,7 +185,7 @@ class PurchasesController extends Controller
                     $journal->save();
 
                     $journal = new GeneralJournal();
-                    $journal->date = $time;
+                    $journal->date = strtotime($request->input('purchase_date'));
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $purchase_id;
                     $journal->year = $year;
@@ -227,7 +227,7 @@ class PurchasesController extends Controller
 
                     //Insert data into General Journal
                     $journal = new GeneralJournal();
-                    $journal->date = $time;
+                    $journal->date = strtotime($request->input('purchase_date'));
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $purchase_id;
                     $journal->year = $year;
@@ -240,7 +240,7 @@ class PurchasesController extends Controller
                     $journal->save();
 
                     $journal = new GeneralJournal();
-                    $journal->date = $time;
+                    $journal->date = strtotime($request->input('purchase_date'));
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $purchase_id;
                     $journal->year = $year;
@@ -253,7 +253,7 @@ class PurchasesController extends Controller
                     $journal->save();
 
                     $journal = new GeneralJournal();
-                    $journal->date = $time;
+                    $journal->date = strtotime($request->input('purchase_date'));
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $purchase_id;
                     $journal->year = $year;

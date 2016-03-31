@@ -119,7 +119,7 @@ class PurchasesReturnController extends Controller
                 //Insert data into General Journal
 
                 $journal = new GeneralJournal();
-                $journal->date = $time;
+                $journal->date = strtotime($request->input('purchase_return_date'));
                 $journal->transaction_type = $transaction_type;
                 $journal->reference_id = $purchase_return_id;
                 $journal->year = $year;
@@ -132,7 +132,7 @@ class PurchasesReturnController extends Controller
                 $journal->save();
 
                 $journal = new GeneralJournal();
-                $journal->date = $time;
+                $journal->date = strtotime($request->input('purchase_return_date'));
                 $journal->transaction_type = $transaction_type;
                 $journal->reference_id = $purchase_return_id;
                 $journal->year = $year;
@@ -160,7 +160,7 @@ class PurchasesReturnController extends Controller
 
                 //Insert data into General Journal
                 $journal = new GeneralJournal();
-                $journal->date = $time;
+                $journal->date = strtotime($request->input('purchase_return_date'));
                 $journal->transaction_type = $transaction_type;
                 $journal->reference_id = $purchase_return_id;
                 $journal->year = $year;
@@ -173,7 +173,7 @@ class PurchasesReturnController extends Controller
                 $journal->save();
 
                 $journal = new GeneralJournal();
-                $journal->date = $time;
+                $journal->date = strtotime($request->input('purchase_return_date'));
                 $journal->transaction_type = $transaction_type;
                 $journal->reference_id = $purchase_return_id;
                 $journal->year = $year;
@@ -209,7 +209,7 @@ class PurchasesReturnController extends Controller
                 //Insert data into General Journal
 
                 $journal = new GeneralJournal();
-                $journal->date = $time;
+                $journal->date = strtotime($request->input('purchase_return_date'));
                 $journal->transaction_type = $transaction_type;
                 $journal->reference_id = $purchase_return_id;
                 $journal->year = $year;
@@ -222,7 +222,7 @@ class PurchasesReturnController extends Controller
                 $journal->save();
 
                 $journal = new GeneralJournal();
-                $journal->date = $time;
+                $journal->date = strtotime($request->input('purchase_return_date'));
                 $journal->transaction_type = $transaction_type;
                 $journal->reference_id = $purchase_return_id;
                 $journal->year = $year;
@@ -262,7 +262,7 @@ class PurchasesReturnController extends Controller
 
                 //Insert data into General Journal
                 $journal = new GeneralJournal();
-                $journal->date = $time;
+                $journal->date = strtotime($request->input('purchase_return_date'));
                 $journal->transaction_type = $transaction_type;
                 $journal->reference_id = $purchase_return_id;
                 $journal->year = $year;
@@ -275,7 +275,7 @@ class PurchasesReturnController extends Controller
                 $journal->save();
 
                 $journal = new GeneralJournal();
-                $journal->date = $time;
+                $journal->date = strtotime($request->input('purchase_return_date'));
                 $journal->transaction_type = $transaction_type;
                 $journal->reference_id = $purchase_return_id;
                 $journal->year = $year;
@@ -288,7 +288,7 @@ class PurchasesReturnController extends Controller
                 $journal->save();
 
                 $journal = new GeneralJournal();
-                $journal->date = $time;
+                $journal->date = strtotime($request->input('purchase_return_date'));
                 $journal->transaction_type = $transaction_type;
                 $journal->reference_id = $purchase_return_id;
                 $journal->year = $year;
