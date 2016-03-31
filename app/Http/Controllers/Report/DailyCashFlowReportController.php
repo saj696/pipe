@@ -34,6 +34,8 @@ class DailyCashFlowReportController extends Controller
         $employees = Employee::where('status', 1)->lists('name', 'id');
         $suppliers = Supplier::where('status', 1)->lists('company_name', 'id');
 
+        $cashInHand = DB::table('workspace_ledgers')->where(['account_code' => 11000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => CommonHelper::get_current_financial_year()])->sum('balance');
+
         $sales = DB::table('general_journals')
             ->select('general_journals.*', 'chart_of_accounts.name', 'sales_order.customer_id', 'sales_order.customer_type')
             ->join('chart_of_accounts', 'chart_of_accounts.code', '=', 'general_journals.account_code')
@@ -61,7 +63,7 @@ class DailyCashFlowReportController extends Controller
         $salesReturns = json_decode(json_encode($salesReturns), true);
         $expenses = json_decode(json_encode($expenses), true);
 
-        $ajaxView = view('reports.cashFlow.view', compact('sales', 'salesReturns', 'expenses', 'customers', 'employees', 'suppliers'))->render();
+        $ajaxView = view('reports.cashFlow.view', compact('sales', 'salesReturns', 'expenses', 'customers', 'employees', 'suppliers', 'cashInHand'))->render();
         return response()->json($ajaxView);
     }
 

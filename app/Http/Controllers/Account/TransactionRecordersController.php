@@ -102,7 +102,7 @@ class TransactionRecordersController extends Controller
                     $personData->update();
                     // General Journals Insert
                     $generalJournal = New GeneralJournal;
-                    $generalJournal->date = time();
+                    $generalJournal->date = strtotime($request->date);
                     $generalJournal->transaction_type = Config::get('common.transaction_type.general');
                     $generalJournal->reference_id = $recorder->id;
                     $generalJournal->year = $currentYear;
@@ -131,7 +131,7 @@ class TransactionRecordersController extends Controller
                     $personData->update();
                     // General Journals Insert
                     $generalJournal = New GeneralJournal;
-                    $generalJournal->date = time();
+                    $generalJournal->date = strtotime($request->date);
                     $generalJournal->transaction_type = Config::get('common.transaction_type.general');
                     $generalJournal->reference_id = $recorder->id;
                     $generalJournal->year = $currentYear;
@@ -167,7 +167,7 @@ class TransactionRecordersController extends Controller
                     // General Journals Insert
                     $person_id = $request->from_whom;
                     $generalJournal = New GeneralJournal;
-                    $generalJournal->date = time();
+                    $generalJournal->date = strtotime($request->date);
                     $generalJournal->transaction_type = Config::get('common.transaction_type.general');
                     $generalJournal->reference_id = $recorder->id;
                     $generalJournal->year = $currentYear;
@@ -204,7 +204,7 @@ class TransactionRecordersController extends Controller
                     // General Journals Insert
                     $person_id = $request->from_whom;
                     $generalJournal = New GeneralJournal;
-                    $generalJournal->date = time();
+                    $generalJournal->date = strtotime($request->date);
                     $generalJournal->transaction_type = Config::get('common.transaction_type.general');
                     $generalJournal->reference_id = $recorder->id;
                     $generalJournal->year = $currentYear;
@@ -227,7 +227,7 @@ class TransactionRecordersController extends Controller
                     $drawWorkspaceData->update();
                     // General Journals Insert
                     $generalJournal = New GeneralJournal;
-                    $generalJournal->date = time();
+                    $generalJournal->date = strtotime($request->date);
                     $generalJournal->transaction_type = Config::get('common.transaction_type.draw');
                     $generalJournal->reference_id = $recorder->id;
                     $generalJournal->year = $currentYear;
@@ -250,7 +250,7 @@ class TransactionRecordersController extends Controller
                     $investmentWorkspaceData->update();
                     // General Journals Insert
                     $generalJournal = New GeneralJournal;
-                    $generalJournal->date = time();
+                    $generalJournal->date = strtotime($request->date);
                     $generalJournal->transaction_type = Config::get('common.transaction_type.investment');
                     $generalJournal->reference_id = $recorder->id;
                     $generalJournal->year = $currentYear;
@@ -278,7 +278,7 @@ class TransactionRecordersController extends Controller
                     // General Journals Insert
                     $person_id = $request->from_whom;
                     $generalJournal = New GeneralJournal;
-                    $generalJournal->date = time();
+                    $generalJournal->date = strtotime($request->date);
                     $generalJournal->transaction_type = Config::get('common.transaction_type.general');
                     $generalJournal->reference_id = $recorder->id;
                     $generalJournal->year = $currentYear;
@@ -318,7 +318,7 @@ class TransactionRecordersController extends Controller
                     // General Journals Insert
                     $person_id = $request->from_whom;
                     $generalJournal = New GeneralJournal;
-                    $generalJournal->date = time();
+                    $generalJournal->date = strtotime($request->date);
                     $generalJournal->transaction_type = Config::get('common.transaction_type.general');
                     $generalJournal->reference_id = $recorder->id;
                     $generalJournal->year = $currentYear;
@@ -349,7 +349,7 @@ class TransactionRecordersController extends Controller
 
                     // General Journals Insert
                     $generalJournal = New GeneralJournal;
-                    $generalJournal->date = time();
+                    $generalJournal->date = strtotime($request->date);
                     $generalJournal->transaction_type = Config::get('common.transaction_type.donation');
                     $generalJournal->reference_id = $recorder->id;
                     $generalJournal->year = $currentYear;
@@ -382,7 +382,7 @@ class TransactionRecordersController extends Controller
 
                     // General Journals Insert
                     $generalJournal = New GeneralJournal;
-                    $generalJournal->date = time();
+                    $generalJournal->date = strtotime($request->date);
                     $generalJournal->transaction_type = Config::get('common.transaction_type.cash_adjustment');
                     $generalJournal->reference_id = $recorder->id;
                     $generalJournal->year = $currentYear;

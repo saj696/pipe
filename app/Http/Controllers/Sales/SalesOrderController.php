@@ -50,7 +50,7 @@ class SalesOrderController extends Controller
 
     public function store(SalesOrderRequest $request)
     {
-
+    
         $inputs = $request->input();
         try {
             DB::transaction(function () use ($inputs) {
@@ -93,6 +93,7 @@ class SalesOrderController extends Controller
                 $balance_type = Config::get('common.balance_type_intermediate');
                 $transaction_type = Config::get('common.transaction_type.sales');
                 $time = time();
+                $date = strtotime(date('d-m-Y'));
                 $year = CommonHelper::get_current_financial_year();
 
                 // Update Workspace Ledger
@@ -138,7 +139,7 @@ class SalesOrderController extends Controller
                 //Insert data into General Journal
 
                 $journal = new GeneralJournal();
-                $journal->date = $time;
+                $journal->date =$date;
                 $journal->transaction_type = $transaction_type;
                 $journal->reference_id = $sales_order_id;
                 $journal->year = $year;
@@ -151,7 +152,7 @@ class SalesOrderController extends Controller
                 $journal->save();
 
                 $journal = new GeneralJournal();
-                $journal->date = $time;
+                $journal->date =$date;
                 $journal->transaction_type = $transaction_type;
                 $journal->reference_id = $sales_order_id;
                 $journal->year = $year;
@@ -164,7 +165,7 @@ class SalesOrderController extends Controller
                 $journal->save();
 
                 $journal = new GeneralJournal();
-                $journal->date = $time;
+                $journal->date =$date;
                 $journal->transaction_type = $transaction_type;
                 $journal->reference_id = $sales_order_id;
                 $journal->year = $year;
@@ -339,7 +340,7 @@ class SalesOrderController extends Controller
                 {
                     //Insert data into General Journal
                     $journal = new GeneralJournal();
-                    $journal->date = $time;
+                    $journal->date =$date;
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $id;
                     $journal->year = $year;
@@ -399,7 +400,7 @@ class SalesOrderController extends Controller
                 $old_due_amount = $oldSalesOrder['total'] - $oldSalesOrder['paid'];
                 if ($new_due_amount && !$old_due_amount) {
                     $journal = new GeneralJournal();
-                    $journal->date = $time;
+                    $journal->date =$date;
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $id;
                     $journal->year = date('Y');

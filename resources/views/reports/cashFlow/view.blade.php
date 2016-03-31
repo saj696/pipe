@@ -20,6 +20,16 @@ if ($row < sizeof($expenses)) {
                 <div class="form-horizontal" role="form">
                     <div class="form-body">
                         <div class="row">
+                            <div class="col-md-12">
+                                <div class="portlet box blue-chambray">
+                                    <div class="portlet-title">
+                                        <div class="caption pull-right">
+                                            Cash Before Today: {{ $cashInHand+array_sum(array_column($expenses,'amount'))-array_sum(array_column($sales,'amount')) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="col-md-6">
                                 <div class="portlet box green">
                                     <div class="portlet-title">
@@ -50,15 +60,15 @@ if ($row < sizeof($expenses)) {
                                                             <td>{!! (sizeof($sales)>$i)? $i+1 : "&nbsp" !!}</td>
                                                             <td>
                                                                 <?php
-                                                                    if($sales[$i]['customer_type']==Config::get('common.sales_customer_type.Employee'))
+                                                                    if(isset($sales[$i]['customer_type']) && $sales[$i]['customer_type']==Config::get('common.person_type_employee'))
                                                                     {
                                                                         echo $employees[$sales[$i]['customer_id']];
                                                                     }
-                                                                    elseif($sales[$i]['customer_type']==Config::get('common.sales_customer_type.Supplier'))
+                                                                    elseif(isset($sales[$i]['customer_type']) && $sales[$i]['customer_type']==Config::get('common.person_type_supplier'))
                                                                     {
                                                                         echo $suppliers[$sales[$i]['customer_id']];
                                                                     }
-                                                                    elseif($sales[$i]['customer_type']==Config::get('common.sales_customer_type.Customer'))
+                                                                    elseif(isset($sales[$i]['customer_type']) && $sales[$i]['customer_type']==Config::get('common.person_type_customer'))
                                                                     {
                                                                         echo $customers[$sales[$i]['customer_id']];
                                                                     }
@@ -68,12 +78,12 @@ if ($row < sizeof($expenses)) {
                                                                     }
                                                                 ?>
                                                             </td>
-                                                            <td>{!! isset($sales[$i]['amount'])? $sales[$i]['amount'] : 0 !!}</td>
+                                                            <td>{!! isset($sales[$i]['amount'])? $sales[$i]['amount'] : '&nbsp' !!}</td>
                                                         </tr>
                                                     @endfor
                                                     <tr>
-                                                        <th colspan="3">Total (Excluding Returns)</th>
-                                                        <th>{!! array_sum(array_column($sales,'amount'))? array_sum(array_column($sales,'amount'))-array_sum(array_column($salesReturns,'amount')) : 0 !!}</th>
+                                                        <th colspan="2">Total (Excluding Sales Returns)</th>
+                                                        <th>{!! array_sum(array_column($sales,'amount'))? array_sum(array_column($sales,'amount'))-array_sum(array_column($salesReturns,'amount')) : '&nbsp' !!}</th>
                                                     </tr>
                                                 @else
                                                     <tr>
@@ -111,6 +121,7 @@ if ($row < sizeof($expenses)) {
                                                 </tr>
                                                 </thead>
                                                 <tbody>
+
                                                 @if(sizeof($expenses)>0)
                                                     @for($i=0; $i< $row; $i++)
                                                         <tr>
@@ -120,7 +131,7 @@ if ($row < sizeof($expenses)) {
                                                         </tr>
                                                     @endfor
                                                     <tr>
-                                                        <th colspan="3">Total</th>
+                                                        <th colspan="2">Total</th>
                                                         <th>{!! array_sum(array_column($expenses,'amount'))? array_sum(array_column($expenses,'amount')) : 0 !!}</th>
                                                     </tr>
                                                 @else
@@ -130,6 +141,16 @@ if ($row < sizeof($expenses)) {
                                                 @endif
                                                 </tbody>
                                             </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="portlet box blue-chambray">
+                                    <div class="portlet-title">
+                                        <div class="caption pull-right">
+                                            Cash In Hand: {{ $cashInHand }}
                                         </div>
                                     </div>
                                 </div>
