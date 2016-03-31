@@ -9162,6 +9162,7 @@ var
 
 	// Map over the $ in case of overwrite
 	_$ = window.$;
+	_$ = window.$;
 
 jQuery.noConflict = function( deep ) {
 	if ( window.$ === jQuery ) {

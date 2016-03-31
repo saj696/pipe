@@ -30,7 +30,6 @@ class SalaryGeneratorRequest extends Request
             case 'POST': {
                 return [
                     'month' => 'required|numeric',
-                    'employee_type' => 'required|numeric',
                 ];
             }
             case 'PUT':

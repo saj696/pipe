@@ -9,8 +9,11 @@ class Wage extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'extra_hours',
-        'bonus',
-        'cut'
+        'wage',
     ];
+
+    public function employee()
+    {
+        return $this->belongsTo('App\Models\Employee');
+    }
 }

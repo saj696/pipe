@@ -44,39 +44,40 @@
                     </div>
 
                     <div class="form-group">
-                        {{ Form::label('extra_hours', 'Extra Hours', ['class'=>'col-md-3 control-label']) }}
-                        <div class="col-md-7">
-                            {{ Form::text('extra_hours',$salary->extra_hours,['class'=>'form-control','data-hourly_rate'=>$salary->employee->designation->hourly_rate]) }}
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        {{ Form::label('extra_salary', 'Extra Salary', ['class'=>'col-md-3 control-label']) }}
-                        <div class="col-md-7">
-                            {{ Form::text('extra_salary',null,['class'=>'form-control','readonly']) }}
-                        </div>
-                    </div>
-
-                    <div class="form-group">
                         {{ Form::label('cut', 'Cut', ['class'=>'col-md-3 control-label']) }}
                         <div class="col-md-7">
-                            {{ Form::text('cut',$salary->cut, ['class'=>'form-control']) }}
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        {{ Form::label('bonus', 'Bonus', ['class'=>'col-md-3 control-label']) }}
-                        <div class="col-md-7">
-                            {{ Form::text('bonus', $salary->bonus, ['class'=>'form-control']) }}
+                            {{ Form::number('cut',$salary->cut, ['class'=>'form-control','min'=>0,'step'=>0.01]) }}
                         </div>
                     </div>
 
                     <div class="form-group">
                         {{ Form::label('net', 'Net Salary', ['class'=>'col-md-3 control-label']) }}
                         <div class="col-md-7">
-                            {{ Form::text('net',$salary->net, ['class'=>'form-control','readonly']) }}
+                            {{ Form::number('net',$salary->net, ['class'=>'form-control','readonly','min'=>$salary->net_paid, 'step'=>0.01]) }}
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        {{ Form::label('over_time', 'Overtime', ['class'=>'col-md-3 control-label']) }}
+                        <div class="col-md-7">
+                            {{ Form::number('over_time',$salary->over_time,['class'=>'form-control','data-hourly_rate'=>$salary->employee->designation->hourly_rate, 'min'=>0, 'step'=>0.01]) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        {{ Form::label('overtime_amount', 'Overtime Amount', ['class'=>'col-md-3 control-label']) }}
+                        <div class="col-md-7">
+                            {{ Form::number('overtime_amount',$salary->over_time*$salary->employee->designation->hourly_rate,['class'=>'form-control','readonly','min'=>$salary->over_time_paid]) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        {{ Form::label('bonus', 'Bonus', ['class'=>'col-md-3 control-label']) }}
+                        <div class="col-md-7">
+                            {{ Form::number('bonus', $salary->bonus, ['class'=>'form-control','min'=>$salary->bonus_paid,'step'=>0.01]) }}
+                        </div>
+                    </div>
+
 
                     <div class="form-actions">
                         <div class="row">
@@ -95,35 +96,39 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $(document).on('change', '#cut', function () {
-                $('#net').val(calculate());
+            $(document).on('keyup', '#cut', function () {
+                var cut = parseFloat($(this).val());
+                var salary = parseFloat($('#salary').val());
+                if (isNaN(cut)) {
+                    cut = 0;
+                }
+                $('#net').val(salary - cut);
             });
 
-            $(document).on('change', '#extra_hours', function () {
+            $(document).on('keyup', '#over_time', function () {
                 var over_time = parseFloat($(this).val());
                 var over_time_rate = parseFloat($(this).data('hourly_rate'));
-                var net = parseFloat($('#net').val());
-                if ((over_time * over_time_rate) > 0) {
-                    var total = over_time * over_time_rate;
-                    $('#extra_salary').val(total)
+                if (isNaN(over_time)) {
+                    over_time = 0;
                 }
-                $('#net').val(calculate());
+                if (isNaN(over_time_rate)) {
+                    over_time_rate = 0;
+                }
+                var total = over_time * over_time_rate;
+                $('#overtime_amount').val(total.toFixed(2))
             });
 
-            $(document).on('change', '#bonus', function () {
-                $('#net').val(calculate());
-            });
+            $(document).on('submit','form', function(e){
+                var over_time = parseFloat($('#over_time').val());
+                var over_time_rate = parseFloat($('#over_time').data('hourly_rate'));
+                var over_time_paid= '{{ $salary->over_time_paid }}'
+
+                if((over_time*over_time_rate) < over_time_paid ){
+                    e.preventDefault();
+                    alert('Overtime amount not less than '+over_time_paid);
+                }
+            })
         });
 
-        function calculate() {
-            var extra_salary = parseFloat($('#extra_salary').val());
-            if (isNaN(extra_salary))
-                extra_salary = 0;
-            var cut = parseFloat($('#cut').val());
-            var bonus = parseFloat($('#bonus').val());
-            var salary = parseFloat($('#salary').val());
-
-            return ((salary + extra_salary + bonus) - cut)
-        }
     </script>
 @stop

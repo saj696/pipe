@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Models\Customer;
 use App\Models\GeneralJournal;
 use App\Models\PersonalAccount;
+use App\Models\Product;
 use App\Models\Stock;
 use App\Models\WorkspaceLedger;
 use DB;
@@ -58,6 +59,7 @@ class SalesReturnController extends Controller
                 $balance_type = Config::get('common.balance_type_intermediate');
                 $transaction_type = Config::get('common.transaction_type.sales_return');
                 $time = time();
+                $date = strtotime(date('d-m-Y'));
                 $year = CommonHelper::get_current_financial_year();
                 $data['customer_id'] = $inputs['customer_id'];
                 $data['workspace_id'] = $workspace_id;
@@ -65,8 +67,8 @@ class SalesReturnController extends Controller
                 $data['total_amount'] = $inputs['total'];
                 if ($inputs['return_type'] == 3) {
                     $data['due'] = $inputs['total'];;
-                }elseif ($inputs['return_type'] == 4) {
-                    $data['due'] = $inputs['total']-$inputs['due_paid'];
+                } elseif ($inputs['return_type'] == 4) {
+                    $data['due'] = $inputs['total'] - $inputs['due_paid'];
                 }
                 if (isset($inputs['due_paid'])) {
                     $data['due_paid'] = $inputs['due_paid'];
@@ -81,23 +83,40 @@ class SalesReturnController extends Controller
                 $data['sales_return_id'] = $sales_return_id;
                 $data['created_by'] = $user_id;
                 $data['created_at'] = $time;
+
+                $products = Product::whereIn('id', array_column($inputs['product'], 'product_id'))->get()->toArray();
                 foreach ($inputs['product'] as $product) {
                     $data['product_id'] = $product['product_id'];
                     $data['quantity'] = $product['quantity_returned'];
                     $data['unit_price'] = $product['unit_price'];
+                    $data['unit_type'] = $product['unit_type'];
                     DB::table('sales_return_details')->insert($data);
 
+                    $quantity_returned = $product['quantity_returned'];
+
                     $stock = Stock::find($product['product_id']);
-                    $stock->quantity += $product['quantity_returned'];
+                    if ($product['unit_type'] == 2) {
+                        foreach ($products as $item) {
+                            if ($item['id'] == $product['product_id']) {
+                                $quantity_returned = (($quantity_returned / $item['weight']) * $item['length']);
+                            }
+                        }
+                    }
+                    $stock->quantity += $quantity_returned;
                     $stock->updated_by = $user_id;
                     $stock->updated_at = $time;
                     $stock->save();
                 }
 
+
                 if ($inputs['return_type'] == 1) {                  //For Cash
 
                     // Update Workspace Ledger
                     $workspace = WorkspaceLedger::where(['account_code' => 11000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
+                    if ($workspace->balance < $inputs['total']) {
+                        Session()->flash('warning_message', 'Insufficient cash balance!');
+                        throw new \Exception();
+                    }
                     $workspace->balance -= $inputs['total']; //Subtract Cash
                     $workspace->updated_by = $user_id;
                     $workspace->updated_at = $time;
@@ -109,25 +128,10 @@ class SalesReturnController extends Controller
                     $workspace->updated_at = $time;
                     $workspace->save();
 
-                    /* // Update General Ledger
-                     $general = GeneralLedger::where(['account_code' => 11000, 'balance_type' => $balance_type])->first();
-                     $general->year = $year;
-                     $general->balance -= $inputs['total']; //Subtract Cash
-                     $general->updated_by = $user_id;
-                     $general->updated_at = $time;
-                     $general->save();
-
-                     $general = GeneralLedger::where(['account_code' => 32000, 'balance_type' => $balance_type])->first();
-                     $general->year = $year;
-                     $general->balance += $inputs['total']; //Add Product Sales Return
-                     $general->updated_by = $user_id;
-                     $general->updated_at = $time;
-                     $general->save();*/
-
                     //Insert data into General Journal
 
                     $journal = new GeneralJournal();
-                    $journal->date = $time;
+                    $journal->date = $date;
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $sales_return_id;
                     $journal->year = $year;
@@ -140,7 +144,7 @@ class SalesReturnController extends Controller
                     $journal->save();
 
                     $journal = new GeneralJournal();
-                    $journal->date = $time;
+                    $journal->date = $date;
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $sales_return_id;
                     $journal->year = $year;
@@ -167,25 +171,10 @@ class SalesReturnController extends Controller
                     $workspace->updated_at = $time;
                     $workspace->save();
 
-                    /*// Update General Ledger
-                    $general = GeneralLedger::where(['account_code' => 12000, 'balance_type' => $balance_type])->first();
-                    $general->year = $year;
-                    $general->balance -= $inputs['total']; //Subtract Account Receivable
-                    $general->updated_by = $user_id;
-                    $general->updated_at = $time;
-                    $general->save();
-
-                    $general = GeneralLedger::where(['account_code' => 32000, 'balance_type' => $balance_type])->first();
-                    $general->year = $year;
-                    $general->balance += $inputs['total']; //Add Product Sales Return
-                    $general->updated_by = $user_id;
-                    $general->updated_at = $time;
-                    $general->save();*/
-
                     //Insert data into General Journal
 
                     $journal = new GeneralJournal();
-                    $journal->date = $time;
+                    $journal->date = $date;
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $sales_return_id;
                     $journal->year = $year;
@@ -198,7 +187,7 @@ class SalesReturnController extends Controller
                     $journal->save();
 
                     $journal = new GeneralJournal();
-                    $journal->date = $time;
+                    $journal->date = $date;
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $sales_return_id;
                     $journal->year = $year;
@@ -234,25 +223,10 @@ class SalesReturnController extends Controller
                     $workspace->updated_at = $time;
                     $workspace->save();
 
-                    /*// Update General Ledger
-                    $general = GeneralLedger::where(['account_code' => 41000, 'balance_type' => $balance_type])->first();
-                    $general->year = $year;
-                    $general->balance += $inputs['total']; //Add Account Payable
-                    $general->updated_by = $user_id;
-                    $general->updated_at = $time;
-                    $general->save();
-
-                    $general = GeneralLedger::where(['account_code' => 32000, 'balance_type' => $balance_type])->first();
-                    $general->year = $year;
-                    $general->balance += $inputs['total']; //Add Product Sales Return
-                    $general->updated_by = $user_id;
-                    $general->updated_at = $time;
-                    $general->save();*/
-
                     //Insert data into General Journal
 
                     $journal = new GeneralJournal();
-                    $journal->date = $time;
+                    $journal->date = $date;
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $sales_return_id;
                     $journal->year = $year;
@@ -265,7 +239,7 @@ class SalesReturnController extends Controller
                     $journal->save();
 
                     $journal = new GeneralJournal();
-                    $journal->date = $time;
+                    $journal->date = $date;
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $sales_return_id;
                     $journal->year = $year;
@@ -287,6 +261,10 @@ class SalesReturnController extends Controller
 
                     // Update Workspace Ledger
                     $workspace = WorkspaceLedger::where(['account_code' => 11000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
+                    if ($workspace->balance < ($inputs['total'] - $inputs['due_paid'])) {
+                        Session()->flash('warning_message', 'Insufficient cash balance!');
+                        throw new \Exception();
+                    }
                     $workspace->balance -= ($inputs['total'] - $inputs['due_paid']); //Subtract Cash
                     $workspace->updated_by = $user_id;
                     $workspace->updated_at = $time;
@@ -303,32 +281,10 @@ class SalesReturnController extends Controller
                     $workspace->updated_at = $time;
                     $workspace->save();
 
-                    /*// Update General Ledger
-                    $general = GeneralLedger::where(['account_code' => 11000, 'balance_type' => $balance_type])->first();
-                    $general->year = $year;
-                    $general->balance -= ($inputs['total'] - $inputs['due_paid']); //Subtract Cash
-                    $general->updated_by = $user_id;
-                    $general->updated_at = $time;
-                    $general->save();
-
-                    $general = GeneralLedger::where(['account_code' => 32000, 'balance_type' => $balance_type])->first();
-                    $general->year = $year;
-                    $general->balance += ($inputs['total'] - $inputs['due_paid']); //Add Product Sales Return
-                    $general->updated_by = $user_id;
-                    $general->updated_at = $time;
-                    $general->save();
-
-                    $general = GeneralLedger::where(['account_code' => 12000, 'balance_type' => $balance_type])->first();
-                    $general->year = $year;
-                    $general->balance -= $inputs['due_paid']; //Subtract Cash
-                    $general->updated_by = $user_id;
-                    $general->updated_at = $time;
-                    $general->save();*/
-
                     //Insert data into General Journal
 
                     $journal = new GeneralJournal();
-                    $journal->date = $time;
+                    $journal->date = $date;
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $sales_return_id;
                     $journal->year = $year;
@@ -341,7 +297,7 @@ class SalesReturnController extends Controller
                     $journal->save();
 
                     $journal = new GeneralJournal();
-                    $journal->date = $time;
+                    $journal->date = $date;
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $sales_return_id;
                     $journal->year = $year;
@@ -354,7 +310,7 @@ class SalesReturnController extends Controller
                     $journal->save();
 
                     $journal = new GeneralJournal();
-                    $journal->date = $time;
+                    $journal->date = $date;
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $sales_return_id;
                     $journal->year = $year;
@@ -378,7 +334,6 @@ class SalesReturnController extends Controller
             });
 
         } catch (\Exception $e) {
-
             Session()->flash('error_message', 'Sales Returned Failed.');
             return Redirect::back();
         }

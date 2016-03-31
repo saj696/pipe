@@ -22,8 +22,7 @@ class WageRequest extends Request
     public function rules()
     {
         return [
-            'month' => 'required|numeric',
-            'employee_type' => 'required|numeric',
+            'payment_date' => 'required',
         ];
     }
 }

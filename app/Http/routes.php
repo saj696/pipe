@@ -41,6 +41,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('materials', 'Setup\MaterialsController');
     Route::resource('usageRegisters', 'Register\UsageRegistersController');
     Route::resource('customers', 'Customer\CustomersController');
+    Route::get('sales_invoice/{id}', 'Sales\SalesOrderController@invoice_print');
     Route::resource('salesOrder', 'Sales\SalesOrderController');
     Route::resource('productionRegisters', 'Register\ProductionRegistersController');
     Route::resource('designations', 'Employee\DesignationsController');
@@ -62,6 +63,8 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('salary_payment', 'Payroll\SalaryPaymentController');
     Route::resource('financial_year', 'System\FinancialYearSetupController');
     Route::resource('rollback', 'Account\RollbackController');
+    Route::resource('receive_defect', 'Sales\ReceiveDefectController');
+    Route::resource('daily_wage_payment', 'Payroll\DailyWagePaymentController');
     Route::resource('discarded_stock', 'Discarded\DiscardedMaterialStockController');
     Route::resource('discarded_sale', 'Discarded\DiscardedMaterialSaleController');
 
@@ -96,7 +99,9 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('get_person_due_amount', array('as' => 'ajax.get_person_due_amount', 'uses' => 'AjaxController@getPersonDueAmount'));
     Route::post('get_person_balance_amount', array('as' => 'ajax.get_person_balance_amount', 'uses' => 'AjaxController@getPersonBalanceAmount'));
     Route::post('get_employee_list', array('as' => 'ajax.get_employee_list', 'uses' => 'AjaxController@getEmployeeList'));
-    Route::post('get_employee_payment_list', array('as' => 'ajax.get_employee_payment_list', 'uses' => 'AjaxController@getEmployeePaymentList'));
+    Route::post('get_employee', array('as' => 'ajax.get_employee', 'uses' => 'AjaxController@getEmployee'));
+    Route::post('get_employee_payment', array('as' => 'ajax.get_employee_payment', 'uses' => 'AjaxController@getEmployeePayment'));
+    Route::post('get_daily_worker_list', array('as' => 'ajax.get_daily_worker_list', 'uses' => 'AjaxController@getDailyWorkerList'));
     Route::get('cash_flow_report', 'Report\DailyCashFlowReportController@index');
     Route::post('cash_flow_report',array('as'=>'ajax.cash_flow_report', 'uses'=>'Report\DailyCashFlowReportController@getReport')) ;
 });
@@ -106,6 +111,7 @@ Route::post('parent_select', array('as' => 'ajax.parent_select', 'uses' => 'Ajax
 Route::post('customer_select', array('as' => 'ajax.customer_select', 'uses' => 'AjaxController@getCustomers'));
 Route::post('supplier_select', array('as' => 'ajax.supplier_select', 'uses' => 'AjaxController@getSuppliers'));
 Route::post('employee_select', array('as' => 'ajax.employee_select', 'uses' => 'AjaxController@getEmployees'));
+Route::post('get_personal_account_balance', array('as' => 'ajax.get_personal_account_balance', 'uses' => 'AjaxController@getPersonalAccountBalance'));
 
 Route::post('transaction_recorder_amount', array('as' => 'ajax.transaction_recorder_amount', 'uses' => 'AjaxController@getTransactionRecorderAmount'));
 

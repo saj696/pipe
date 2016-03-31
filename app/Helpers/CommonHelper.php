@@ -10,6 +10,7 @@ namespace App\Helpers;
 
 use App\Models\SalesDeliveryDetail;
 use DB;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Facade;
 
 
@@ -33,7 +34,13 @@ class CommonHelper extends Facade
                 ->first();
             return $customer->company_name;
         } elseif ($type == 1) {
-            return "";
+            $customer= DB::table('employees')
+                ->select('name')
+                ->where('id',$id)
+                ->where('status',1)
+                ->first();
+
+            return $customer->name;
         }
 
         return "";
@@ -117,6 +124,18 @@ class CommonHelper extends Facade
         }
 
         return $yearStr;
+    }
+
+    //Get current stock quantity by product_id from stocks table
+    public static function get_current_stock($product_id)
+    {
+       $stock=DB::table('stocks')
+           ->where('product_id','=',$product_id)
+           ->where('year','=', self::get_current_financial_year())
+           ->where('stock_type','=',Config::get('common.balance_type_intermediate'))
+           ->first();
+
+        return $stock->quantity;
     }
 
 }

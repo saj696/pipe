@@ -17,6 +17,10 @@ class Employee extends Model
         'dob'
     ];
 
+    public function workspace()
+    {
+        return $this->belongsTo('App\Models\Workspace');
+    }
     public function designation()
     {
         return $this->belongsTo('App\Models\Designation');

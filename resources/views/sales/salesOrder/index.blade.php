@@ -30,7 +30,7 @@
                                     Order Date
                                 </th>
                                 <th>
-                                    Total Amount
+                                    Total Price
                                 </th>
                                 <th>
                                     Delivery Status
@@ -61,6 +61,8 @@
                                         <td>
                                             <a class="label label-danger"
                                                href="{{ url('/salesOrder/'.$salesOrder->id.'/edit' )}}">Edit</a>
+                                            <a class="label label-info"
+                                               href="{{ url('/sales_invoice/'.$salesOrder->id )}}">Invoice</a>
                                         </td>
                                     </tr>
                                 @endforeach

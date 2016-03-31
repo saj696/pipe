@@ -28,9 +28,9 @@ class SalesOrderRequest extends Request
             }
             case 'POST': {
                 return [
-                    'customer_id' => 'required',
                     'total' => 'required',
                     'product' => 'required|array',
+                    'customer_type' => 'required_with:customer_id',
                 ];
             }
             case 'PUT':

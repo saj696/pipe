@@ -389,7 +389,7 @@ var TableAdvanced = function () {
             },
 
             "order": [
-                [0, 'asc']
+                [4, 'desc']
             ],
             "lengthMenu": [
                 [10, 25, 50, 100, -1],
@@ -404,7 +404,7 @@ var TableAdvanced = function () {
                 "targets": [0]
             }],
             "order": [
-                [1, "desc"]
+                [3, "desc"]
             ]
         });
 

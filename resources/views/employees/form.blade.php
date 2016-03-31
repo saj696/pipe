@@ -84,7 +84,7 @@
     </div>
 </div>
 
-{{--<div class="form-group">
+<div class="form-group">
     {{ Form::label('employee_type', 'Employee Type', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('employee_type') ? ' has-error' : '' }}">
         {{ Form::select('employee_type', array_flip(Config::get('common.employee_type')), null,['class'=>'form-control', 'placeholder'=>'Select','required']) }}
@@ -94,7 +94,7 @@
             </span>
         @endif
     </div>
-</div>--}}
+</div>
 
 <div class="form-group">
     {{ Form::label('present_address', 'Present Address', ['class'=>'col-md-3 control-label']) }}

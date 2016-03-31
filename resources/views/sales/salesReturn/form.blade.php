@@ -38,17 +38,22 @@
 </div>
 
 <div class="product_list" data-product-id="0">
-    <div class='col-md-offset-3 col-md-2'>
-        <label for="">Product Name</label>
-    </div>
-    <div class='col-md-2'>
-        <label for="">Quantity Returned</label>
-    </div>
-    <div class='col-md-2'>
-        <label for="">Price/Unit</label>
-    </div>
-    <div class='col-md-2'>
-        <label for="">Total</label>
+    <div class="form-group">
+        <div class='col-md-offset-2 col-md-2'>
+            <label for="">Product Name</label>
+        </div>
+        <div class='col-md-3'>
+            <label for="">Return Quantity</label>
+        </div>
+        <div class='col-md-2'>
+            <label for="">Unit Price</label>
+        </div>
+        <div class='col-md-2'>
+            <label for="">Total</label>
+        </div>
+        <div class='col-md-1'>
+            <label for=""></label>
+        </div>
     </div>
 </div>
 
@@ -134,20 +139,32 @@
 //            minLength: 3,
             select: function (event, ui) {
 //                console.log(ui);
+                var quantity = 0;
+                if (ui.item.quantity > 0) {
+                    quantity = ui.item.quantity;
+                }
                 var index = $('.product_list').data('product-id');
                 var html = "<div class='form-group single_product'>" +
-                        "<div class='col-md-offset-3 col-md-2'>" +
+                        "<div class='col-md-offset-2 col-md-2'>" +
                         " <input type='text' class='form-control' value='" + ui.item.label + "' disabled>" +
                         "<input class='product_id' type='hidden' value='" + ui.item.value + "' name='product[" + index + "][product_id]'> " +
                         "</div>" +
-                        "<div class='col-md-2'>" +
+                        "<div class='col-md-3'>" +
+                        "<div style='width: 75%;float: left'>" +
                         "<input required type='number' min='1' step='0.01' class='form-control pcal single_p_quantity' name='product[" + index + "][quantity_returned]' placeholder='Sales Quantity'> " +
                         "</div>" +
-                        "<div class='col-md-2'>" +
-                        "<input required title='W: " + ui.item.wholesale_price + ", R: " + ui.item.retail_price + "' type='number' min='1' step='0.01' class='form-control pcal single_p_rate' name='product[" + index + "][unit_price]' placeholder='Unit Price'> " +
+                        "<div style='width: 25%;float: left'>" +
+                        "<select name='product[" + index + "][unit_type]' class='form-control unit_type' style='padding:5px'> " +
+                        "<option value='1'>ft</option>" +
+                        "<option value='2'>kg</option>" +
+                        "</select>" +
+                        "</div>" +
                         "</div>" +
                         "<div class='col-md-2'>" +
-                        "<input  type='text' class='form-control single_p_total'> " +
+                        "<input required data-wholesale_price='" + ui.item.wholesale_price + "' data-retail_price='" + ui.item.retail_price + "' data-length='" + ui.item.length + "' data-weight='" + ui.item.weight + "' title='W: " + (ui.item.wholesale_price / ui.item.length).toFixed(2) + ", R: " + (ui.item.retail_price / ui.item.length).toFixed(2) + "' type='number' min='0.01' step='0.01' class='form-control pcal single_p_rate' name='product[" + index + "][unit_price]' placeholder='Unit Price'> " +
+                        "</div>" +
+                        "<div class='col-md-2'>" +
+                        "<input  type='text' readonly class='form-control single_p_total'> " +
                         "</div>" +
                         "<div class='col-md-1'>" +
                         "<span class='btn btn-danger remove_product'>X</span>" +
@@ -184,6 +201,22 @@
 
         $(document).on('change', '.pcal', function () {
             rowTotal(this);
+        });
+
+        $(document).on('change', '.unit_type', function () {
+            var type = parseInt($(this).val());
+            var obj = $(this);
+            var wholesale_price = parseFloat(obj.closest('.single_product').find('.single_p_rate').data('wholesale_price'));
+            var retail_price = parseFloat(obj.closest('.single_product').find('.single_p_rate').data('retail_price'));
+            if (type == 2) {
+                var weight = parseFloat(obj.closest('.single_product').find('.single_p_rate').data('weight'));
+                var title = 'W: ' + (wholesale_price / weight).toFixed(2) + ', R: ' + (retail_price / weight).toFixed(2);
+                obj.closest('.single_product').find('.single_p_rate').attr('title', title);
+            } else {
+                var length = parseFloat(obj.closest('.single_product').find('.single_p_rate').data('length'));
+                var title = 'W: ' + (wholesale_price / length).toFixed(2) + ', R: ' + (retail_price / length).toFixed(2);
+                obj.closest('.single_product').find('.single_p_rate').attr('title', title);
+            }
         });
 
         $(document).on('change', '#product_return_type', function (e) {

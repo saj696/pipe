@@ -72,7 +72,7 @@ class EmployeesController extends Controller
                 $employee->dob = $request->input('dob');
                 $employee->designation_id = $request->input('designation_id');
                 $employee->workspace_id = $request->input('workspace_id');
-                $employee->employee_type = Config::get('common.employee_type.Regular');
+                $employee->employee_type = $request->input('employee_type');
                 $employee->joining_date = $request->input('joining_date');
                 $employee->created_by = Auth::user()->id;
                 $employee->created_at = time();

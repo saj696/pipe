@@ -4,10 +4,11 @@
         <th>Name</th>
         <th>Salary</th>
         <th>Cut</th>
+        <th>Net</th>
         <th>Overtime</th>
         <th>Overtime Amount</th>
         <th>Bonus</th>
-        <th>Net</th>
+
     </tr>
     @if(sizeof($employees)> 0)
         @foreach($employees as $employee)
@@ -18,6 +19,8 @@
                 <td> {{ $employee->designation->salary }} </td>
                 <td><input type="text" name="employee[{{ $employee->id }}][cut]" placeholder="Cut"
                            class="form-control cut"></td>
+                <td><input readonly type="text" name="employee[{{ $employee->id }}][net]" placeholder="Net"
+                           class="form-control net" value="{{ $employee->designation->salary }}" required></td>
                 <td><input type="text" name="employee[{{ $employee->id }}][overtime]" placeholder="Over time"
                            class="form-control over_time" data-hourly_rate="{{ $employee->designation->hourly_rate }}">
                 </td>
@@ -25,8 +28,6 @@
                            placeholder="Over time amount" class="form-control over_time_amount"></td>
                 <td><input type="text" name="employee[{{ $employee->id }}][bonus]" placeholder="Bonus"
                            class="form-control bonus"></td>
-                <td><input readonly type="text" name="employee[{{ $employee->id }}][net]" placeholder="Net"
-                           class="form-control net" value="{{ $employee->designation->salary }}" required></td>
                 <input type="hidden" class="salary" name="employee[{{ $employee->id }}][salary]"
                        value="{{ $employee->designation->salary }}">
                 <input type="hidden" name="employee[{{ $employee->id }}][employee_type]"

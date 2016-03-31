@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SalesOrder extends Model
+class Defect extends Model
 {
     public $timestamps = false;
-    protected $table = 'sales_order';
+    protected $table = 'defects';
 
-    public function salesOrderItems()
+    public function defectItems()
     {
-        return $this->hasMany('App\Models\SalesOrderItem');
+        return $this->hasMany('App\Models\DefectItem');
     }
 
     public function workspaces()

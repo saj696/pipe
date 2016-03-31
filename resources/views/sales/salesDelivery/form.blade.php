@@ -14,9 +14,11 @@
         <tr class="product">
             <td>{{  $productList->title }}</td>
             <td>
-                {{  $productList->sales_quantity }}
+                {{  $productList->sales_quantity }}{{ $productList->sales_unit_type==1? " (ft)" : " (kg)" }}
                 <input type="hidden" name="quantity[{{ $productList->product_id }}]"
                        value="{{ $productList->sales_quantity }}">
+                <input type="hidden" name="unit_type[{{ $productList->product_id }}]"
+                       value="{{ $productList->sales_unit_type }}">
             </td>
             <td>{{  $productList->delivered_quantity ? $productList->delivered_quantity : 0 }}</td>
             <td class="remaining">{{  ($productList->sales_quantity-$productList->delivered_quantity) }}</td>

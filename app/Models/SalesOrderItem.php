@@ -18,4 +18,9 @@ class SalesOrderItem extends Model
     {
         return $this->belongsTo('App\Models\Product', 'product_id');
     }
+
+    public function salesDelivery()
+    {
+        return $this->hasOne('App\Models\SalesDeliveryDetail','sales_order_id','product_id');
+    }
 }

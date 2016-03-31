@@ -1,17 +1,15 @@
 @extends('layouts.app')
-
 @section('content')
-
     <div class="row">
         <div class="col-md-12">
-            <div class="portlet box yellow">
+            <div class="portlet box blue-hoki">
                 <div class="portlet-title">
                     <div class="caption">
-                        <i class="fa fa-coffee"></i>Salary Generator
+                        <i class="fa fa-coffee"></i>Wage Payment
                     </div>
                     <div>
                         <a style="margin: 12px; padding: 5px;" class="label label-success pull-right"
-                           href="{{ url('/salary_generator/create' )}}">Generate Salary</a>
+                           href="{{ url('/daily_wage_payment/create' )}}">Payment Today</a>
                     </div>
                 </div>
                 <div class="portlet-body">
@@ -23,25 +21,13 @@
                                     Employee Name
                                 </th>
                                 <th>
-                                    Year
+                                    Date
                                 </th>
                                 <th>
-                                    Month
+                                    Wage
                                 </th>
                                 <th>
-                                    Base Salary
-                                </th>
-                                <th>
-                                    Extra Hours
-                                </th>
-                                <th>
-                                    Cut
-                                </th>
-                                <th>
-                                    Bonus
-                                </th>
-                                <th>
-                                    Net Salary
+                                    Due
                                 </th>
                                 <th>
                                     Action
@@ -49,21 +35,16 @@
                             </tr>
                             </thead>
                             <tbody>
-
-                            @if(sizeof($lists)>0)
-                                @foreach($lists as $list)
+                            @if(sizeof($wages) > 0)
+                                @foreach($wages as $wage)
                                     <tr>
-                                        <td>{{ $list->employee->name }}</td>
-                                        <td>{{ $list->year }}</td>
-                                        <td>{{ date('F', mktime(0, 0, 0, $list->month)) }}</td>
-                                        <td>{{ $list->salary }}</td>
-                                        <td>{{ $list->extra_hours}}</td>
-                                        <td>{{ $list->cut}}</td>
-                                        <td>{{ $list->bonus}}</td>
-                                        <td>{{ $list->net}}</td>
+                                        <td>{{ $wage->employee->name }}</td>
+                                        <td>{{ date('d-m-Y',$wage->payment_date) }}</td>
+                                        <td>{{ $wage->wage }}</td>
+                                        <td>{{ $wage->due}}</td>
                                         <td>
                                             <a class="label label-danger"
-                                               href="{{ url('/salary_generator/'.$list->id.'/edit' )}}">Edit</a>
+                                               href="{{ url('/daily_wage_payment/'.$wage->id.'/edit' )}}">Edit</a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -75,9 +56,9 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="pagination"> {{ $lists->links() }} </div>
+                    <div class="pagination"> {{ $wages->links() }} </div>
                 </div>
             </div>
         </div>
     </div>
-@stop
+@endsection

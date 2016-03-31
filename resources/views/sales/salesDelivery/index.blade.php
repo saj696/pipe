@@ -19,21 +19,20 @@
                                     Customer
                                 </th>
                                 <th>
-                                    Customer Type
+                                    Order Type
                                 </th>
                                 <th>
                                     Order Place
                                 </th>
                                 <th>
+                                    Order Date
+                                </th>
+                                <th>
                                     Product Quantity
                                 </th>
                                 <th>
-                                    Total Amount
-                                </th>
-                                <th>
                                     Delivery Status
-                                </th>
-                                <th>
+                                </th><th>
                                     Action
                                 </th>
                             </tr>
@@ -44,10 +43,10 @@
                                 @foreach($salesOrders as $salesOrder)
                                     <tr>
                                         <td>{{ \App\Helpers\CommonHelper::getCustomerName($salesOrder->customer_id,$salesOrder->customer_type) }}</td>
-                                        <td>{{ Config::get('common.sales_customer_type.'.$salesOrder->customer_type) }}</td>
+                                        <td>{{ ($salesOrder->order_type==1)? 'Sales' : 'Replacement' }}</td>
                                         <td>{{ $salesOrder->workspaces->name }}</td>
+                                        <td>{{ date('d-m-Y',$salesOrder->created_at) }}</td>
                                         <td>{{ $salesOrder->salesOrderItems->count() }}</td>
-                                        <td>{{ $salesOrder->total}}</td>
                                         <td>
                                             @if($salesOrder->status==1)
                                                 <span class="label label-danger">Not Yet</span>
