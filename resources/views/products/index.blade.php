@@ -64,7 +64,7 @@
                                         <td>{{ $product->diameter }}</td>
                                         <td>{{ $product->weight }}</td>
                                         <td>{{ $product->length }}</td>
-                                        <td>{{ \Illuminate\Support\Facades\Config::get('common.status')[$product->status] }}</td>
+                                        <td>{{ Config::get('common.status')[$product->status] }}</td>
                                         <td>
                                             <a class="label label-danger"
                                                href="{{ url('/products/'.$product->id.'/edit' )}}">Edit</a>
@@ -79,7 +79,7 @@
                             </tbody>
                         </table>
                     </div>
-                    {{--<div class="pagination"> {{ $tasks->links() }} </div>--}}
+                    <div class="pagination"> {{ $products->links() }} </div>
                 </div>
             </div>
         </div>
