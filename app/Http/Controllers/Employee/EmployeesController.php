@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Employee;
 
+use App\Helpers\CommonHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use App\Http\Requests\EmployeeRequest;
@@ -125,7 +126,7 @@ class EmployeesController extends Controller
                     $generalJournal->date = strtotime(date('d-m-Y'));
                     $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
                     $generalJournal->reference_id = $insertedId;
-                    $generalJournal->year = date('Y');
+                    $generalJournal->year = CommonHelper::get_current_financial_year();
                     $generalJournal->account_code = $accountPayableCode;
                     $generalJournal->workspace_id = $workspace_id;
                     $generalJournal->amount = $request->input('balance');
@@ -146,18 +147,17 @@ class EmployeesController extends Controller
                     $generalJournal->date = strtotime(date('d-m-Y'));
                     $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
                     $generalJournal->reference_id = $insertedId;
-                    $generalJournal->year = date('Y');
+                    $generalJournal->year = CommonHelper::get_current_financial_year();
                     $generalJournal->account_code = $accountReceivableCode;
                     $generalJournal->workspace_id = $workspace_id;
                     $generalJournal->amount = $request->input('due');
-                    $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
+                    $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
                     $generalJournal->created_by = Auth::user()->id;
                     $generalJournal->created_at = time();
                     $generalJournal->save();
                 }
             });
         } catch (\Exception $e) {
-            dd($e);
             Session()->flash('error_message', 'Employee Not Created!');
             return redirect('employees');
         }

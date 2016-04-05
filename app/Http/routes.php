@@ -40,6 +40,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('materials', 'Setup\MaterialsController');
     Route::resource('usageRegisters', 'Register\UsageRegistersController');
     Route::resource('customers', 'Customer\CustomersController');
+    Route::resource('providers', 'Setup\ProvidersController');
     Route::get('sales_invoice/{id}', 'Sales\SalesOrderController@invoice_print');
     Route::resource('salesOrder', 'Sales\SalesOrderController');
     Route::resource('productionRegisters', 'Register\ProductionRegistersController');
@@ -110,6 +111,7 @@ Route::post('parent_select', array('as' => 'ajax.parent_select', 'uses' => 'Ajax
 Route::post('customer_select', array('as' => 'ajax.customer_select', 'uses' => 'AjaxController@getCustomers'));
 Route::post('supplier_select', array('as' => 'ajax.supplier_select', 'uses' => 'AjaxController@getSuppliers'));
 Route::post('employee_select', array('as' => 'ajax.employee_select', 'uses' => 'AjaxController@getEmployees'));
+Route::post('provider_select', array('as' => 'ajax.provider_select', 'uses' => 'AjaxController@getProviders'));
 Route::post('get_personal_account_balance', array('as' => 'ajax.get_personal_account_balance', 'uses' => 'AjaxController@getPersonalAccountBalance'));
 
 Route::post('transaction_recorder_amount', array('as' => 'ajax.transaction_recorder_amount', 'uses' => 'AjaxController@getTransactionRecorderAmount'));

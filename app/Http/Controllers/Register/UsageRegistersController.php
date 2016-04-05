@@ -37,7 +37,15 @@ class UsageRegistersController extends Controller
 
     public function create()
     {
-        $materials = Material::lists('name', 'id');
+        $materialConfig = array_flip(Config::get('common.material_type'));
+        $rawMaterials = Material::where('status', 1)->where('type', '!=', $materialConfig['Discarded'])->select('name', 'id', 'type')->get();
+        $materials = [];
+        foreach ($rawMaterials as $material) {
+            if ($material->type != 1)
+                $materials[$material->id] = Config::get('common.material_type')[$material->type] . ' - ' . $material->name;
+            else
+                $materials[$material->id] = $material->name;
+        }
         return view('usageRegisters.create', compact('materials'));
     }
 
@@ -96,7 +104,15 @@ class UsageRegistersController extends Controller
     public function edit($id)
     {
         $UsageRegister = UsageRegister::findOrFail($id);
-        $materials = Material::lists('name', 'id');
+        $materialConfig = array_flip(Config::get('common.material_type'));
+        $rawMaterials = Material::where('status', 1)->where('type', '!=', $materialConfig['Discarded'])->select('name', 'id', 'type')->get();
+        $materials = [];
+        foreach ($rawMaterials as $material) {
+            if ($material->type != 1)
+                $materials[$material->id] = Config::get('common.material_type')[$material->type] . ' - ' . $material->name;
+            else
+                $materials[$material->id] = $material->name;
+        }
         return view('usageRegisters.edit', compact('UsageRegister', 'materials'));
     }
 

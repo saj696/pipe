@@ -45,8 +45,9 @@ class PurchasesReturnController extends Controller
      */
     public function create()
     {
+        $materialConfig = array_flip(Config::get('common.material_type'));
         $suppliers = Supplier::where('status', 1)->lists('company_name', 'id');
-        $rmaterials = Material::where('status', 1)->select('name', 'id', 'type')->get();
+        $rmaterials = Material::where('status', 1)->where('type', '!=', $materialConfig['Discarded'])->select('name', 'id', 'type')->get();
         $materials = [];
         foreach ($rmaterials as $material) {
             if ($material->type != 1)

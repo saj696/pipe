@@ -7,11 +7,10 @@
             <div class="portlet box yellow">
                 <div class="portlet-title">
                     <div class="caption">
-                        <i class="fa fa-coffee"></i>Transaction Recorders
+                        <i class="fa fa-coffee"></i>Product & Service Provider
                     </div>
                     <div>
-                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right"
-                           href="{{ url('/recorders/create' )}}">New</a>
+                        <a style="margin: 12px; padding: 5px;" class="label label-success pull-right" href="{{ url('/providers/create' )}}">New</a>
                     </div>
                 </div>
 
@@ -21,16 +20,22 @@
                             <thead>
                             <tr>
                                 <th>
-                                    Date
+                                    Name
                                 </th>
                                 <th>
-                                    Account
+                                    Mobile
                                 </th>
                                 <th>
-                                    Total Amount
+                                    Address
                                 </th>
                                 <th>
-                                    Amount
+                                    Company Name
+                                </th>
+                                <th>
+                                    Company Address
+                                </th>
+                                <th>
+                                    Status
                                 </th>
                                 <th>
                                     Action
@@ -38,36 +43,41 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @if(sizeof($recorders)>0)
-                                @foreach($recorders as $recorder)
+                            @if(sizeof($providers)>0)
+                                @foreach($providers as $provider)
                                     <tr>
                                         <td>
-                                            {{ $recorder->date }}
+                                            {{ $provider->name }}
                                         </td>
                                         <td>
-                                            {{ $accounts[$recorder->account_code] }}
+                                            {{ $provider->mobile }}
                                         </td>
                                         <td>
-                                            {{ $recorder->total_amount }}
+                                            {{ $provider->address }}
                                         </td>
                                         <td>
-                                            {{ $recorder->amount }}
+                                            {{ $provider->company_name }}
                                         </td>
                                         <td>
-                                            <a class="label label-danger"
-                                               href="{{ url('/recorders/'.$recorder->id.'/edit' )}}">Edit</a>
+                                            {{ $provider->company_address }}
+                                        </td>
+                                        <td>
+                                            {{ ($provider->status==1)? "Active" : "In-Active" }}
+                                        </td>
+                                        <td>
+                                            <a class="label label-danger" href="{{ url('/providers/'.$provider->id.'/edit' )}}">Edit</a>
                                         </td>
                                     </tr>
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="6" class="text-center danger">No Data Found</td>
+                                    <td colspan="7" class="text-center danger">No Data Found</td>
                                 </tr>
                             @endif
                             </tbody>
                         </table>
                     </div>
-                    <div class="pagination"> {{ $recorders->links() }} </div>
+                    <div class="pagination"> {{ $providers->links() }} </div>
                 </div>
             </div>
         </div>

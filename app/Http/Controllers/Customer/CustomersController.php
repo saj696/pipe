@@ -49,9 +49,6 @@ class CustomersController extends Controller
 
     public function store(CustomerRequest $request)
     {
-//        $inputs = $request->input();
-//        dd($inputs);
-
         try {
 
             DB::transaction(function () use ($request) {
@@ -68,7 +65,9 @@ class CustomersController extends Controller
                     $name = time() . $file->getClientOriginalName();
                     $file->move($destinationPath, $name);
                     $inputs['picture'] = $name;
+                    $customer->picture = $inputs['picture'];
                 }
+
                 $customer->name = $inputs['name'];
                 $customer->mobile = $inputs['mobile'];
                 $customer->address = $inputs['address'];
@@ -141,11 +140,10 @@ class CustomersController extends Controller
                 }
             });
         } catch (\Exception $e) {
-            dd($e);
-            Session::flash('flash_message', 'Failed to create customer. Please Try again.');
+            Session::flash('error_message', 'Failed to create customer. Please Try again.');
             return Redirect::back();
         }
-        Session::flash('flash_message', 'Customer created successfully');
+        Session::flash('flash_message', 'Customer created successfully!');
         return redirect('customers');
     }
 

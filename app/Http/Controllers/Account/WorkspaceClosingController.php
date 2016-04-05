@@ -78,26 +78,53 @@ class WorkspaceClosingController extends Controller
                         $workspaceLedger->created_by = Auth::user()->id;
                         $workspaceLedger->created_at = time();
                         $workspaceLedger->save();
-                        // Initial Balance Next Year
-                        $workspaceLedger = New WorkspaceLedger;
-                        $workspaceLedger->workspace_id = $workspace_id;
-                        $workspaceLedger->year = CommonHelper::get_next_financial_year();
-                        $workspaceLedger->account_code = $a[$ci][1];
-                        $workspaceLedger->balance_type = Config::get('common.balance_type_opening');
-                        $workspaceLedger->balance = $a[$ci][3];
-                        $workspaceLedger->created_by = Auth::user()->id;
-                        $workspaceLedger->created_at = time();
-                        $workspaceLedger->save();
-                        // Intermediate Balance Next Year
-                        $workspaceLedger = New WorkspaceLedger;
-                        $workspaceLedger->workspace_id = $workspace_id;
-                        $workspaceLedger->year = CommonHelper::get_next_financial_year();
-                        $workspaceLedger->account_code = $a[$ci][1];
-                        $workspaceLedger->balance_type = Config::get('common.balance_type_intermediate');
-                        $workspaceLedger->balance = $a[$ci][3];
-                        $workspaceLedger->created_by = Auth::user()->id;
-                        $workspaceLedger->created_at = time();
-                        $workspaceLedger->save();
+
+                        if(substr($a[$ci][1], 0, 1)==1 || substr($a[$ci][1], 0, 1)==4 || substr($a[$ci][1], 0, 1)==6)
+                        {
+                            // Initial Balance Next Year
+                            $workspaceLedger = New WorkspaceLedger;
+                            $workspaceLedger->workspace_id = $workspace_id;
+                            $workspaceLedger->year = CommonHelper::get_next_financial_year();
+                            $workspaceLedger->account_code = $a[$ci][1];
+                            $workspaceLedger->balance_type = Config::get('common.balance_type_opening');
+                            $workspaceLedger->balance = $a[$ci][3];
+                            $workspaceLedger->created_by = Auth::user()->id;
+                            $workspaceLedger->created_at = time();
+                            $workspaceLedger->save();
+                            // Intermediate Balance Next Year
+                            $workspaceLedger = New WorkspaceLedger;
+                            $workspaceLedger->workspace_id = $workspace_id;
+                            $workspaceLedger->year = CommonHelper::get_next_financial_year();
+                            $workspaceLedger->account_code = $a[$ci][1];
+                            $workspaceLedger->balance_type = Config::get('common.balance_type_intermediate');
+                            $workspaceLedger->balance = $a[$ci][3];
+                            $workspaceLedger->created_by = Auth::user()->id;
+                            $workspaceLedger->created_at = time();
+                            $workspaceLedger->save();
+                        }
+                        else
+                        {
+                            // Initial Balance Next Year
+                            $workspaceLedger = New WorkspaceLedger;
+                            $workspaceLedger->workspace_id = $workspace_id;
+                            $workspaceLedger->year = CommonHelper::get_next_financial_year();
+                            $workspaceLedger->account_code = $a[$ci][1];
+                            $workspaceLedger->balance_type = Config::get('common.balance_type_opening');
+                            $workspaceLedger->balance = 0;
+                            $workspaceLedger->created_by = Auth::user()->id;
+                            $workspaceLedger->created_at = time();
+                            $workspaceLedger->save();
+                            // Intermediate Balance Next Year
+                            $workspaceLedger = New WorkspaceLedger;
+                            $workspaceLedger->workspace_id = $workspace_id;
+                            $workspaceLedger->year = CommonHelper::get_next_financial_year();
+                            $workspaceLedger->account_code = $a[$ci][1];
+                            $workspaceLedger->balance_type = Config::get('common.balance_type_intermediate');
+                            $workspaceLedger->balance = 0;
+                            $workspaceLedger->created_by = Auth::user()->id;
+                            $workspaceLedger->created_at = time();
+                            $workspaceLedger->save();
+                        }
                     }
 
                     // Workspace Account Close Info

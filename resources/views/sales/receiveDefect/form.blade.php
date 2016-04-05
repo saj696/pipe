@@ -207,8 +207,10 @@
                 url = "{{ route('ajax.supplier_select') }}";
             } else if (type == 1) {
                 url = "{{ route('ajax.employee_select') }}";
-            } else {
+            } else if (type == 3){
                 url = "{{ route('ajax.customer_select') }}";
+            } else if (type == 4){
+                url = "{{ route('ajax.provider_select') }}";
             }
 
             $.ajax({

@@ -15,11 +15,12 @@ return [
     'status' => ['1'=>'Active','0'=>'Inactive'],
     'material_type' => ['1'=>'Normal', '2'=>'Color', '3'=>'Mixer', '4'=>'Discarded'],
     'customer_type' =>['1'=>'Dealer','2'=>'Non Dealer'],
-    'sales_customer_type' => [1=>'Employee',2 =>'Supplier',3=>'Customer'],
+    'sales_customer_type' => [1=>'Employee',2 =>'Supplier',3=>'Customer',4=>'Product & Service Provider'],
     'supplier_types'=>[1=>'Local',2=>'International'],
     'person_type_employee'=>1,
     'person_type_supplier'=>2,
     'person_type_customer'=>3,
+    'person_type_provider'=>4,
     'delivery_type'=>[1=>'Not Yet',2=>'Partial',3=>'Fully'],
     'transaction_accounts'=>['11000', '12000', '20000', '30000', '41000', '50000', '60000', '31000', '32000', '23000', '24000', '25000', '26000', '27000'],
     'delivery_status'=>[1=>'Not Yet',2=>'Partial',4=>'Delivered'],
@@ -58,5 +59,5 @@ return [
 
     'defect_return_type' => [1 => 'Cash', 2 => 'Pay Due', 3 => 'Due', 4 => 'Pay Due & Cash Return', 5 => 'Replacement'],
     'sales_order_type' => ['sales'=>1,'replacement'=>2],
-    'cash_adjustment_type' => ['Add' => 1, 'Reduce' => 2],
+    'cash_adjustment_type' => ['Invisible Expense' => 29994, 'Invisible Income' => 37000],
 ];

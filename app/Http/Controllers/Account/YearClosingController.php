@@ -22,7 +22,7 @@ class YearClosingController extends Controller
     public function __construct()
     {
         $this->middleware('perm');
-        $this->middleware('transactionPermission', ['except' => ['index']]);
+        //$this->middleware('transactionPermission', ['except' => ['index']]);
     }
 
     public function index()
@@ -54,15 +54,31 @@ class YearClosingController extends Controller
                             $generalLedger->created_by = Auth::user()->id;
                             $generalLedger->created_at = time();
                             $generalLedger->save();
-                            // Opening Balance Set for Next Financial Year
-                            $generalLedger = New GeneralLedger;
-                            $generalLedger->year = CommonHelper::get_next_financial_year();
-                            $generalLedger->account_code = $head;
-                            $generalLedger->balance_type = Config::get('common.balance_type_opening');
-                            $generalLedger->balance = $headTotal;
-                            $generalLedger->created_by = Auth::user()->id;
-                            $generalLedger->created_at = time();
-                            $generalLedger->save();
+                            
+                            if(substr($head, 0, 1)==1 || substr($head, 0, 1)==4 || substr($head, 0, 1)==6)
+                            {
+                                // Opening Balance Set for Next Financial Year
+                                $generalLedger = New GeneralLedger;
+                                $generalLedger->year = CommonHelper::get_next_financial_year();
+                                $generalLedger->account_code = $head;
+                                $generalLedger->balance_type = Config::get('common.balance_type_opening');
+                                $generalLedger->balance = $headTotal;
+                                $generalLedger->created_by = Auth::user()->id;
+                                $generalLedger->created_at = time();
+                                $generalLedger->save();
+                            }
+                            else
+                            {
+                                // Opening Balance Set for Next Financial Year
+                                $generalLedger = New GeneralLedger;
+                                $generalLedger->year = CommonHelper::get_next_financial_year();
+                                $generalLedger->account_code = $head;
+                                $generalLedger->balance_type = Config::get('common.balance_type_opening');
+                                $generalLedger->balance = 0;
+                                $generalLedger->created_by = Auth::user()->id;
+                                $generalLedger->created_at = time();
+                                $generalLedger->save();
+                            }
                         }
 
                         // Account Closing table Impact
@@ -102,12 +118,13 @@ class YearClosingController extends Controller
 
                         // Current Year Data Fetch
                         $existingYearDetail = DB::table('financial_years')->where('year', $currentYear)->first();
+                        $nextYear = CommonHelper::get_next_financial_year();
                         // Current Year Inactive
                         DB::table('financial_years')->where('year', $currentYear)->update(['status' => 0]);
                         // New Year Insert
                         DB::table('financial_years')->insert(
                             [
-                                'year' => CommonHelper::get_next_financial_year(),
+                                'year' => $nextYear,
                                 'start_date'=>strtotime(date("Y-m-d", $existingYearDetail->start_date) . " + 1 year"),
                                 'end_date'=>strtotime(date("Y-m-d", $existingYearDetail->end_date) . " + 1 year"),
                                 'created_by'=>Auth::user()->id,

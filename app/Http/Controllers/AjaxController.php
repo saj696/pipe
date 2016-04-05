@@ -9,6 +9,7 @@ use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\Module;
 use App\Models\PersonalAccount;
+use App\Models\Provider;
 use App\Models\PurchaseDetail;
 use App\Models\RawStock;
 use App\Models\Salary;
@@ -62,6 +63,13 @@ class AjaxController extends Controller
     {
         $employees = Employee::where('status', 1)->lists('name', 'id');
         $dropdown = view('ajaxView.employeeDropDown')->with('employees', $employees)->render();
+        return response()->json($dropdown);
+    }
+
+    public function getProviders()
+    {
+        $providers = Provider::where('status', 1)->lists('name', 'id');
+        $dropdown = view('ajaxView.providerDropDown')->with('providers', $providers)->render();
         return response()->json($dropdown);
     }
 

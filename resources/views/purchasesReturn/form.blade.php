@@ -57,7 +57,7 @@ $old_items = isset($purchase) ? $purchase['purchaseDetails'] : false;
                 <table class="table table-bordered">
                     <tr>
                         <td width="25%">
-                            {{ Form::select('items['.$item['id'].'][material_id]',$materials, $item['material_id'],['class'=>'form-control material_id','id'=>'','required','placeholder'=>'Select Material']) }}
+                            {{ Form::select('items['.$item['id'].'][material_id]',$materials, $item['material_id'],['class'=>'form-control material_id','required','placeholder'=>'Select']) }}
                         </td>
                         <td>
                             {{ Form::number('items['.$item['id'].'][quantity]', $item['quantity'],['class'=>'form-control quantity','id'=>'','required','placeholder'=>'Quantity','min'=>1,'step'=>0.01]) }}
@@ -82,41 +82,40 @@ $old_items = isset($purchase) ? $purchase['purchaseDetails'] : false;
             </div>
         @endforeach
     @else
-        <div class="col-md-12 purchase_row">
-            <table class="table table-bordered">
-                <tr>
-                    <td width="25%">
-                        <select name="items[0][material_id]" required="required" class="form-control material_id">
-                            @foreach($materials as $material_id=>$material)
-                                <option value="{{$material_id}}"
-                                        data-raw-stock="{{$raw_stock[$material_id]}}">{{$material}}</option>
-                            @endforeach
-                        </select>
-                    </td>
+    <div class="col-md-12 purchase_row">
+        <table class="table table-bordered">
+            <tr>
+                <td width="25%">
+                    <select name="items[0][material_id]" required="required" class="form-control material_id">
+                        @foreach($materials as $material_id=>$material)
+                            <option value="{{$material_id}}"
+                                    data-raw-stock="{{$raw_stock[$material_id]}}">{{$material}}</option>
+                        @endforeach
+                    </select>
+                </td>
 
-                    <td>
-                        <div class="col-md-1 material_in_stock"><span class="badge badge-danger"></span></div>
-                    </td>
-                    <td>
-                        {{ Form::number('items[0][quantity]', null,['class'=>'form-control quantity','id'=>'','required','placeholder'=>'Quantity','min'=>1,'step'=>0.01]) }}
-                    </td>
-                    <td>
-                        {{ Form::number('items[0][unit_price]', null,['class'=>'form-control unit_price','id'=>'','required','placeholder'=>'Unit Price','min'=>0.01,'step'=>0.01]) }}
-                    </td>
-                    <td width="15%" class="text-center">
-                        <span class="badge badge-info row_total" style="margin-top: 10px">0</span>
-                    </td>
-                    <td>
-                        <i class="fa fa-close" onclick="closeIt(this)"
-                           style="color: red;margin-top: 10px; cursor: pointer"></i>
-                    </td>
-                </tr>
-            </table>
-        </div>
+                <td>
+                    <div class="col-md-1 material_in_stock"><span class="badge badge-danger"></span></div>
+                </td>
+                <td>
+                    {{ Form::number('items[0][quantity]', null,['class'=>'form-control quantity','id'=>'','required','placeholder'=>'Quantity','min'=>1,'step'=>0.01]) }}
+                </td>
+                <td>
+                    {{ Form::number('items[0][unit_price]', null,['class'=>'form-control unit_price','id'=>'','required','placeholder'=>'Unit Price','min'=>0.01,'step'=>0.01]) }}
+                </td>
+                <td width="15%" class="text-center">
+                    <span class="badge badge-info row_total" style="margin-top: 10px">0</span>
+                </td>
+                <td>
+                    <i class="fa fa-close" onclick="closeIt(this)"
+                       style="color: red;margin-top: 10px; cursor: pointer"></i>
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>
 @endif
 
-</div>
 
 <div class="col-md-12 text-center">
     <button type="button" onclick="addMore()" class="btn-circle btn btn-success" style="margin: 10px 0">

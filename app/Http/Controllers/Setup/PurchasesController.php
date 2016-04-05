@@ -46,8 +46,9 @@ class PurchasesController extends Controller
      */
     public function create()
     {
+        $materialConfig = array_flip(Config::get('common.material_type'));
         $suppliers = Supplier::where('status', 1)->lists('company_name', 'id');
-        $rmaterials = Material::where('status', 1)->select('name', 'id', 'type')->get();
+        $rmaterials = Material::where('status', 1)->where('type', '!=', $materialConfig['Discarded'])->select('name', 'id', 'type')->get();
         $materials = [];
         foreach ($rmaterials as $material) {
             if ($material->type != 1)
@@ -66,8 +67,6 @@ class PurchasesController extends Controller
      */
     public function store(PurchaseRequest $request)
     {
-//        $input = $request->input();
-//        dd($input);
         if (!$request->input('items')) {
             Session()->flash('error_message', 'Purchases has not been Completed');
             return redirect('purchases');
@@ -244,7 +243,7 @@ class PurchasesController extends Controller
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $purchase_id;
                     $journal->year = $year;
-                    $journal->account_code = 25000; //Cash
+                    $journal->account_code = 25000; //Purchase
                     $journal->workspace_id = $workspace_id;
                     $journal->amount = $input['total'];
                     $journal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');

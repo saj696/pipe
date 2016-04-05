@@ -49,8 +49,7 @@
     </div>
 </div>
 
-<div class="to_whom_div"
-     style="display: {{ (isset($recorder->to_whom_type) && $recorder->to_whom_type>0)?'show':'none' }};">
+<div class="to_whom_div" style="display: {{ (isset($recorder->to_whom_type) && $recorder->to_whom_type>0)?'show':'none' }};">
     @if(isset($recorder->to_whom_type) && $recorder->to_whom_type>0)
         @if($recorder->to_whom_type==1)
             <?php
@@ -66,6 +65,11 @@
             <?php
             $to_whom_data = $employees;
             $label = 'Employee';
+            ?>
+        @elseif($recorder->to_whom_type==3)
+            <?php
+            $to_whom_data = $providers;
+            $label = 'Service Provider';
             ?>
         @endif
 
@@ -109,6 +113,11 @@
             $from_whom_data = $employees;
             $label = 'Employee';
             ?>
+        @elseif($recorder->from_whom_type==4)
+            <?php
+            $from_whom_data = $providers;
+            $label = 'Service Provider';
+            ?>
         @endif
 
         <div class="form-group">
@@ -124,7 +133,7 @@
      style="display: {{ (isset($recorder->total_amount) && $recorder->total_amount>0)?'show':'none' }};">
     {{ Form::label('total_amount', 'Total Amount', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('total_amount') ? ' has-error' : '' }}">
-        {{ Form::text('total_amount', null,['class'=>'form-control total_amount']) }}
+        {{ Form::text('total_amount', null,['class'=>'form-control total_amount quantity']) }}
         @if ($errors->has('total_amount'))
             <span class="help-block">
                 <strong>{{ $errors->first('total_amount') }}</strong>
@@ -137,7 +146,7 @@
      style="display: {{ (isset($recorder->amount) && $recorder->amount>0)?'show':'none' }};">
     {{ Form::label('amount', 'Amount', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('amount') ? ' has-error' : '' }}">
-        {{ Form::text('amount', null,['class'=>'form-control amount', 'required'=>'required']) }}
+        {{ Form::text('amount', null,['class'=>'form-control amount quantity', 'required'=>'required']) }}
         @if ($errors->has('amount'))
             <span class="help-block">
                 <strong>{{ $errors->first('amount') }}</strong>
@@ -182,6 +191,10 @@
     });
 
     $(document).ready(function () {
+        $(document).on("keyup", ".quantity", function () {
+            this.value = this.value.replace(/[^0-9\.]/g, '');
+        });
+
         $(document).on('change', '#account_type', function () {
             $('.total_amount').val('');
             var code = $(this).val();
@@ -276,6 +289,9 @@
                 else if (type == 3) {
                     url = "{{ route('ajax.customer_select') }}";
                 }
+                else if (type == 4) {
+                    url = "{{ route('ajax.provider_select') }}";
+                }
 
                 $.ajax({
                     url: url,
@@ -288,6 +304,7 @@
 
                         $('.employee_customer_supplier').attr('name', 'to_whom');
                         $('.employee_customer_supplier').attr('id', 'to_whom');
+                        $('.select2me').select2();
                     },
                     error: function (xhr, desc, err) {
                         console.log("error");
@@ -314,7 +331,9 @@
                 else if (type == 3) {
                     url = "{{ route('ajax.customer_select') }}";
                 }
-
+                else if (type == 4) {
+                    url = "{{ route('ajax.provider_select') }}";
+                }
                 $.ajax({
                     url: url,
                     type: 'POST',
@@ -326,6 +345,7 @@
 
                         $('.employee_customer_supplier').attr('name', 'from_whom');
                         $('.employee_customer_supplier').attr('id', 'from_whom');
+                        $('.select2me').select2();
                     },
                     error: function (xhr, desc, err) {
                         console.log("error");
@@ -343,7 +363,16 @@
             var total_amount = parseFloat($('.total_amount').val());
             var due = total_amount - amount;
 
-            $('.due').val(due);
+            if(due<0)
+            {
+                $(this).val(0);
+                $('.due').val(total_amount);
+                alert('Paid amount exceeds total amount!');
+            }
+            else
+            {
+                $('.due').val(due);
+            }
         });
 
         $(document).on('change', '#from_whom', function () {
@@ -396,7 +425,7 @@
             var code = $('#account_type').val();
             var slice = code.substring(0, 1);
 
-            if (slice == 1 || slice == 2 || slice == 3)
+            if ((slice == 1 || slice == 2 || slice == 3) && code!=29930 && code!=29960 && code!=29940)
             {
                 if($('#from_whom').val()>0)
                 {
