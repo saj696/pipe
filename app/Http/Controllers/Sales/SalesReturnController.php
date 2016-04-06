@@ -8,7 +8,6 @@ use App\Http\Requests;
 use App\Models\Customer;
 use App\Models\GeneralJournal;
 use App\Models\PersonalAccount;
-use App\Models\Product;
 use App\Models\Stock;
 use App\Models\WorkspaceLedger;
 use DB;
@@ -50,7 +49,6 @@ class SalesReturnController extends Controller
             'return_type' => 'required',
         ]);
 
-
         try {
             DB::transaction(function () use ($request) {
                 $inputs = $request->input();
@@ -84,7 +82,6 @@ class SalesReturnController extends Controller
                 $data['created_by'] = $user_id;
                 $data['created_at'] = $time;
 
-                $products = Product::whereIn('id', array_column($inputs['product'], 'product_id'))->get()->toArray();
                 foreach ($inputs['product'] as $product) {
                     $data['product_id'] = $product['product_id'];
                     $data['quantity'] = $product['quantity_returned'];
@@ -94,18 +91,14 @@ class SalesReturnController extends Controller
 
                     $quantity_returned = $product['quantity_returned'];
 
-                    $stock = Stock::find($product['product_id']);
+                    $stock = Stock::where('year','=',$year)->where('stock_type','=',$balance_type)->where('product_id','=',$product['product_id'])->first();
                     if ($product['unit_type'] == 2) {
-                        foreach ($products as $item) {
-                            if ($item['id'] == $product['product_id']) {
-                                $quantity_returned = (($quantity_returned / $item['weight']) * $item['length']);
-                            }
-                        }
+                        $quantity_returned = ($product['quantity_returned'] / $product['weight']) * $product['length'];
                     }
                     $stock->quantity += $quantity_returned;
                     $stock->updated_by = $user_id;
                     $stock->updated_at = $time;
-                    $stock->save();
+                    $stock->update();
                 }
 
 

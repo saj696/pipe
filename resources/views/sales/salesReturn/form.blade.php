@@ -164,6 +164,8 @@
                         "</div>" +
                         "<div class='col-md-2'>" +
                         "<input required data-wholesale_price='" + ui.item.wholesale_price + "' data-retail_price='" + ui.item.retail_price + "' data-length='" + ui.item.length + "' data-weight='" + ui.item.weight + "' title='W: " + (ui.item.wholesale_price / ui.item.length).toFixed(2) + ", R: " + (ui.item.retail_price / ui.item.length).toFixed(2) + "' type='number' min='0.01' step='0.01' class='form-control pcal single_p_rate' name='product[" + index + "][unit_price]' placeholder='Unit Price'> " +
+                        "<input value='" + ui.item.length + "' type='hidden' name='product[" + index + "][length]'> " +
+                        "<input value='" + ui.item.weight + "' type='hidden' name='product[" + index + "][weight]'> " +
                         "</div>" +
                         "<div class='col-md-2'>" +
                         "<input  type='text' readonly class='form-control single_p_total'> " +

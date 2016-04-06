@@ -51,7 +51,7 @@
 <div class="form-group">
     {{ Form::label('balance', 'Balance', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('balance') ? ' has-error' : '' }}">
-        {{ Form::text('balance',null,['class'=>'form-control']) }}
+        {{ Form::number('balance',null,['class'=>'form-control','min'=>0, 'step'=>0.01]) }}
         @if ($errors->has('balance'))
             <span class="help-block">
                 <strong>{{ $errors->first('balance') }}</strong>
@@ -65,7 +65,7 @@
 <div class="form-group">
     {{ Form::label('due', 'Due', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('due') ? ' has-error' : '' }}">
-        {{ Form::text('due',null,['class'=>'form-control']) }}
+        {{ Form::number('due',null,['class'=>'form-control','min'=>0, 'step'=>0.01]) }}
         @if ($errors->has('due'))
             <span class="help-block">
                 <strong>{{ $errors->first('due') }}</strong>
