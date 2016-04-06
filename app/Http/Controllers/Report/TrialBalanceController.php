@@ -45,11 +45,13 @@ class TrialBalanceController extends Controller
         $debits = DB::table('general_journals')
             ->select('general_journals.*', 'chart_of_accounts.name')
             ->join('chart_of_accounts', 'chart_of_accounts.code', '=', 'general_journals.account_code')
+            ->where('transaction_type', '!=', Config::get('common.transaction_type.cash_transfer'))
             ->where(['workspace_id'=>$workspace_id, 'dr_cr_indicator'=>Config::get('common.debit_credit_indicator.debit'), 'year'=>CommonHelper::get_current_financial_year(), 'general_journals.status'=>1])
             ->get();
         $credits = DB::table('general_journals')
             ->select('general_journals.*', 'chart_of_accounts.name')
             ->join('chart_of_accounts', 'chart_of_accounts.code', '=', 'general_journals.account_code')
+            ->where('transaction_type', '!=', Config::get('common.transaction_type.cash_transfer'))
             ->where(['workspace_id'=>$workspace_id, 'dr_cr_indicator'=>Config::get('common.debit_credit_indicator.credit'), 'year'=>CommonHelper::get_current_financial_year(), 'general_journals.status'=>1])
             ->get();
 
