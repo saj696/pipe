@@ -34,34 +34,54 @@ class IncomeStatementReportController extends Controller
     public function getReport(Request $request)
     {
         $this->validate($request, [
-            'workspace' => 'required',
             'ending_date' => 'required',
         ]);
 
         $workspace_id = $request->workspace;
         $ending_date = strtotime($request->ending_date);
 
-        $revenues = DB::table('general_journals')
-            ->select('general_journals.*', DB::raw('SUM(amount) as sum_amount'), 'chart_of_accounts.name', 'chart_of_accounts.contra_status')
-            ->join('chart_of_accounts', 'chart_of_accounts.code', '=', 'general_journals.account_code')
-            ->where(['workspace_id'=>$workspace_id, 'year'=>CommonHelper::get_current_financial_year(), 'general_journals.status'=>1])
-            ->where('general_journals.account_code', 'like', '3%')
-            ->where('general_journals.date', '<=', $ending_date)
-            ->groupBy('general_journals.account_code')
-            ->get();
+        if($workspace_id>0)
+        {
+            $revenues = DB::table('general_journals')
+                ->select('general_journals.*', DB::raw('SUM(amount) as sum_amount'), 'chart_of_accounts.name', 'chart_of_accounts.contra_status')
+                ->join('chart_of_accounts', 'chart_of_accounts.code', '=', 'general_journals.account_code')
+                ->where(['workspace_id'=>$workspace_id, 'year'=>CommonHelper::get_current_financial_year(), 'general_journals.status'=>1])
+                ->where('general_journals.account_code', 'like', '3%')
+                ->where('general_journals.date', '<=', $ending_date)
+                ->groupBy('general_journals.account_code')
+                ->get();
 
-        $expenses = DB::table('general_journals')
-            ->select('general_journals.*', DB::raw('SUM(amount) as sum_amount'), 'chart_of_accounts.name', 'chart_of_accounts.contra_status')
-            ->join('chart_of_accounts', 'chart_of_accounts.code', '=', 'general_journals.account_code')
-            ->where(['workspace_id'=>$workspace_id, 'year'=>CommonHelper::get_current_financial_year(), 'general_journals.status'=>1])
-            ->where('general_journals.account_code', 'like', '2%')
-            ->where('general_journals.date', '<=', $ending_date)
-            ->groupBy('general_journals.account_code')
-            ->get();
+            $expenses = DB::table('general_journals')
+                ->select('general_journals.*', DB::raw('SUM(amount) as sum_amount'), 'chart_of_accounts.name', 'chart_of_accounts.contra_status')
+                ->join('chart_of_accounts', 'chart_of_accounts.code', '=', 'general_journals.account_code')
+                ->where(['workspace_id'=>$workspace_id, 'year'=>CommonHelper::get_current_financial_year(), 'general_journals.status'=>1])
+                ->where('general_journals.account_code', 'like', '2%')
+                ->where('general_journals.date', '<=', $ending_date)
+                ->groupBy('general_journals.account_code')
+                ->get();
+        }
+        else
+        {
+            $revenues = DB::table('general_journals')
+                ->select('general_journals.*', DB::raw('SUM(amount) as sum_amount'), 'chart_of_accounts.name', 'chart_of_accounts.contra_status')
+                ->join('chart_of_accounts', 'chart_of_accounts.code', '=', 'general_journals.account_code')
+                ->where(['year'=>CommonHelper::get_current_financial_year(), 'general_journals.status'=>1])
+                ->where('general_journals.account_code', 'like', '3%')
+                ->where('general_journals.date', '<=', $ending_date)
+                ->groupBy('general_journals.account_code')
+                ->get();
 
+            $expenses = DB::table('general_journals')
+                ->select('general_journals.*', DB::raw('SUM(amount) as sum_amount'), 'chart_of_accounts.name', 'chart_of_accounts.contra_status')
+                ->join('chart_of_accounts', 'chart_of_accounts.code', '=', 'general_journals.account_code')
+                ->where(['year'=>CommonHelper::get_current_financial_year(), 'general_journals.status'=>1])
+                ->where('general_journals.account_code', 'like', '2%')
+                ->where('general_journals.date', '<=', $ending_date)
+                ->groupBy('general_journals.account_code')
+                ->get();
+        }
 
         $ajaxView = view('reports.incomeStatement.view', compact('revenues', 'expenses', 'ending_date'))->render();
         return response()->json($ajaxView);
     }
-
 }
