@@ -228,6 +228,7 @@
             if (return_type == 2 || return_type == 4) {
 
                 var person_id = $('#customer_id option:selected').val();
+                var total = parseFloat($('#total').val());
 
                 if (person_id <= 0) {
                     $('#product_return_type').prop('selectedIndex',0);
@@ -253,7 +254,7 @@
                                 '<div class="form-group">' +
                                 '<label class="col-md-3 control-label" for="total">Due Paid</label>' +
                                 '<div class="col-md-7">' +
-                                '<input type="number" step="0.01" min="0" max="'+ data +'" id="due_paid" name="due_paid" class="form-control" required>' +
+                                '<input type="number" step="0.01" min="0" max="'+ total +'" id="due_paid" name="due_paid" class="form-control" required>' +
                                 '</div>' +
                                 '</div>';
                         $('.pay_due').html(html);

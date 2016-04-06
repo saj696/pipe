@@ -158,6 +158,7 @@ class SalesReturnController extends Controller
                     $workspace->updated_by = $user_id;
                     $workspace->updated_at = $time;
                     $workspace->save();
+
                     $workspace = WorkspaceLedger::where(['account_code' => 32000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
                     $workspace->balance += $inputs['total']; //Add Product Sales Return
                     $workspace->updated_by = $user_id;
