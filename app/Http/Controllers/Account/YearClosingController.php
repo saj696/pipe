@@ -54,10 +54,10 @@ class YearClosingController extends Controller
                             $generalLedger->created_by = Auth::user()->id;
                             $generalLedger->created_at = time();
                             $generalLedger->save();
-                            
+
+                            // Opening Balance Set for Next Financial Year
                             if(substr($head, 0, 1)==1 || substr($head, 0, 1)==4 || substr($head, 0, 1)==6)
                             {
-                                // Opening Balance Set for Next Financial Year
                                 $generalLedger = New GeneralLedger;
                                 $generalLedger->year = CommonHelper::get_next_financial_year();
                                 $generalLedger->account_code = $head;
@@ -69,7 +69,6 @@ class YearClosingController extends Controller
                             }
                             else
                             {
-                                // Opening Balance Set for Next Financial Year
                                 $generalLedger = New GeneralLedger;
                                 $generalLedger->year = CommonHelper::get_next_financial_year();
                                 $generalLedger->account_code = $head;

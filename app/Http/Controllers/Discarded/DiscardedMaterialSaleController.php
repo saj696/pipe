@@ -66,7 +66,7 @@ class DiscardedMaterialSaleController extends Controller
                     $discardedSales->customer_id = $request->customer_id;
                     $discardedSales->total_amount = $request->total_amount;
                     $discardedSales->paid_amount = $request->paid_amount;
-                    $discardedSales->due_amount = $total_amount - $paid_amount;
+                    $discardedSales->due_amount = $due_amount;
                     $discardedSales->created_by = Auth::user()->id;
                     $discardedSales->created_at = time();
                     $discardedSales->save();
@@ -83,19 +83,38 @@ class DiscardedMaterialSaleController extends Controller
                         $saleDetail->save();
                     }
 
+                    // Workspace Ledger Discarded Sale Account Debit(+)
+                    $discardedWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => 33000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => CommonHelper::get_current_financial_year()])->first();
+                    $discardedWorkspaceData->balance += $total_amount;
+                    $discardedWorkspaceData->update();
+
+                    // General Journals Discarded Sale Credit
+                    $generalJournal = New GeneralJournal;
+                    $generalJournal->date = strtotime($request->date);
+                    $generalJournal->transaction_type = Config::get('common.transaction_type.discarded_sale');
+                    $generalJournal->reference_id = $discardedSales->id;
+                    $generalJournal->year = CommonHelper::get_current_financial_year();
+                    $generalJournal->account_code = 33000;
+                    $generalJournal->workspace_id = $workspace_id;
+                    $generalJournal->amount = $total_amount;
+                    $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
+                    $generalJournal->created_by = Auth::user()->id;
+                    $generalJournal->created_at = time();
+                    $generalJournal->save();
+
                     if($paid_amount>0)
                     {
-                        // Workspace Ledger Discarded Sale Account Debit(+)
-                        $discardedWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => 33000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => CommonHelper::get_current_financial_year()])->first();
+                        // Workspace Ledger Cash Account Debit(+)
+                        $discardedWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => 11000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => CommonHelper::get_current_financial_year()])->first();
                         $discardedWorkspaceData->balance += $paid_amount;
                         $discardedWorkspaceData->update();
-                        // General Journals Insert
+                        // General Journals Cash Debit
                         $generalJournal = New GeneralJournal;
                         $generalJournal->date = strtotime($request->date);
                         $generalJournal->transaction_type = Config::get('common.transaction_type.discarded_sale');
                         $generalJournal->reference_id = $discardedSales->id;
                         $generalJournal->year = CommonHelper::get_current_financial_year();
-                        $generalJournal->account_code = 33000;
+                        $generalJournal->account_code = 11000;
                         $generalJournal->workspace_id = $workspace_id;
                         $generalJournal->amount = $paid_amount;
                         $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
@@ -116,7 +135,7 @@ class DiscardedMaterialSaleController extends Controller
                         $personData = PersonalAccount::where(['person_id' => $person_id, 'person_type' => $person_type])->first();
                         $personData->balance += $due_amount;
                         $personData->update();
-                        // General Journals Insert
+                        // General Journals Account Receivable Debit
                         $generalJournal = New GeneralJournal;
                         $generalJournal->date = strtotime($request->date);
                         $generalJournal->transaction_type = Config::get('common.transaction_type.discarded_sale');
@@ -171,6 +190,7 @@ class DiscardedMaterialSaleController extends Controller
                     $discardedSales = DiscardedSales::findOrFail($id);
                     $old_paid_amount = $discardedSales->paid_amount;
                     $old_due_amount = $discardedSales->due_amount;
+                    $old_total_amount = $discardedSales->total_amount;
 
                     $discardedSales->year = CommonHelper::get_current_financial_year();
                     $discardedSales->date = $request->date;
@@ -211,24 +231,56 @@ class DiscardedMaterialSaleController extends Controller
                         }
                     }
 
-                    if($old_paid_amount != $paid_amount)
+                    if($old_total_amount != $total_amount)
                     {
                         // Workspace Ledger Discarded Sale Account Debit(+)
                         $discardedWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => 33000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => CommonHelper::get_current_financial_year()])->first();
                         if($old_paid_amount>$paid_amount)
                         {
+                            $update_total_amount = $old_total_amount-$total_amount;
+                            $discardedWorkspaceData->balance -= $update_total_amount;
+                        }
+                        else
+                        {
+                            $update_total_amount = $total_amount-$old_total_amount;
+                            $discardedWorkspaceData->balance += $update_total_amount;
+                        }
+                        $discardedWorkspaceData->update();
+                        // General Journal Update
+                        $generalJournal = GeneralJournal::where(['transaction_type'=>Config::get('common.transaction_type.discarded_sale'),'reference_id'=>$id,'workspace_id' => $workspace_id, 'account_code' => 33000, 'year' => CommonHelper::get_current_financial_year()])->first();;
+                        if($old_total_amount>$total_amount)
+                        {
+                            $update_total_amount = $old_total_amount-$total_amount;
+                            $generalJournal->amount -= $update_total_amount;
+                        }
+                        else
+                        {
+                            $update_total_amount = $total_amount-$old_total_amount;
+                            $generalJournal->amount += $update_total_amount;
+                        }
+                        $generalJournal->updated_by = Auth::user()->id;
+                        $generalJournal->updated_at = time();
+                        $generalJournal->update();
+                    }
+
+                    if($old_paid_amount != $paid_amount)
+                    {
+                        // Workspace Ledger Cash Account Debit(+)
+                        $cashWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => 11000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => CommonHelper::get_current_financial_year()])->first();
+                        if($old_paid_amount>$paid_amount)
+                        {
                             $update_paid_amount = $old_paid_amount-$paid_amount;
-                            $discardedWorkspaceData->balance -= $update_paid_amount;
+                            $cashWorkspaceData->balance -= $update_paid_amount;
                         }
                         else
                         {
                             $update_paid_amount = $paid_amount-$old_paid_amount;
-                            $discardedWorkspaceData->balance += $update_paid_amount;
+                            $cashWorkspaceData->balance += $update_paid_amount;
                         }
-                        $discardedWorkspaceData->update();
+                        $cashWorkspaceData->update();
 
-                        // General Journals Update
-                        $generalJournal = GeneralJournal::where(['reference_id'=>$id,'workspace_id' => $workspace_id, 'account_code' => 33000, 'year' => CommonHelper::get_current_financial_year()])->first();;
+                        // General Journals Cash Update
+                        $generalJournal = GeneralJournal::where(['transaction_type'=>Config::get('common.transaction_type.discarded_sale'),'reference_id'=>$id,'workspace_id' => $workspace_id, 'account_code' => 11000, 'year' => CommonHelper::get_current_financial_year()])->first();;
                         if($old_paid_amount>$paid_amount)
                         {
                             $update_paid_amount = $old_paid_amount-$paid_amount;
@@ -276,8 +328,8 @@ class DiscardedMaterialSaleController extends Controller
                         }
                         $personData->update();
 
-                        // General Journals Update
-                        $generalJournal = GeneralJournal::where(['reference_id'=>$id,'workspace_id' => $workspace_id, 'account_code' => 12000, 'year' => CommonHelper::get_current_financial_year()])->first();;
+                        // General Journals Account Receivable Update
+                        $generalJournal = GeneralJournal::where(['transaction_type'=>Config::get('common.transaction_type.discarded_sale'),'reference_id'=>$id,'workspace_id' => $workspace_id, 'account_code' => 12000, 'year' => CommonHelper::get_current_financial_year()])->first();;
                         if($old_due_amount>$due_amount)
                         {
                             $update_due_amount = $old_due_amount-$due_amount;
@@ -290,7 +342,7 @@ class DiscardedMaterialSaleController extends Controller
                         }
                         $generalJournal->updated_by = Auth::user()->id;
                         $generalJournal->updated_at = time();
-                        $generalJournal->save();
+                        $generalJournal->update();
                     }
                 }
             });
