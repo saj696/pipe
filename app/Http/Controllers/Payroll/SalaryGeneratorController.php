@@ -75,7 +75,7 @@ class SalaryGeneratorController extends Controller
                     $personalAccount = PersonalAccount::where(['person_id' => $employee_id, 'person_type' => Config::get('common.person_type_employee')])->first();
                     $personalAccount->balance += $inputs['employee'][$employee_id]['net']; //Add Balance
                     if ($inputs['employee'][$employee_id]['overtime'] > 0) {
-                        $personalAccount->overtime_balance += $inputs['employee'][$employee_id]['overtime']; //Add overtime balance
+                        $personalAccount->overtime_balance += $inputs['employee'][$employee_id]['overtime_amount']; //Add overtime balance
                     }
                     if ($inputs['employee'][$employee_id]['bonus'] > 0) {
                         $personalAccount->bonus_balance += $inputs['employee'][$employee_id]['bonus']; //Add overtime balance
@@ -267,10 +267,10 @@ class SalaryGeneratorController extends Controller
                     $balance = $copy->net - $inputs['net'];
                     $personalAccount->balance -= $balance; //Sub
                 }
-                if ($inputs['over_time'] > $copy->over_time) {
-                    $personalAccount->overtime_balance += ($inputs['over_time'] - $copy->over_time);
-                } elseif ($inputs['over_time'] < $copy->over_time) {
-                    $personalAccount->overtime_balance -= ($copy->over_time - $inputs['over_time']);
+                if ($inputs['overtime_amount'] > $copy->over_time_amount) {
+                    $personalAccount->overtime_balance += ($inputs['overtime_amount'] - $copy->over_time_amount);
+                } elseif ($inputs['overtime_amount'] < $copy->over_time_amount) {
+                    $personalAccount->overtime_balance -= ($copy->over_time_amount - $inputs['overtime_amount']);
                 }
                 if ($inputs['bonus'] > $copy->bonus) {
                     $personalAccount->bonus_balance += ($inputs['bonus'] - $copy->bonus);
@@ -336,7 +336,73 @@ class SalaryGeneratorController extends Controller
                     $generalJournal->save();
                 }
 
-                if ($inputs['over_time'] > $copy->over_time) {
+                if ($inputs['over_time'] && !$copy->over_time) {
+                    //Update Workspace Ledger
+                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 44000, 'balance_type' => $balance_type, 'year' => $year])->first();
+                    $accountPayableWorkspaceData->balance += $inputs['overtime_amount']; //Add Overtime Payable
+                    $accountPayableWorkspaceData->updated_by = $user->id;
+                    $accountPayableWorkspaceData->updated_at = $time;
+                    $accountPayableWorkspaceData->update();
+
+                    // General Journal Table Impact
+                    $generalJournal = New GeneralJournal;
+                    $generalJournal->date = $date;
+                    $generalJournal->transaction_type = $transaction_type;
+                    $generalJournal->reference_id = $salary->id;
+                    $generalJournal->year = $year;
+                    $generalJournal->account_code = 44000;
+                    $generalJournal->workspace_id = $user->workspace_id;
+                    $generalJournal->amount = $inputs['over_time'];
+                    $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
+                    $generalJournal->created_by = $user->id;
+                    $generalJournal->created_at = $time;
+                    $generalJournal->save();
+
+                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 29993, 'balance_type' => $balance_type, 'year' => $year])->first();
+                    $accountPayableWorkspaceData->balance += $inputs['overtime_amount']; //Add Overtime Expense
+                    $accountPayableWorkspaceData->updated_by = $user->id;
+                    $accountPayableWorkspaceData->updated_at = $time;
+                    $accountPayableWorkspaceData->update();
+
+                    $generalJournal = New GeneralJournal;
+                    $generalJournal->date = $date;
+                    $generalJournal->transaction_type = $transaction_type;
+                    $generalJournal->reference_id = $salary->id;
+                    $generalJournal->year = $year;
+                    $generalJournal->account_code = 29993;
+                    $generalJournal->workspace_id = $user->workspace_id;
+                    $generalJournal->amount = $inputs['over_time'];
+                    $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
+                    $generalJournal->created_by = $user->id;
+                    $generalJournal->created_at = $time;
+                    $generalJournal->save();
+
+
+                }else if (!$inputs['over_time'] && $copy->over_time) {
+                    //Update Workspace Ledger
+                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 44000, 'balance_type' => $balance_type, 'year' => $year])->first();
+                    $accountPayableWorkspaceData->balance -= $copy->over_time; //Add Overtime Payable
+                    $accountPayableWorkspaceData->updated_by = $user->id;
+                    $accountPayableWorkspaceData->updated_at = $time;
+                    $accountPayableWorkspaceData->update();
+
+                    // General Journal Table Impact
+                    $generalJournal = GeneralJournal::where(['transaction_type' => $transaction_type, 'reference_id' => $id, 'account_code' => 44000, 'year' => $year, 'workspace_id' => $user->workspace_id])->first();
+                    $generalJournal->delete();
+
+                    $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 29993, 'balance_type' => $balance_type, 'year' => $year])->first();
+                    $accountPayableWorkspaceData->balance = $copy->over_time; //Add Overtime Expense
+                    $accountPayableWorkspaceData->updated_by = $user->id;
+                    $accountPayableWorkspaceData->updated_at = $time;
+                    $accountPayableWorkspaceData->update();
+
+                    // General Journal Table Impact
+                    $generalJournal = GeneralJournal::where(['transaction_type' => $transaction_type, 'reference_id' => $id, 'account_code' => 29993, 'year' => $year, 'workspace_id' => $user->workspace_id])->first();
+                    $generalJournal->deleet();
+
+
+
+                } else if ($inputs['over_time'] > $copy->over_time) {
                     //Update Workspace Ledger
                     $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 44000, 'balance_type' => $balance_type, 'year' => $year])->first();
                     $accountPayableWorkspaceData->balance += ($inputs['overtime_amount'] - $copy->overtime_amount); //Add Overtime Payable
@@ -388,6 +454,7 @@ class SalaryGeneratorController extends Controller
                     $generalJournal->updated_by = $user->id;
                     $generalJournal->updated_at = $time;
                     $generalJournal->save();
+
                 }
 
                 if ($inputs['bonus'] > $copy->bonus) {
@@ -406,16 +473,49 @@ class SalaryGeneratorController extends Controller
 
                     // General Journal Table Impact
                     $generalJournal = GeneralJournal::where(['transaction_type' => $transaction_type, 'reference_id' => $id, 'account_code' => 45000, 'year' => $year, 'workspace_id' => $user->workspace_id])->first();
-                    $generalJournal->amount += ($inputs['bonus'] - $copy->bonus);
-                    $generalJournal->updated_by = $user->id;
-                    $generalJournal->updated_at = $time;
-                    $generalJournal->save();
+                    if($generalJournal){
+                        $generalJournal->amount += ($inputs['bonus'] - $copy->bonus);
+                        $generalJournal->updated_by = $user->id;
+                        $generalJournal->updated_at = $time;
+                        $generalJournal->save();
+                    }else{
+                        $generalJournal = New GeneralJournal;
+                        $generalJournal->date = $date;
+                        $generalJournal->transaction_type = $transaction_type;
+                        $generalJournal->reference_id = $salary->id;
+                        $generalJournal->year = $year;
+                        $generalJournal->account_code = 45000;
+                        $generalJournal->workspace_id = $user->workspace_id;
+                        $generalJournal->amount = $inputs['bonus'];
+                        $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
+                        $generalJournal->created_by = $user->id;
+                        $generalJournal->created_at = $time;
+                        $generalJournal->save();
+
+                    }
 
                     $generalJournal = GeneralJournal::where(['transaction_type' => $transaction_type, 'reference_id' => $id, 'account_code' => 29970, 'year' => $year, 'workspace_id' => $user->workspace_id])->first();
-                    $generalJournal->amount += ($inputs['bonus'] - $copy->bonus);
-                    $generalJournal->updated_by = $user->id;
-                    $generalJournal->updated_at = $time;
-                    $generalJournal->save();
+
+                    if($generalJournal){
+                        $generalJournal->amount += ($inputs['bonus'] - $copy->bonus);
+                        $generalJournal->updated_by = $user->id;
+                        $generalJournal->updated_at = $time;
+                        $generalJournal->save();
+                    }else{
+                        $generalJournal = New GeneralJournal;
+                        $generalJournal->date = $date;
+                        $generalJournal->transaction_type = $transaction_type;
+                        $generalJournal->reference_id = $salary->id;
+                        $generalJournal->year = $year;
+                        $generalJournal->account_code = 29970;
+                        $generalJournal->workspace_id = $user->workspace_id;
+                        $generalJournal->amount = $inputs['bonus'];
+                        $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
+                        $generalJournal->created_by = $user->id;
+                        $generalJournal->created_at = $time;
+                        $generalJournal->save();
+                    }
+
                 } elseif ($inputs['bonus'] < $copy->bonus) {
                     //Update Workspace Ledger
                     $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 45000, 'balance_type' => $balance_type, 'year' => $year])->first();

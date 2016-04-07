@@ -48,7 +48,7 @@
                                             {{ $accounts[$recorder->account_code] }}
                                         </td>
                                         <td>
-                                            {{ $recorder->total_amount }}
+                                            {{ isset($recorder->total_amount)?$recorder->total_amount:'N/A' }}
                                         </td>
                                         <td>
                                             {{ $recorder->amount }}

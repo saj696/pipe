@@ -122,11 +122,32 @@ class AjaxController extends Controller
         $slice = $request->input('slice');
         $person_id = $request->input('person_id');
 
-        $personal = PersonalAccount::where(['person_type' => $type, 'person_id' => $person_id])->first();
-        if ($slice == 1) {
-            return response()->json(isset($personal->due) ? $personal->due : 0);
-        } elseif ($slice == 4) {
-            return response()->json(isset($personal->balance) ? $personal->balance : 0);
+        if($type == Config::get('common.person_type_employee'))
+        {
+            $personal = PersonalAccount::where(['person_type' => $type, 'person_id' => $person_id])->first();
+
+            $dueSalary = DB::table('salaries')
+                ->select(DB::raw('SUM(net_due) as sum_net_due'), DB::raw('SUM(over_time_due) as sum_over_time_due'), DB::raw('SUM(bonus_due) as sum_bonus_due'))
+                ->where('employee_id', $person_id)
+                ->first();
+
+            $sumDueSalary = $dueSalary->sum_net_due+$dueSalary->sum_over_time_due+$dueSalary->sum_bonus_due;
+            $employeeAmount = $personal->balance+$personal->overtime_balance+$personal->bonus_balance-$sumDueSalary;
+
+            if ($slice == 1) {
+                return response()->json(isset($personal->due) ? $personal->due : 0);
+            } elseif ($slice == 4) {
+                return response()->json(isset($employeeAmount) ? $employeeAmount : 0);
+            }
+        }
+        else
+        {
+            $personal = PersonalAccount::where(['person_type' => $type, 'person_id' => $person_id])->first();
+            if ($slice == 1) {
+                return response()->json(isset($personal->due) ? $personal->due : 0);
+            } elseif ($slice == 4) {
+                return response()->json(isset($personal->balance) ? $personal->balance : 0);
+            }
         }
     }
 

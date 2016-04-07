@@ -273,6 +273,15 @@
                 $('.cash_adjustment_type').hide();
                 $('#cash_adjustment_type').val('');
             }
+
+            if(code==12000 || code==41000)
+            {
+                $('.total_amount').attr('readonly','readonly');
+            }
+            else
+            {
+                $('.total_amount').removeAttr('readonly');
+            }
         });
 
         $(document).on('change', '#to_whom_type', function () {
