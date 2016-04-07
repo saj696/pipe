@@ -22,36 +22,19 @@ class SuppliersController extends Controller
         $this->middleware('transactionPermission', ['except' => ['index']]);
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $suppliers = Supplier::paginate(Config::get('common.pagination'));
         return view('suppliers.index', compact('suppliers'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('suppliers.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(SupplierRequest $request)
     {
-//
         try {
 
             DB::transaction(function () use ($request) {
@@ -68,7 +51,6 @@ class SuppliersController extends Controller
                 $supplier->created_at = time();
                 $supplier->created_by = Auth::user()->id;
                 $supplier->save();
-
 
                 //Personal Account Creation
                 $personal = new PersonalAccount();
@@ -88,51 +70,23 @@ class SuppliersController extends Controller
                 $year = CommonHelper::get_current_financial_year();
                 $user = Auth::user();
                 $time = time();
-                $date = strtotime(date('d-m-Y'));
+
                 if (!empty($request->input('balance'))) {
-                    //Update Workspace Ledger
+                    // Update Workspace Ledger
                     $workspaceLedger = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 41000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $year])->first();
                     $workspaceLedger->balance += $request->input('balance');
                     $workspaceLedger->updated_by = $user->id;
                     $workspaceLedger->updated_by = $time;
                     $workspaceLedger->save();
-
-                    // Insert into General Journal
-                    $generalJournal = new GeneralJournal();
-                    $generalJournal->date = $date;
-                    $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
-                    $generalJournal->reference_id = $personal->id;
-                    $generalJournal->year = $year;
-                    $generalJournal->account_code = 41000;
-                    $generalJournal->workspace_id = $user->workspace_id;
-                    $generalJournal->amount = $request->input('balance');
-                    $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
-                    $generalJournal->created_by = $user->id;
-                    $generalJournal->created_at = $time;
-                    $generalJournal->save();
                 }
 
                 if (!empty($request->input('due'))) {
-                    //Update Workspace Ledger
+                    // Update Workspace Ledger
                     $workspaceLedger = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 12000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $year])->first();
                     $workspaceLedger->balance += $request->input('due');
                     $workspaceLedger->updated_by = $user->id;
                     $workspaceLedger->updated_by = $time;
                     $workspaceLedger->save();
-
-                    // Insert into General Journal
-                    $generalJournal = new GeneralJournal();
-                    $generalJournal->date = $date;
-                    $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
-                    $generalJournal->reference_id = $personal->id;
-                    $generalJournal->year = $year;
-                    $generalJournal->account_code = 12000;
-                    $generalJournal->workspace_id = $user->workspace_id;
-                    $generalJournal->amount = $request->input('due');
-                    $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
-                    $generalJournal->created_by = $user->id;
-                    $generalJournal->created_at = $time;
-                    $generalJournal->save();
                 }
             });
         } catch (\Exception $e) {
@@ -140,41 +94,16 @@ class SuppliersController extends Controller
             return redirect('suppliers');
         }
 
-
         Session()->flash('flash_message', 'Data has been Saved');
         return redirect('suppliers');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-//    public function show($id)
-//    {
-//        //
-//    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $supplier = Supplier::findOrFail($id);
         return view('suppliers.edit')->with('supplier', $supplier);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
     public function update($id, SupplierRequest $request)
     {
         $supplier = Supplier::findOrFail($id);
@@ -193,15 +122,4 @@ class SuppliersController extends Controller
         Session()->flash('flash_message', 'Data has been Updated');
         return redirect('suppliers');
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-//    public function destroy($id)
-//    {
-//        //
-//    }
 }

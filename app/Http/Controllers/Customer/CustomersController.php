@@ -100,20 +100,6 @@ class CustomersController extends Controller
                     $workspaceLedger->updated_by = $user->id;
                     $workspaceLedger->updated_by = $time;
                     $workspaceLedger->save();
-
-                    // Insert into General Journal
-                    $generalJournal = new GeneralJournal();
-                    $generalJournal->date = $date;
-                    $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
-                    $generalJournal->reference_id = $personal->id;
-                    $generalJournal->year = $year;
-                    $generalJournal->account_code = 41000;
-                    $generalJournal->workspace_id = $user->workspace_id;
-                    $generalJournal->amount = $inputs['balance'];
-                    $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
-                    $generalJournal->created_by = $user->id;
-                    $generalJournal->created_at = $time;
-                    $generalJournal->save();
                 }
 
                 if (!empty($inputs['due'])) {
@@ -123,20 +109,6 @@ class CustomersController extends Controller
                     $workspaceLedger->updated_by = $user->id;
                     $workspaceLedger->updated_by = $time;
                     $workspaceLedger->save();
-
-                    // Insert into General Journal
-                    $generalJournal = new GeneralJournal();
-                    $generalJournal->date = $date;
-                    $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
-                    $generalJournal->reference_id = $personal->id;
-                    $generalJournal->year = $year;
-                    $generalJournal->account_code = 12000;
-                    $generalJournal->workspace_id = $user->workspace_id;
-                    $generalJournal->amount = $inputs['due'];
-                    $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
-                    $generalJournal->created_by = $user->id;
-                    $generalJournal->created_at = $time;
-                    $generalJournal->save();
                 }
             });
         } catch (\Exception $e) {

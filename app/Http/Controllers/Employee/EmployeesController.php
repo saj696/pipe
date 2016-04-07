@@ -120,20 +120,6 @@ class EmployeesController extends Controller
                     $accountPayableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => $accountPayableCode, 'balance_type' => Config::get('common.balance_type_intermediate')])->first();
                     $accountPayableWorkspaceData->balance += $request->input('balance');
                     $accountPayableWorkspaceData->update();
-
-                    // General Journal Table Impact
-                    $generalJournal = New GeneralJournal;
-                    $generalJournal->date = strtotime(date('d-m-Y'));
-                    $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
-                    $generalJournal->reference_id = $insertedId;
-                    $generalJournal->year = CommonHelper::get_current_financial_year();
-                    $generalJournal->account_code = $accountPayableCode;
-                    $generalJournal->workspace_id = $workspace_id;
-                    $generalJournal->amount = $request->input('balance');
-                    $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
-                    $generalJournal->created_by = Auth::user()->id;
-                    $generalJournal->created_at = time();
-                    $generalJournal->save();
                 }
 
                 if ($request->input('due') > 0) {
@@ -142,19 +128,6 @@ class EmployeesController extends Controller
                     $accountReceivableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => $accountReceivableCode, 'balance_type' => Config::get('common.balance_type_intermediate')])->first();
                     $accountReceivableWorkspaceData->balance += $request->input('due');
                     $accountReceivableWorkspaceData->update();
-
-                    $generalJournal = New GeneralJournal;
-                    $generalJournal->date = strtotime(date('d-m-Y'));
-                    $generalJournal->transaction_type = Config::get('common.transaction_type.personal');
-                    $generalJournal->reference_id = $insertedId;
-                    $generalJournal->year = CommonHelper::get_current_financial_year();
-                    $generalJournal->account_code = $accountReceivableCode;
-                    $generalJournal->workspace_id = $workspace_id;
-                    $generalJournal->amount = $request->input('due');
-                    $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
-                    $generalJournal->created_by = Auth::user()->id;
-                    $generalJournal->created_at = time();
-                    $generalJournal->save();
                 }
             });
         } catch (\Exception $e) {
