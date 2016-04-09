@@ -67,6 +67,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('daily_wage_payment', 'Payroll\DailyWagePaymentController');
     Route::resource('discarded_stock', 'Discarded\DiscardedMaterialStockController');
     Route::resource('discarded_sale', 'Discarded\DiscardedMaterialSaleController');
+    Route::resource('purchase_return', 'Setup\PurchasesReturnController');
 
     // Report route
     Route::get('report_print', 'Report\PrintReportController@index');

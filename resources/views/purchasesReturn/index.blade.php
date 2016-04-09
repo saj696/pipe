@@ -40,9 +40,9 @@
                                 <th>
                                     Status
                                 </th>
-                                <th>
-                                    Action
-                                </th>
+                                {{--<th>--}}
+                                    {{--Action--}}
+                                {{--</th>--}}
                             </tr>
                             </thead>
                             <tbody>
@@ -57,11 +57,11 @@
                                         <td>{{ $purchase->total }}</td>
                                         <td>{{ $purchase->paid }}</td>
                                         <td>{{ \Illuminate\Support\Facades\Config::get('common.status')[$purchase->status] }}</td>
-                                        <td>
+                                        {{--<td>--}}
                                             {{--<a class="label label-danger" href="{{ url('/purchase_return/'.$purchase->id.'/edit' )}}">Edit</a>--}}
-                                            <a class="label label-info"
-                                               href="{{ url('/purchase_return/'.$purchase->id )}}">View</a>
-                                        </td>
+                                            {{--<a class="label label-info"--}}
+                                               {{--href="{{ url('/purchase_return/'.$purchase->id )}}">View</a>--}}
+                                        {{--</td>--}}
                                     </tr>
                                 @endforeach
                             @else

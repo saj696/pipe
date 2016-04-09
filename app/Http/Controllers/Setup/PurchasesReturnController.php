@@ -105,11 +105,15 @@ class PurchasesReturnController extends Controller
             if ($inputs['return_type'] == 1)//For Cash
             {
                 // Update Workspace Ledger
-                $workspace = WorkspaceLedger::where(['account_code' => 11000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                $workspace->balance += $inputs['total']; //add Cash
-                $workspace->updated_by = $user_id;
-                $workspace->updated_at = $time;
-                $workspace->save();
+                WorkspaceLedger::where(['account_code' => 11000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])
+                    ->increment('balance', $inputs['total'], ['updated_at' => $time, 'updated_by' => $user_id]);
+//                $workspace = WorkspaceLedger::where(['account_code' => 11000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
+//
+//                $workspace->balance += $inputs['total']; //add Cash
+//
+//                $workspace->updated_by = $user_id;
+//                $workspace->updated_at = $time;
+//                $workspace->save();
 
                 $workspace = WorkspaceLedger::where(['account_code' => 26000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
                 $workspace->balance += $inputs['total']; //Add Purchase Return
@@ -140,7 +144,7 @@ class PurchasesReturnController extends Controller
                 $journal->account_code = 26000; //purchase Return
                 $journal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
                 $journal->workspace_id = $workspace_id;
-                $journal->amount = $inputs['total'];;
+                $journal->amount = $inputs['total'];
                 $journal->created_by = $user_id;
                 $journal->created_at = $time;
                 $journal->save();
