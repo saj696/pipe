@@ -623,6 +623,14 @@
             }
         });
 
+        $(document).on('change', '.pcal', function () {
+            rowTotal(this);
+        });
+
+        $(document).on('change', '.new_pcal', function () {
+            rowTotal2(this);
+        });
+
         $(document).on('click', '.remove_product', function () {
             var obj = $(this);
             var product_id = obj.closest('.single_product').find('.product_id').val();
@@ -699,6 +707,7 @@
                 }
             } else {
                 var total = parseFloat($('#total').val());
+                var new_total = parseFloat($('#new_total').val());
                 var cash = parseFloat($('#cash').val());
                 if (!cash) {
                     cash = 0;
@@ -715,6 +724,11 @@
                 if ((cash + due_paid + due) > total) {
                     e.preventDefault();
                     alert('Summation of cash, due paid and due exceed\'s total amount.');
+                }
+
+                if ((total - cash - due_paid - due) < new_total) {
+                    e.preventDefault();
+                    alert('Replacement total should be equal or less than Defect total amount.');
                 }
             }
         });

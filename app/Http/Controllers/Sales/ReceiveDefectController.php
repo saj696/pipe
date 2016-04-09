@@ -34,7 +34,7 @@ class ReceiveDefectController extends Controller
 
     public function index()
     {
-        $defects = Defect::orderBy('created_at','desc')->paginate(15);
+        $defects = Defect::orderBy('created_at', 'desc')->paginate(15);
         return view('sales.receiveDefect.index')->with(compact('defects'));
     }
 
@@ -115,24 +115,29 @@ class ReceiveDefectController extends Controller
                     $rawStock->update();
                 }
 
-                $journal = new GeneralJournal();
-                $journal->date = $date;
-                $journal->transaction_type = $transaction_type;
-                $journal->reference_id = $defect->id;
-                $journal->year = $year;
-                $journal->account_code = 36000; //Defect Receive
-                $journal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
-                $journal->workspace_id = $user->workspace_id;
-                $journal->amount = $inputs['total'];
-                $journal->created_by = $user->id;
-                $journal->created_at = $time;
-                $journal->save();
+                $defect_amount = $inputs['cash'] + $inputs['due_paid'] + $inputs['due'];
 
-                $workspace = WorkspaceLedger::where(['account_code' => 36000, 'workspace_id' => $user->workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                $workspace->balance += $inputs['total']; //add defect receive
-                $workspace->updated_by = $user->id;
-                $workspace->updated_at = $time;
-                $workspace->update();
+                if ($defect_amount > 0) {
+                    $journal = new GeneralJournal();
+                    $journal->date = $date;
+                    $journal->transaction_type = $transaction_type;
+                    $journal->reference_id = $defect->id;
+                    $journal->year = $year;
+                    $journal->account_code = 36000; //Defect Receive
+                    $journal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
+                    $journal->workspace_id = $user->workspace_id;
+                    $journal->amount = $defect_amount;
+                    $journal->created_by = $user->id;
+                    $journal->created_at = $time;
+                    $journal->save();
+
+                    $workspace = WorkspaceLedger::where(['account_code' => 36000, 'workspace_id' => $user->workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
+                    $workspace->balance += $defect_amount; //add defect receive
+                    $workspace->updated_by = $user->id;
+                    $workspace->updated_at = $time;
+                    $workspace->update();
+                }
+
 
                 if ($inputs['cash'] > 0) { //Cash
 
@@ -242,7 +247,7 @@ class ReceiveDefectController extends Controller
                         $stock = Stock::where('product_id', '=', $new_product['product_id'])->where('stock_type', '=', $balance_type)->where('year', '=', $year)->first();
                         if ($new_product['sales_unit_type'] == 1) {
 
-                            if($stock->quantity < $new_product['sales_quantity']){
+                            if ($stock->quantity < $new_product['sales_quantity']) {
                                 Session()->flash('warning_message', 'Insufficient stock!.');
                                 throw new \Exception();
                             }
@@ -274,12 +279,12 @@ class ReceiveDefectController extends Controller
         if ($defect->customer_type == 1) {
             $customers = Employee::where('status', 1)->lists('name', 'id');
         } elseif ($defect->customer_type == 2) {
-            $customers = Supplier::where('status', 1)->lists('name', 'id');
+            $customers = Supplier::where('status', 1)->lists('company_name', 'id');
         } else {
             $customers = Customer::where('status', 1)->lists('name', 'id');
         }
 
-        $salesOrder=new SalesOrder();
+        $salesOrder = new SalesOrder();
 
         if ($defect->is_replacement) {
             $salesOrder = SalesOrder::where('defect_id', '=', $defect->id)->with(['salesOrderItems', 'salesOrderItems.product', 'salesOrderItems.salesDelivery'])->first();
@@ -325,27 +330,40 @@ class ReceiveDefectController extends Controller
                 $defect->updated_at = $time;
                 $defect->update();
 
-                $journal = GeneralJournal::where('account_code', '=', 36000)->where('workspace_id', '=', $user->workspace_id)->where('reference_id', '=', $id)->where('transaction_type', '=', $transaction_type)->where('year', '=', $year)->first();
-                $journal->amount = $inputs['total'];
-                $journal->updated_by = $user->id;
-                $journal->updated_at = $time;
-                $journal->update();
+                $defect_amount = $inputs['cash'] + $inputs['due_paid'] + $inputs['due'];
 
-                $workspace = WorkspaceLedger::where(['account_code' => 36000, 'workspace_id' => $user->workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                if ($oldDefect->total > $inputs['total']) {
-                    $workspace->balance += ($oldDefect->total - $inputs['total']); //sub defect receive
-                } elseif ($oldDefect->total < $inputs['total']) {
-                    $workspace->balance += ($inputs['total'] - $oldDefect->total); //sub defect receive
+                if ($defect_amount > 0) {
+                    $journal = GeneralJournal::where('account_code', '=', 36000)->where('workspace_id', '=', $user->workspace_id)->where('reference_id', '=', $id)->where('transaction_type', '=', $transaction_type)->where('year', '=', $year)->first();
+                    $journal->amount = $defect_amount;
+                    $journal->updated_by = $user->id;
+                    $journal->updated_at = $time;
+                    $journal->update();
+
+                    $workspace = WorkspaceLedger::where(['account_code' => 36000, 'workspace_id' => $user->workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
+                    if ($oldDefect->total > $defect_amount) {
+                        $workspace->balance += ($oldDefect->total - $defect_amount); //sub defect receive
+                    } elseif ($oldDefect->total < $defect_amount) {
+                        $workspace->balance += ($defect_amount - $oldDefect->total); //sub defect receive
+                    }
+                    $workspace->updated_by = $user->id;
+                    $workspace->updated_at = $time;
+                    $workspace->update();
+                } else {
+                    $journal = GeneralJournal::where('account_code', '=', 36000)->where('workspace_id', '=', $user->workspace_id)->where('reference_id', '=', $id)->where('transaction_type', '=', $transaction_type)->where('year', '=', $year)->first();
+                    $journal->delete();
+
+                    $workspace = WorkspaceLedger::where(['account_code' => 36000, 'workspace_id' => $user->workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
+                    $workspace->balance -= ($oldDefect->cash + $oldDefect->due_paid + $oldDefect->due); //sub defect receive
+                    $workspace->updated_by = $user->id;
+                    $workspace->updated_at = $time;
+                    $workspace->update();
                 }
-                $workspace->updated_by = $user->id;
-                $workspace->updated_at = $time;
-                $workspace->update();
 
 
-                if(isset($inputs['delete_product'])){
-                    foreach($inputs['delete_product'] as $product){
+                if (isset($inputs['delete_product'])) {
+                    foreach ($inputs['delete_product'] as $product) {
                         $defectItem = DefectItem::where('defect_id', '=', $id)->where('product_id', '=', $product['product_id'])->first();
-                        if($defectItem){
+                        if ($defectItem) {
                             $defectItem->delete();
                         }
 
@@ -677,7 +695,6 @@ class ReceiveDefectController extends Controller
                 }
 
 
-
                 if (isset($inputs['is_replacement']) && !$oldDefect->is_replacement) { //Replacement
 
                     $defectReplacement = new SalesOrder();
@@ -741,10 +758,10 @@ class ReceiveDefectController extends Controller
                     $defectReplacement->updated_at = $time;
                     $defectReplacement->update();
 
-                    if(isset($inputs['delete_replacement_product'])){
-                        foreach($inputs['delete_replacement_product'] as $product){
+                    if (isset($inputs['delete_replacement_product'])) {
+                        foreach ($inputs['delete_replacement_product'] as $product) {
                             $defectReplacementItem = SalesOrderItem::where('sales_order_id', '=', $defectReplacement->id)->where('product_id', '=', $product['product_id'])->first();
-                            if($defectReplacementItem){
+                            if ($defectReplacementItem) {
                                 $defectReplacementItem->delete();
                             }
 
@@ -773,7 +790,7 @@ class ReceiveDefectController extends Controller
                                     $stock->quantity += ($oldDefectReplacementItem->sales_quantity - $new_product['sales_quantity']); //Add stock
                                 } elseif ($oldDefectReplacementItem->sales_quantity < $new_product['sales_quantity']) {
 
-                                    $sales_quantity=($new_product['sales_quantity'] - $oldDefectReplacementItem->sales_quantity);
+                                    $sales_quantity = ($new_product['sales_quantity'] - $oldDefectReplacementItem->sales_quantity);
 
                                     if ($stock->quantity < $sales_quantity) {
                                         Session()->flash('warning_message', 'Insufficient stock!.');
@@ -791,7 +808,7 @@ class ReceiveDefectController extends Controller
                                     $stock->quantity += ($oldDefectReplacementItem->sales_quantity - $new_sales_quantity); //Add stock
                                 } elseif ($oldDefectReplacementItem->sales_quantity < $new_sales_quantity) {
 
-                                    $sales_quantity= ($new_sales_quantity - $oldDefectReplacementItem->sales_quantity);
+                                    $sales_quantity = ($new_sales_quantity - $oldDefectReplacementItem->sales_quantity);
 
                                     if ($stock->quantity < $sales_quantity) {
                                         Session()->flash('warning_message', 'Insufficient stock!.');
@@ -810,7 +827,8 @@ class ReceiveDefectController extends Controller
 
                                 if ($new_sales_quantity > $new_product['sales_quantity']) {
 
-                                    $stock->quantity += ($new_sales_quantity - $new_product['sales_quantity']);$stock->quantity += ($new_sales_quantity - $new_product['sales_quantity']); //Add stock
+                                    $stock->quantity += ($new_sales_quantity - $new_product['sales_quantity']);
+                                    $stock->quantity += ($new_sales_quantity - $new_product['sales_quantity']); //Add stock
 
                                 } elseif ($new_sales_quantity < $new_product['sales_quantity']) {
 
@@ -833,7 +851,7 @@ class ReceiveDefectController extends Controller
                                     $stock->quantity += ($old_sales_quantity - $new_sales_quantity); //Add stock
                                 } elseif ($old_sales_quantity < $new_sales_quantity) {
 
-                                    $sales_quantity=($new_sales_quantity - $old_sales_quantity);
+                                    $sales_quantity = ($new_sales_quantity - $old_sales_quantity);
 
                                     if ($stock->quantity < $sales_quantity) {
                                         Session()->flash('warning_message', 'Insufficient stock!.');
@@ -871,7 +889,7 @@ class ReceiveDefectController extends Controller
                             $stock->update();
                         }
                     }
-                }elseif(!isset($inputs['is_replacement']) && $oldDefect->is_replacement){
+                } elseif (!isset($inputs['is_replacement']) && $oldDefect->is_replacement) {
 
                     $defectReplacement = SalesOrder::where('defect_id', '=', $id)->first();
                     $oldDefectReplacement = clone $defectReplacement;
@@ -880,10 +898,10 @@ class ReceiveDefectController extends Controller
                     $defectReplacement->updated_at = $time;
                     $defectReplacement->update();
 
-                    if(isset($inputs['delete_replacement_product'])){
-                        foreach($inputs['delete_replacement_product'] as $product){
+                    if (isset($inputs['delete_replacement_product'])) {
+                        foreach ($inputs['delete_replacement_product'] as $product) {
                             $defectReplacementItem = SalesOrderItem::where('sales_order_id', '=', $defectReplacement->id)->where('product_id', '=', $product['product_id'])->first();
-                            if($defectReplacementItem){
+                            if ($defectReplacementItem) {
                                 $defectReplacementItem->delete();
                             }
 
@@ -911,7 +929,7 @@ class ReceiveDefectController extends Controller
                                     $stock->quantity += ($oldDefectReplacementItem->sales_quantity - $new_product['sales_quantity']); //Add stock
                                 } elseif ($oldDefectReplacementItem->sales_quantity < $new_product['sales_quantity']) {
 
-                                    $sales_quantity=($new_product['sales_quantity'] - $oldDefectReplacementItem->sales_quantity);
+                                    $sales_quantity = ($new_product['sales_quantity'] - $oldDefectReplacementItem->sales_quantity);
 
                                     if ($stock->quantity < $sales_quantity) {
                                         Session()->flash('warning_message', 'Insufficient stock!.');
@@ -929,7 +947,7 @@ class ReceiveDefectController extends Controller
                                     $stock->quantity += ($oldDefectReplacementItem->sales_quantity - $new_sales_quantity); //Add stock
                                 } elseif ($oldDefectReplacementItem->sales_quantity < $new_sales_quantity) {
 
-                                    $sales_quantity= ($new_sales_quantity - $oldDefectReplacementItem->sales_quantity);
+                                    $sales_quantity = ($new_sales_quantity - $oldDefectReplacementItem->sales_quantity);
 
                                     if ($stock->quantity < $sales_quantity) {
                                         Session()->flash('warning_message', 'Insufficient stock!.');
@@ -948,7 +966,8 @@ class ReceiveDefectController extends Controller
 
                                 if ($new_sales_quantity > $new_product['sales_quantity']) {
 
-                                    $stock->quantity += ($new_sales_quantity - $new_product['sales_quantity']);$stock->quantity += ($new_sales_quantity - $new_product['sales_quantity']); //Add stock
+                                    $stock->quantity += ($new_sales_quantity - $new_product['sales_quantity']);
+                                    $stock->quantity += ($new_sales_quantity - $new_product['sales_quantity']); //Add stock
 
                                 } elseif ($new_sales_quantity < $new_product['sales_quantity']) {
 
@@ -971,7 +990,7 @@ class ReceiveDefectController extends Controller
                                     $stock->quantity += ($old_sales_quantity - $new_sales_quantity); //Add stock
                                 } elseif ($old_sales_quantity < $new_sales_quantity) {
 
-                                    $sales_quantity=($new_sales_quantity - $old_sales_quantity);
+                                    $sales_quantity = ($new_sales_quantity - $old_sales_quantity);
 
                                     if ($stock->quantity < $sales_quantity) {
                                         Session()->flash('warning_message', 'Insufficient stock!.');

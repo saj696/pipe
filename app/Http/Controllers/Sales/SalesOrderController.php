@@ -502,6 +502,7 @@ class SalesOrderController extends Controller
                     $workspace->updated_by = $user->id;
                     $workspace->updated_at = $time;
                     $workspace->save();
+                    dd($workspace);
                 }
 
                 $new_account_paid = $inputs['paid_from_personal_account'];

@@ -207,9 +207,9 @@
                 url = "{{ route('ajax.supplier_select') }}";
             } else if (type == 1) {
                 url = "{{ route('ajax.employee_select') }}";
-            } else if (type == 3){
+            } else if (type == 3) {
                 url = "{{ route('ajax.customer_select') }}";
-            } else if (type == 4){
+            } else if (type == 4) {
                 url = "{{ route('ajax.provider_select') }}";
             }
 
@@ -446,40 +446,46 @@
             if (!$('#is_replacement').prop('checked')) {
                 var total = parseFloat($('#total').val());
                 var cash = parseFloat($('#cash').val());
-                if(!cash){
-                    cash=0;
+                if (!cash) {
+                    cash = 0;
                 }
                 var due_paid = parseFloat($('#due_paid').val());
-                if(!due_paid){
-                    due_paid=0;
+                if (!due_paid) {
+                    due_paid = 0;
                 }
                 var due = parseFloat($('#due').val());
-                if(!due){
-                    due=0;
+                if (!due) {
+                    due = 0;
                 }
 
                 if ((cash + due_paid + due) != total) {
                     e.preventDefault();
                     alert('Summation of cash, due paid and due should be equal to total amount.');
                 }
-            }else {
+            } else {
                 var total = parseFloat($('#total').val());
+                var new_total = parseFloat($('#new_total').val());
                 var cash = parseFloat($('#cash').val());
-                if(!cash){
-                    cash=0;
+                if (!cash) {
+                    cash = 0;
                 }
                 var due_paid = parseFloat($('#due_paid').val());
-                if(!due_paid){
-                    due_paid=0;
+                if (!due_paid) {
+                    due_paid = 0;
                 }
                 var due = parseFloat($('#due').val());
-                if(!due){
-                    due=0;
+                if (!due) {
+                    due = 0;
                 }
 
                 if ((cash + due_paid + due) > total) {
                     e.preventDefault();
                     alert('Summation of cash, due paid and due exceed\'s total amount.');
+                }
+
+                if ((total - cash - due_paid - due) < new_total) {
+                    e.preventDefault();
+                    alert('Replacement total should be equal or less than Defect total amount.');
                 }
             }
         });
