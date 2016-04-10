@@ -45,10 +45,12 @@ class PayrollReportController extends Controller
             return response()->json($ajaxView);
         } else {
             $salaries = DB::table('salaries')
-                ->select('salaries.*', 'employees.name as employee_name')
+                ->select('salaries.*', 'employees.name as employee_name', 'workspaces.name as workspace_name')
                 ->join('employees', 'employees.id', '=', 'salaries.employee_id')
-                ->where('month', '=', $request->month)
-                ->where('year', '=', $request->year)
+                ->leftJoin('workspaces', 'salaries.workspace_id', '=', 'workspaces.id')
+                ->where('salaries.month', '=', $request->month)
+                ->where('salaries.workspace_id', '=', $request->workspace_id)
+                ->where('salaries.year', '=', $request->year)
                 ->get();
 
             $ajaxView = view('reports.payrollReport.report')->with(compact('salaries'))->render();

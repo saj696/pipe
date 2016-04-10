@@ -67,7 +67,7 @@
                             <div class="form-actions">
                                 <div class="row">
                                     <div class="text-center col-md-12">
-                                        {{ Form::submit('Search', ['class'=>'btn btn-circle green','id'=>'submit']) }}
+                                        {{ Form::submit('Search', ['class'=>'btn btn-circle green-seagreen','id'=>'submit']) }}
                                     </div>
                                 </div>
                             </div>

@@ -11,7 +11,6 @@
                 </div>
             </div>
             <div id="printArea" class="portlet-body form">
-
                 <div class="table-scrollable">
                     <table class="table table-bordered">
                         <thead>
@@ -25,6 +24,7 @@
                             <th>
                                 Month
                             </th>
+
                             <th>
                                 Workspace
                             </th>
@@ -53,6 +53,7 @@
                         </tr>
                         </thead>
                         <tbody>
+
                         @if(!empty($salaries))
                             <?php
                             $month = array_flip(Config::get('common.month'));
@@ -62,15 +63,15 @@
                                 <tr>
                                     <td>{{ $i++ }}</td>
                                     <td>{{ $salary->year }}</td>
-                                    <td>{{  $month[str_pad($salary->month,2,0,STR_PAD_LEFT)] }}</td>
+                                    <td>{{ $month[str_pad($salary->month,2,0,STR_PAD_LEFT)] }}</td>
                                     <td>{{ $salary->workspace_name }}</td>
                                     <td>{{ $salary->employee_name }}</td>
                                     <td>{{ $salary->salary }}</td>
                                     <td>{{ $salary->cut }}</td>
                                     <td>{{ $salary->bonus }}</td>
                                     <td>{{ $salary->net }}</td>
-                                    <td>{{ $salary->paid }}</td>
-                                    <td>{{ $salary->due }}</td>
+                                    <td>{{ $salary->net_paid }}</td>
+                                    <td>{{ $salary->net_due }}</td>
                                 </tr>
                             @endforeach
                             <tr>
@@ -83,10 +84,9 @@
                                 <th>{{ collect($salaries)->sum('cut') }}</th>
                                 <th>{{ collect($salaries)->sum('bonus') }}</th>
                                 <th>{{ collect($salaries)->sum('net') }}</th>
-                                <th>{{ collect($salaries)->sum('paid') }}</th>
-                                <th>{{ collect($salaries)->sum('due') }}</th>
+                                <th>{{ collect($salaries)->sum('net_paid') }}</th>
+                                <th>{{ collect($salaries)->sum('net_due') }}</th>
                             </tr>
-
                         @else
                             <tr>
                                 <td colspan="12" class="text-center danger">No Data Found</td>
@@ -97,6 +97,5 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>

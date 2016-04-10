@@ -1,4 +1,4 @@
-<div class="row" id="printArea">
+<div class="row">
     <div class="col-md-12">
         <div class="portlet box green-seagreen">
             <div class="portlet-title">
@@ -10,7 +10,7 @@
                 </div>
             </div>
 
-            <div class="portlet-body">
+            <div class="portlet-body" id="printArea">
                 <div class="table-scrollable">
                     <table class="table table-hover">
                         <thead>

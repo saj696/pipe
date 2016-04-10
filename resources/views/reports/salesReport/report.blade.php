@@ -11,7 +11,6 @@
                 </div>
             </div>
             <div id="printArea" class="portlet-body form">
-
                 <div class="table-scrollable">
                     <table class="table table-bordered">
                         <thead>
