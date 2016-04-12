@@ -13,7 +13,7 @@
 </div>
 
 <div class="form-group">
-    {{ Form::label('salary', 'Salary', ['class'=>'col-md-3 control-label']) }}
+    {{ Form::label('salary', 'Base Amount', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('salary') ? ' has-error' : '' }}">
         {{ Form::text('salary', null,['class'=>'form-control quantity']) }}
         @if ($errors->has('salary'))

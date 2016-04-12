@@ -23,7 +23,7 @@
                                     Name
                                 </th>
                                 <th>
-                                    Salary
+                                    Base Amount
                                 </th>
                                 <th>
                                     Hourly Rate

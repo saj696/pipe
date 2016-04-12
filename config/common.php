@@ -60,4 +60,5 @@ return [
     'defect_return_type' => [1 => 'Cash', 2 => 'Pay Due', 3 => 'Due', 4 => 'Pay Due & Cash Return', 5 => 'Replacement'],
     'sales_order_type' => ['sales'=>1,'replacement'=>2],
     'cash_adjustment_type' => ['Invisible Expense' => 29994, 'Invisible Income' => 37000],
+    'debtor_creditor_type' => [1 => 'Debtors', 2 => 'Creditors'],
 ];

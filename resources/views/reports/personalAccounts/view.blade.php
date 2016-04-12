@@ -25,6 +25,8 @@
                                     {{ 'Supplier name' }}
                                 @elseif($person_type==3)
                                     {{ 'Customer name' }}
+                                @elseif($person_type==4)
+                                    {{ 'Provider name' }}
                                 @endif
                             </th>
                             <th>

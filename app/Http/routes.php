@@ -104,7 +104,9 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('get_employee_payment', array('as' => 'ajax.get_employee_payment', 'uses' => 'AjaxController@getEmployeePayment'));
     Route::post('get_daily_worker_list', array('as' => 'ajax.get_daily_worker_list', 'uses' => 'AjaxController@getDailyWorkerList'));
     Route::get('cash_flow_report', 'Report\DailyCashFlowReportController@index');
-    Route::post('cash_flow_report',array('as'=>'ajax.cash_flow_report', 'uses'=>'Report\DailyCashFlowReportController@getReport')) ;
+    Route::post('cash_flow_report',array('as'=>'ajax.cash_flow_report', 'uses'=>'Report\DailyCashFlowReportController@getReport'));
+    Route::get('debtors_creditors_report', 'Report\DebtorsCreditorsReportController@index');
+    Route::post('debtors_creditors_report',array('as'=>'ajax.debtors_creditors_report', 'uses'=>'Report\DebtorsCreditorsReportController@getReport'));
 });
 
 Route::post('module_select', array('as' => 'ajax.module_select', 'uses' => 'AjaxController@getModules'));
