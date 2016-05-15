@@ -15,7 +15,7 @@
 <div class="form-group">
     {{ Form::label('account_code', 'Account', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('account_code') ? ' has-error' : '' }}">
-        {{ Form::select('account_code', $accounts, null,['class'=>'form-control', 'id'=>'account_type', 'placeholder'=>'Select']) }}
+        {{ Form::select('account_code', $accounts, null,['class'=>'form-control select2me', 'id'=>'account_type', 'placeholder'=>'Select']) }}
         @if ($errors->has('account_code'))
             <span class="help-block">
                 <strong>{{ $errors->first('account_code') }}</strong>
@@ -40,7 +40,7 @@
      style="display: {{ (isset($recorder->to_whom_type) && $recorder->to_whom_type>0)?'show':'none' }};">
     {{ Form::label('to_whom_type', 'To Whom Type', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('to_whom_type') ? ' has-error' : '' }}">
-        {{ Form::select('to_whom_type', $types, null,['class'=>'form-control', 'id'=>'to_whom_type', 'placeholder'=>'Select']) }}
+        {{ Form::select('to_whom_type', $types, null,['class'=>'form-control select2me', 'id'=>'to_whom_type', 'placeholder'=>'Select']) }}
         @if ($errors->has('to_whom_type'))
             <span class="help-block">
                 <strong>{{ $errors->first('to_whom_type') }}</strong>
@@ -66,7 +66,7 @@
             $to_whom_data = $employees;
             $label = 'Employee';
             ?>
-        @elseif($recorder->to_whom_type==3)
+        @elseif($recorder->to_whom_type==4)
             <?php
             $to_whom_data = $providers;
             $label = 'Service Provider';
@@ -76,7 +76,7 @@
         <div class="form-group">
             {{ Form::label('to_whom', $label, ['class'=>'col-md-3 control-label']) }}
             <div class="col-md-7">
-                {{ Form::select('to_whom', $to_whom_data, null,['class'=>'form-control employee_customer_supplier','placeholder'=>'Select']) }}
+                {{ Form::select('to_whom', $to_whom_data, null,['class'=>'form-control employee_customer_supplier select2me','placeholder'=>'Select']) }}
             </div>
         </div>
     @endif
@@ -86,7 +86,7 @@
      style="display: {{ (isset($recorder->from_whom_type) && $recorder->from_whom_type>0)?'show':'none' }};">
     {{ Form::label('from_whom_type', 'From Whom Type', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('from_whom_type') ? ' has-error' : '' }}">
-        {{ Form::select('from_whom_type', $types, null,['class'=>'form-control', 'id'=>'from_whom_type', 'placeholder'=>'Select']) }}
+        {{ Form::select('from_whom_type', $types, null,['class'=>'form-control select2me', 'id'=>'from_whom_type', 'placeholder'=>'Select']) }}
         @if ($errors->has('from_whom_type'))
             <span class="help-block">
                 <strong>{{ $errors->first('from_whom_type') }}</strong>
@@ -123,7 +123,7 @@
         <div class="form-group">
             {{ Form::label('from_whom', $label, ['class'=>'col-md-3 control-label']) }}
             <div class="col-md-7">
-                {{ Form::select('from_whom', $from_whom_data, null,['class'=>'form-control employee_customer_supplier','placeholder'=>'Select']) }}
+                {{ Form::select('from_whom', $from_whom_data, null,['class'=>'form-control employee_customer_supplier select2me','placeholder'=>'Select']) }}
             </div>
         </div>
     @endif
@@ -253,6 +253,24 @@
                 $('.due_div').hide();
             }
 
+            // Take Loan
+            if(code==12100)
+            {
+                $('.to_whom_type_div').hide();
+                $('#to_whom_type').val('');
+                $('.to_whom_div').empty();
+
+                $('.from_whom_type_div').show();
+                $('#from_whom_type').val('');
+                $('.from_whom_div').show();
+
+                $('.total_amount_div').empty();
+                $('.total_amount_div').hide();
+                $('.amount_div').show();
+                $('.due_div').empty();
+                $('.due_div').hide();
+            }
+
             if(code==29940)
             {
                 $('.to_whom_type_div').hide();
@@ -301,6 +319,9 @@
                 else if (type == 4) {
                     url = "{{ route('ajax.provider_select') }}";
                 }
+                else if (type == 5) {
+                    url = "{{ route('ajax.loan_provider_select') }}";
+                }
 
                 $.ajax({
                     url: url,
@@ -329,6 +350,7 @@
         $(document).on('change', '#from_whom_type', function () {
             $('.total_amount').val('');
             var type = $(this).val();
+
             if (type > 0) {
                 var url = "";
                 if (type == 2) {
@@ -343,6 +365,10 @@
                 else if (type == 4) {
                     url = "{{ route('ajax.provider_select') }}";
                 }
+                else if (type == 5) {
+                    url = "{{ route('ajax.loan_provider_select') }}";
+                }
+
                 $.ajax({
                     url: url,
                     type: 'POST',

@@ -58,7 +58,6 @@
                     </div>
                 </div>
             </div>
-            <!-- END BORDERED TABLE PORTLET-->
         </div>
     </div>
 @stop

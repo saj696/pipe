@@ -26,7 +26,7 @@
                     {{ Form::select('product_id[]', $products, null,['class'=>'form-control product_id', 'id'=>'product_id', 'placeholder'=>'Select Product', 'required'=>'required']) }}
                 </td>
                 <td width="20%">
-                    {{ Form::text('production[]', null,['class'=>'form-control quantity production', 'required'=>'required', 'placeholder'=>'Input Production Quantity']) }}
+                    {{ Form::text('production[]', null,['class'=>'form-control quantity production', 'required'=>'required', 'placeholder'=>'Input Production Quantity (Pcs.)']) }}
                 </td>
                 <td width="2%">
                     <i class="fa fa-close" onclick="closeIt(this)" style="color: red; margin-top: 10px; cursor: pointer;"></i>

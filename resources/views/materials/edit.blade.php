@@ -5,15 +5,9 @@
             <div class="caption">
                 <i class="fa fa-gift"></i> Edit: {{ $material->name }}
             </div>
-            <div class="tools">
-                <a href="" class="collapse">
-                </a>
-                <a href="#portlet-config" data-toggle="modal" class="config">
-                </a>
-                <a href="" class="reload">
-                </a>
-                <a href="" class="remove">
-                </a>
+            <div>
+                <a style="margin: 12px; padding: 5px;" class="label label-success pull-right"
+                   href="{{ url('/materials' )}}">Back</a>
             </div>
         </div>
         <div class="portlet-body form">

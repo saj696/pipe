@@ -7,6 +7,7 @@ use App\Helpers\CommonHelper;
 use App\Http\Requests;
 use App\Models\Customer;
 use App\Models\Employee;
+use App\Models\LoanProvider;
 use App\Models\Module;
 use App\Models\PersonalAccount;
 use App\Models\Provider;
@@ -70,6 +71,13 @@ class AjaxController extends Controller
     {
         $providers = Provider::where('status', 1)->lists('name', 'id');
         $dropdown = view('ajaxView.providerDropDown')->with('providers', $providers)->render();
+        return response()->json($dropdown);
+    }
+
+    public function getLoanProviders()
+    {
+        $providers = LoanProvider::where('status', 1)->lists('name', 'id');
+        $dropdown = view('ajaxView.loanProviderDropDown')->with('providers', $providers)->render();
         return response()->json($dropdown);
     }
 
@@ -250,6 +258,5 @@ class AjaxController extends Controller
         } else {
             return response()->json(false);
         }
-
     }
 }

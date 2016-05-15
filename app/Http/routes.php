@@ -68,6 +68,11 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('discarded_stock', 'Discarded\DiscardedMaterialStockController');
     Route::resource('discarded_sale', 'Discarded\DiscardedMaterialSaleController');
     Route::resource('purchase_return', 'Setup\PurchasesReturnController');
+    Route::resource('material_stock_initializations', 'Setup\MaterialStockInitializationsController');
+    Route::resource('product_stock_initializations', 'Setup\ProductStockInitializationsController');
+    Route::resource('loan_providers', 'Setup\LoanProvidersController');
+    Route::resource('banks', 'Setup\BanksController');
+    Route::resource('bank_transactions', 'Setup\BankTransactionsController');
 
     // Report route
     Route::get('report_print', 'Report\PrintReportController@index');
@@ -115,6 +120,7 @@ Route::post('customer_select', array('as' => 'ajax.customer_select', 'uses' => '
 Route::post('supplier_select', array('as' => 'ajax.supplier_select', 'uses' => 'AjaxController@getSuppliers'));
 Route::post('employee_select', array('as' => 'ajax.employee_select', 'uses' => 'AjaxController@getEmployees'));
 Route::post('provider_select', array('as' => 'ajax.provider_select', 'uses' => 'AjaxController@getProviders'));
+Route::post('loan_provider_select', array('as' => 'ajax.loan_provider_select', 'uses' => 'AjaxController@getLoanProviders'));
 Route::post('get_personal_account_balance', array('as' => 'ajax.get_personal_account_balance', 'uses' => 'AjaxController@getPersonalAccountBalance'));
 
 Route::post('transaction_recorder_amount', array('as' => 'ajax.transaction_recorder_amount', 'uses' => 'AjaxController@getTransactionRecorderAmount'));

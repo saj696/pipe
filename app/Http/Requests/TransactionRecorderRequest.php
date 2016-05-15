@@ -30,7 +30,7 @@ class TransactionRecorderRequest extends Request
             'cash_adjustment_type' => 'required_if:account_code, 29940',
             'from_whom_type' => 'required_if:account_code, 12000, 20000, 30000',
             'from_whom' => 'required_if:account_code, 12000, 20000, 30000',
-            'total_amount' => 'required_unless:account_code, 50000, 60000, 29960, 29930, 29940',
+            'total_amount' => 'required_unless:account_code, 50000, 60000, 29960, 29930, 29940, 12100',
             'amount' => 'required|numeric',
         ];
     }

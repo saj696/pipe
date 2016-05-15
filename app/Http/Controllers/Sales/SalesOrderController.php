@@ -191,18 +191,18 @@ class SalesOrderController extends Controller
                     $workspace->updated_by = $user_id;
                     $workspace->updated_at = $time;
                     $workspace->update();
-                $journal = new GeneralJournal();
-                $journal->date =$date;
-                $journal->transaction_type = $transaction_type;
-                $journal->reference_id = $sales_order_id;
-                $journal->year = $year;
-                $journal->account_code = 12000;      //Account Receivable
-                $journal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
-                $journal->workspace_id = $workspace_id;
-                $journal->amount = $inputs['due'];
-                $journal->created_by = $user_id;
-                $journal->created_at = $time;
-                $journal->save();
+                    $journal = new GeneralJournal();
+                    $journal->date = $date;
+                    $journal->transaction_type = $transaction_type;
+                    $journal->reference_id = $sales_order_id;
+                    $journal->year = $year;
+                    $journal->account_code = 12000;      //Account Receivable
+                    $journal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
+                    $journal->workspace_id = $workspace_id;
+                    $journal->amount = $inputs['due'];
+                    $journal->created_by = $user_id;
+                    $journal->created_at = $time;
+                    $journal->save();
 
                 }
 
@@ -613,7 +613,7 @@ class SalesOrderController extends Controller
                 $old_due_amount = $oldSalesOrder['due'];
                 if ($new_due_amount && !$old_due_amount) {
                     $journal = new GeneralJournal();
-                    $journal->date =$date;
+                    $journal->date = $date;
                     $journal->transaction_type = $transaction_type;
                     $journal->reference_id = $id;
                     $journal->year = $year;
