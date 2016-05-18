@@ -35,9 +35,15 @@
         </div>
     </div>
 
+    <div class="form-group">
+        {{ Form::label('voucher_no', 'Voucher No.', ['class'=>'col-md-3 control-label']) }}
+        <div class="col-md-7">
+            {{ Form::number('voucher_no', null,['class'=>'form-control','min'=>0,'step'=>0.01]) }}
+        </div>
+    </div>
+
     @if($salary->net_due > 0)
         <div class="form-group">
-
             {{ Form::label('net_salary', 'Net Salary', ['class'=>'col-md-offset-3 col-md-2']) }}
             {{ Form::label('net_paid', 'Net Salary Paid', ['class'=>'col-md-2']) }}
             {{ Form::label('net_pay', 'Net Pay Now', ['class'=>'col-md-2']) }}
@@ -53,7 +59,6 @@
                 {{ Form::number('net_pay', null,['class'=>'form-control','min'=>0,'step'=>0.01,'max'=>$salary->net_due]) }}
             </div>
         </div>
-
     @endif
 
     @if($salary->bonus > 0)

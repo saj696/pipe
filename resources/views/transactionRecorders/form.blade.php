@@ -238,7 +238,7 @@
             }
 
             // Donation & Jakat
-            if(code==29930 || code==29960)
+            if(code==29930 || code==29960 || code==29996)
             {
                 $('.to_whom_type_div').hide();
                 $('#to_whom_type').val('');

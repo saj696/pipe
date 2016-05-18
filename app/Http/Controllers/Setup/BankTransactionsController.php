@@ -166,11 +166,89 @@ class BankTransactionsController extends Controller
                         $workspaceLedger->updated_by = $user->id;
                         $workspaceLedger->updated_by = $time;
                         $workspaceLedger->save();
+                        // Update Workspace Ledger Interest
+                        $workspaceLedger = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 38000, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $year])->first();
+                        $workspaceLedger->balance += $inputs['amount'];
+                        $workspaceLedger->updated_by = $user->id;
+                        $workspaceLedger->updated_by = $time;
+                        $workspaceLedger->save();
+                        // General Journals Cash Debit
+                        $generalJournal = New GeneralJournal;
+                        $generalJournal->date = strtotime($inputs['transaction_date']);
+                        $generalJournal->transaction_type = Config::get('common.transaction_type.bank_interest');
+                        $generalJournal->reference_id = $bankTransaction->id;
+                        $generalJournal->year = $year;
+                        $generalJournal->account_code = 11000;
+                        $generalJournal->workspace_id = $user->workspace_id;
+                        $generalJournal->amount = $inputs['amount'];
+                        $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
+                        $generalJournal->created_by = Auth::user()->id;
+                        $generalJournal->created_at = time();
+                        $generalJournal->save();
+                        // Bank Interest Credit
+                        $generalJournal = New GeneralJournal;
+                        $generalJournal->date = strtotime($inputs['transaction_date']);
+                        $generalJournal->transaction_type = Config::get('common.transaction_type.bank_interest');
+                        $generalJournal->reference_id = $bankTransaction->id;
+                        $generalJournal->year = $year;
+                        $generalJournal->account_code = 38000;
+                        $generalJournal->workspace_id = $user->workspace_id;
+                        $generalJournal->amount = $inputs['amount'];
+                        $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
+                        $generalJournal->created_by = Auth::user()->id;
+                        $generalJournal->created_at = time();
+                        $generalJournal->save();
+                    }
+                    elseif($inputs['transaction_type'] == 4)
+                    {
+                        // Bank Balance Update
+                        $bank = Bank::findOrfail($inputs['bank_id']);
+                        $bank->balance -= $inputs['amount'];
+                        $bank->updated_by = $user->id;
+                        $bank->updated_by = $time;
+                        $bank->save();
+                        // Update Workspace Ledger Bank
+                        $workspaceLedger = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => $bank->account_code, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $year])->first();
+                        $workspaceLedger->balance -= $inputs['amount'];
+                        $workspaceLedger->updated_by = $user->id;
+                        $workspaceLedger->updated_by = $time;
+                        $workspaceLedger->save();
+                        // Update Workspace Ledger Bank Charge
+                        $workspaceLedger = WorkspaceLedger::where(['workspace_id' => $user->workspace_id, 'account_code' => 29995, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $year])->first();
+                        $workspaceLedger->balance += $inputs['amount'];
+                        $workspaceLedger->updated_by = $user->id;
+                        $workspaceLedger->updated_by = $time;
+                        $workspaceLedger->save();
+                        // General Journals Cash Credit
+                        $generalJournal = New GeneralJournal;
+                        $generalJournal->date = strtotime($inputs['transaction_date']);
+                        $generalJournal->transaction_type = Config::get('common.transaction_type.bank_charge');
+                        $generalJournal->reference_id = $bankTransaction->id;
+                        $generalJournal->year = $year;
+                        $generalJournal->account_code = 11000;
+                        $generalJournal->workspace_id = $user->workspace_id;
+                        $generalJournal->amount = $inputs['amount'];
+                        $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
+                        $generalJournal->created_by = Auth::user()->id;
+                        $generalJournal->created_at = time();
+                        $generalJournal->save();
+                        // Bank Charge Debit
+                        $generalJournal = New GeneralJournal;
+                        $generalJournal->date = strtotime($inputs['transaction_date']);
+                        $generalJournal->transaction_type = Config::get('common.transaction_type.bank_charge');
+                        $generalJournal->reference_id = $bankTransaction->id;
+                        $generalJournal->year = $year;
+                        $generalJournal->account_code = 29995;
+                        $generalJournal->workspace_id = $user->workspace_id;
+                        $generalJournal->amount = $inputs['amount'];
+                        $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
+                        $generalJournal->created_by = Auth::user()->id;
+                        $generalJournal->created_at = time();
+                        $generalJournal->save();
                     }
                 }
             });
         } catch (\Exception $e) {
-            dd($e);
             Session::flash('error_message', 'Failed to do Bank Transaction. Please try again!');
             return Redirect::back();
         }

@@ -73,6 +73,8 @@ Route::group(['middleware' => ['web']], function () {
     Route::resource('loan_providers', 'Setup\LoanProvidersController');
     Route::resource('banks', 'Setup\BanksController');
     Route::resource('bank_transactions', 'Setup\BankTransactionsController');
+    Route::resource('receive_payments', 'Payment\ReceivePaymentsController');
+    Route::resource('make_payments', 'Payment\MakePaymentsController');
 
     // Report route
     Route::get('report_print', 'Report\PrintReportController@index');
@@ -124,6 +126,7 @@ Route::post('loan_provider_select', array('as' => 'ajax.loan_provider_select', '
 Route::post('get_personal_account_balance', array('as' => 'ajax.get_personal_account_balance', 'uses' => 'AjaxController@getPersonalAccountBalance'));
 
 Route::post('transaction_recorder_amount', array('as' => 'ajax.transaction_recorder_amount', 'uses' => 'AjaxController@getTransactionRecorderAmount'));
+Route::post('receive_payment_amount', array('as' => 'ajax.receive_payment_amount', 'uses' => 'AjaxController@getReceivePaymentAmount'));
 
 Route::controllers([
     'auth' => 'Auth\AuthController',

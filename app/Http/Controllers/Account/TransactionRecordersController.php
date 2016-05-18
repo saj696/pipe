@@ -496,9 +496,9 @@ class TransactionRecordersController extends Controller
                     $generalJournal->created_at = time();
                     $generalJournal->save();
                 }
-                elseif($request->account_code == 29930 || $request->account_code == 29960)
+                elseif($request->account_code == 29930 || $request->account_code == 29960 || $request->account_code == 29996)
                 {
-                    // DONATION & JAKAT
+                    // DONATION, JAKAT or Middleman Commission
                     $accountCode = $request->account_code;
                     // Workspace Ledger Cash Credit(-)
                     $cashWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => $cashCode, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear])->first();
@@ -618,9 +618,9 @@ class TransactionRecordersController extends Controller
                 }
                 elseif($request->account_code == 12100)
                 {
-                    // Loan Receivable
-                    $accountCode = $request->account_code;
-                    // Workspace Ledger Loan Receivable Account Credit(+)
+                    // Loan Receive
+                    $accountCode = 41400;
+                    // Workspace Ledger Loan Payable Account Credit(+)
                     $WorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => $accountCode, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear])->first();
                     $WorkspaceData->balance += $request->amount;
                     $WorkspaceData->update();
@@ -634,7 +634,7 @@ class TransactionRecordersController extends Controller
                     $personData = PersonalAccount::where(['person_id' => $person_id, 'person_type' => $person_type])->first();
                     $personData->balance += $request->amount;
                     $personData->update();
-                    // General Journals Loan Receivable Credit
+                    // General Journals Loan Payable Credit
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = strtotime($request->date);
                     $generalJournal->transaction_type = Config::get('common.transaction_type.general');
@@ -665,9 +665,9 @@ class TransactionRecordersController extends Controller
                 {
                     // Loan Pay
                     $accountCode = $request->account_code;
-                    // Workspace Ledger Loan Payable Account Credit(+)
+                    // Workspace Ledger Loan Payable Account Debit(-)
                     $WorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => $accountCode, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear])->first();
-                    $WorkspaceData->balance += $request->amount;
+                    $WorkspaceData->balance -= $request->amount;
                     $WorkspaceData->update();
                     // Workspace Ledger Cash Credit(-)
                     $cashWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => $cashCode, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear])->first();
@@ -679,7 +679,7 @@ class TransactionRecordersController extends Controller
                     $personData = PersonalAccount::where(['person_id' => $person_id, 'person_type' => $person_type])->first();
                     $personData->balance -= $request->amount;
                     $personData->update();
-                    // General Journals Loan Payable Credit
+                    // General Journals Loan Payable Debit
                     $generalJournal = New GeneralJournal;
                     $generalJournal->date = strtotime($request->date);
                     $generalJournal->transaction_type = Config::get('common.transaction_type.general');
@@ -688,7 +688,7 @@ class TransactionRecordersController extends Controller
                     $generalJournal->account_code = $accountCode;
                     $generalJournal->workspace_id = $workspace_id;
                     $generalJournal->amount = $request->amount;
-                    $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
+                    $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
                     $generalJournal->created_by = Auth::user()->id;
                     $generalJournal->created_at = time();
                     $generalJournal->save();

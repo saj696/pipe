@@ -203,10 +203,7 @@ class SalaryGeneratorController extends Controller
                     $generalJournal->created_by = $user->id;
                     $generalJournal->created_at = $time;
                     $generalJournal->save();
-
                 }
-
-
             });
         } catch (\Exception $e) {
             Session()->flash('error_message', 'Salary cannot generate. Please Try again.');
@@ -215,15 +212,12 @@ class SalaryGeneratorController extends Controller
 
         Session()->flash('flash_message', 'Salary generated successfully.');
         return redirect('salary_generator');
-
-
     }
 
 
     public function edit($id)
     {
         $salary = Salary::where(['id' => $id, 'status' => 1])->with(['employee', 'employee.designation'])->first();
-//dd($salary);
         return view('payrolls.salaryGenerator.edit')->with(compact('salary'));
     }
 

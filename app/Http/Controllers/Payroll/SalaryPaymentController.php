@@ -37,14 +37,13 @@ class SalaryPaymentController extends Controller
 
     public function store(SalaryPaymentRequest $request)
     {
-
         try {
             DB::transaction(function () use ($request) {
                 $inputs = $request->input();
                 $user = Auth::user();
                 $time = time();
                 $date = strtotime(date('d-m-Y'));
-                $year=CommonHelper::get_current_financial_year();
+                $year = CommonHelper::get_current_financial_year();
 
                 $oldPayment = SalaryPayment::where('salary_id', '=', $inputs['salary_id'])->where('status', '!=', 4)->first();
 
@@ -57,6 +56,7 @@ class SalaryPaymentController extends Controller
                     $salaryPayment->workspace_id = $inputs['workspace_id'];
                     $salaryPayment->year = $year;
                     $salaryPayment->month = $inputs['month'];
+                    $salaryPayment->voucher_no = $inputs['voucher_no'];
                     $salaryPayment->payment_date = $time;
                     if (isset($inputs['net_pay'])) {
                         $salaryPayment->net_paid = $inputs['net_pay'];
@@ -96,7 +96,7 @@ class SalaryPaymentController extends Controller
                         $payment = SalaryPayment::find($salaryPayment->id);
                         $payment->status = 4; //Completed
                         $payment->update();
-                    }else{
+                    } else {
                         $salary->status = 2; //Partial
 
                         //Update Payment
@@ -104,7 +104,6 @@ class SalaryPaymentController extends Controller
                         $payment->status = 2; //Partial
                         $payment->update();
                     }
-
 
                     $salary->updated_by = $user->id;
                     $salary->updated_at = $time;
@@ -162,7 +161,6 @@ class SalaryPaymentController extends Controller
                         $generalJournal->created_by = $user->id;
                         $generalJournal->created_at = $time;
                         $generalJournal->save();
-
                     }
 
                     if (isset($inputs['bonus_pay']) && $inputs['bonus_pay'] > 0) {
@@ -203,7 +201,6 @@ class SalaryPaymentController extends Controller
                         $generalJournal->created_by = $user->id;
                         $generalJournal->created_at = $time;
                         $generalJournal->save();
-
                     }
 
                     if (isset($inputs['over_time_pay']) && $inputs['over_time_pay'] > 0) {
@@ -286,7 +283,7 @@ class SalaryPaymentController extends Controller
                         $payment = SalaryPayment::find($oldPayment->id);
                         $payment->status = 4; //Completed
                         $payment->update();
-                    }else{
+                    } else {
                         $salary->status = 2; //Partial
 
                         //Update Payment
@@ -294,7 +291,6 @@ class SalaryPaymentController extends Controller
                         $payment->status = 2; //Partial
                         $payment->update();
                     }
-
 
                     $salary->updated_by = $user->id;
                     $salary->updated_at = $time;
@@ -321,12 +317,12 @@ class SalaryPaymentController extends Controller
                         $accountPayableWorkspaceData->updated_at = $time;
                         $accountPayableWorkspaceData->update();
 
-                        $data=[
+                        $data = [
                             'transaction_type' => Config::get('common.transaction_type.salary_payment'),
-                            'reference_id'=>$oldPayment->id,
-                            'year'=> $year,
-                            'account_code'=> 42000,
-                            'workspace_id'=>$user->workspace_id
+                            'reference_id' => $oldPayment->id,
+                            'year' => $year,
+                            'account_code' => 42000,
+                            'workspace_id' => $user->workspace_id
                         ];
 
                         $generalJournal = GeneralJournal::firstOrCreate($data);
@@ -348,12 +344,12 @@ class SalaryPaymentController extends Controller
                         $accountPayableWorkspaceData->updated_at = $time;
                         $accountPayableWorkspaceData->update();
 
-                        $data=[
+                        $data = [
                             'transaction_type' => Config::get('common.transaction_type.salary_payment'),
-                            'reference_id'=>$oldPayment->id,
-                            'year'=> $year,
-                            'account_code'=> 11000,
-                            'workspace_id'=>$user->workspace_id
+                            'reference_id' => $oldPayment->id,
+                            'year' => $year,
+                            'account_code' => 11000,
+                            'workspace_id' => $user->workspace_id
                         ];
 
                         $generalJournal = GeneralJournal::firstOrCreate($data);
@@ -368,7 +364,6 @@ class SalaryPaymentController extends Controller
                         $generalJournal->created_by = $user->id;
                         $generalJournal->created_at = $time;
                         $generalJournal->save();
-
                     }
 
                     if (isset($inputs['bonus_pay']) && $inputs['bonus_pay'] > 0) {
@@ -378,12 +373,12 @@ class SalaryPaymentController extends Controller
                         $accountPayableWorkspaceData->updated_at = $time;
                         $accountPayableWorkspaceData->update();
 
-                        $data=[
+                        $data = [
                             'transaction_type' => Config::get('common.transaction_type.salary_payment'),
-                            'reference_id'=>$oldPayment->id,
-                            'year'=> $year,
-                            'account_code'=> 45000,
-                            'workspace_id'=>$user->workspace_id
+                            'reference_id' => $oldPayment->id,
+                            'year' => $year,
+                            'account_code' => 45000,
+                            'workspace_id' => $user->workspace_id
                         ];
 
                         $generalJournal = GeneralJournal::firstOrCreate($data);
@@ -405,12 +400,12 @@ class SalaryPaymentController extends Controller
                         $accountPayableWorkspaceData->updated_at = $time;
                         $accountPayableWorkspaceData->update();
 
-                        $data=[
+                        $data = [
                             'transaction_type' => Config::get('common.transaction_type.salary_payment'),
-                            'reference_id'=>$oldPayment->id,
-                            'year'=> $year,
-                            'account_code'=> 11000,
-                            'workspace_id'=>$user->workspace_id
+                            'reference_id' => $oldPayment->id,
+                            'year' => $year,
+                            'account_code' => 11000,
+                            'workspace_id' => $user->workspace_id
                         ];
 
                         $generalJournal = GeneralJournal::firstOrCreate($data);
@@ -425,7 +420,6 @@ class SalaryPaymentController extends Controller
                         $generalJournal->created_by = $user->id;
                         $generalJournal->created_at = $time;
                         $generalJournal->save();
-
                     }
 
                     if (isset($inputs['over_time_pay']) && $inputs['over_time_pay'] > 0) {
@@ -435,12 +429,12 @@ class SalaryPaymentController extends Controller
                         $accountPayableWorkspaceData->updated_at = $time;
                         $accountPayableWorkspaceData->update();
 
-                        $data=[
+                        $data = [
                             'transaction_type' => Config::get('common.transaction_type.salary_payment'),
-                            'reference_id'=>$oldPayment->id,
-                            'year'=> $year,
-                            'account_code'=> 44000,
-                            'workspace_id'=>$user->workspace_id
+                            'reference_id' => $oldPayment->id,
+                            'year' => $year,
+                            'account_code' => 44000,
+                            'workspace_id' => $user->workspace_id
                         ];
 
                         $generalJournal = GeneralJournal::firstOrCreate($data);
@@ -462,12 +456,12 @@ class SalaryPaymentController extends Controller
                         $accountPayableWorkspaceData->updated_at = $time;
                         $accountPayableWorkspaceData->update();
 
-                        $data=[
+                        $data = [
                             'transaction_type' => Config::get('common.transaction_type.salary_payment'),
-                            'reference_id'=>$oldPayment->id,
-                            'year'=> $year,
-                            'account_code'=> 11000,
-                            'workspace_id'=>$user->workspace_id
+                            'reference_id' => $oldPayment->id,
+                            'year' => $year,
+                            'account_code' => 11000,
+                            'workspace_id' => $user->workspace_id
                         ];
 
                         $generalJournal = GeneralJournal::firstOrCreate($data);
@@ -493,9 +487,7 @@ class SalaryPaymentController extends Controller
 
         Session()->flash('flash_message', 'Salary paid successfully.');
         return Redirect::back();
-//        return redirect('salary_payment');
     }
-
 
     public function edit($id)
     {
@@ -561,7 +553,6 @@ class SalaryPaymentController extends Controller
                     $generalJournal->updated_at = $time;
                     $generalJournal->save();
                 }
-
             });
         } catch (\Exception $e) {
             Session()->flash('error_message', 'Salary payment update cannot successful. Please Try again.');
@@ -570,6 +561,5 @@ class SalaryPaymentController extends Controller
 
         Session()->flash('flash_message', 'Salary payment update successfully.');
         return redirect('salary_payment');
-
     }
 }

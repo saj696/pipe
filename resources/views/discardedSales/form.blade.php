@@ -13,10 +13,48 @@
 </div>
 
 <div class="form-group">
-    {{ Form::label('customer_id', 'Customer', ['class'=>'col-md-4 control-label']) }}
-    <div class="col-md-5">
-        {{ Form::select('customer_id', $customers, null,['class'=>'form-control', 'placeholder'=>'Select']) }}
+    {{ Form::label('customer_type', 'Customer Type', ['class'=>'col-md-3 control-label']) }}
+    <div class="col-md-7{{ $errors->has('customer_type') ? ' has-error' : '' }}">
+        {{ Form::select('customer_type', $types, null,['class'=>'form-control select2me', 'id'=>'customer_type', 'placeholder'=>'Select']) }}
+        @if ($errors->has('customer_type'))
+            <span class="help-block">
+                <strong>{{ $errors->first('customer_type') }}</strong>
+            </span>
+        @endif
     </div>
+</div>
+
+<div class="customer_div">
+    @if(isset($discardedSales->customer_type) && $discardedSales->customer_type>0)
+        @if($discardedSales->customer_type==1)
+            <?php
+            $customer_data = $customers;
+            $label = 'Customer';
+            ?>
+        @elseif($discardedSales->customer_type==2)
+            <?php
+            $customer_data = $suppliers;
+            $label = 'Supplier';
+            ?>
+        @elseif($discardedSales->customer_type==3)
+            <?php
+            $customer_data = $employees;
+            $label = 'Employee';
+            ?>
+        @elseif($discardedSales->customer_type==4)
+            <?php
+            $customer_data = $providers;
+            $label = 'Service Provider';
+            ?>
+        @endif
+
+        <div class="form-group">
+            {{ Form::label('customer', $label, ['class'=>'col-md-3 control-label']) }}
+            <div class="col-md-7">
+                {{ Form::select('customer', $customer_data, null,['class'=>'form-control employee_customer_supplier select2me','placeholder'=>'Select']) }}
+            </div>
+        </div>
+    @endif
 </div>
 
 @if(isset($discardedSales->DiscardedSalesDetail))
@@ -129,6 +167,47 @@
                 alert('Duplicate Material!');
             }
             //console.log(arrUnique(arr));
+        });
+
+        $(document).on('change', '#customer_type', function () {
+            var type = $(this).val();
+
+            if (type > 0) {
+                var url = "";
+                if (type == 2) {
+                    url = "{{ route('ajax.supplier_select') }}";
+                }
+                else if (type == 1) {
+                    url = "{{ route('ajax.employee_select') }}";
+                }
+                else if (type == 3) {
+                    url = "{{ route('ajax.customer_select') }}";
+                }
+                else if (type == 4) {
+                    url = "{{ route('ajax.provider_select') }}";
+                }
+                else if (type == 5) {
+                    url = "{{ route('ajax.loan_provider_select') }}";
+                }
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    dataType: "JSON",
+                    success: function (data, status) {
+                        $('.customer_div').empty();
+                        $('.customer_div').html(data);
+                        $('.select2me').select2();
+                    },
+                    error: function (xhr, desc, err) {
+                        console.log("error");
+                    }
+                });
+            }
+            else {
+                $('.customer_div').empty();
+                $('.customer_div').hide();
+            }
         });
     });
 

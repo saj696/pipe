@@ -13,6 +13,7 @@ use App\Models\GeneralJournal;
 use App\Models\Material;
 use App\Models\PersonalAccount;
 use App\Models\RawStock;
+use App\Models\Supplier;
 use App\Models\UsageRegister;
 use App\Models\WorkspaceLedger;
 use DB;
@@ -36,9 +37,10 @@ class DiscardedMaterialSaleController extends Controller
 
     public function create()
     {
+        $types = Config::get('common.transaction_customer_type');
         $customers = Customer::where('status', 1)->lists('name', 'id');
         $materials = Material::where('type', array_flip(Config::get('common.material_type'))['Discarded'])->lists('name','id');
-        return view('discardedSales.create', compact('materials', 'customers'));
+        return view('discardedSales.create', compact('materials', 'customers', 'types'));
     }
 
     public function store(DiscardedSalesRequest $request)
@@ -46,6 +48,7 @@ class DiscardedMaterialSaleController extends Controller
         try {
             DB::transaction(function () use ($request) {
                 $workspace_id = Auth::user()->workspace_id;
+                $customer_type = $request->customer_type;
                 $customer_id = $request->customer_id;
                 $total_amount = $request->total_amount;
                 $paid_amount = $request->paid_amount;
@@ -63,6 +66,7 @@ class DiscardedMaterialSaleController extends Controller
                     $discardedSales = New DiscardedSales;
                     $discardedSales->year = CommonHelper::get_current_financial_year();
                     $discardedSales->date = $request->date;
+                    $discardedSales->customer_type = $request->customer_type;
                     $discardedSales->customer_id = $request->customer_id;
                     $discardedSales->total_amount = $request->total_amount;
                     $discardedSales->paid_amount = $request->paid_amount;
@@ -130,7 +134,7 @@ class DiscardedMaterialSaleController extends Controller
                         $discardedWorkspaceData->balance += $due_amount;
                         $discardedWorkspaceData->update();
                         // Personal Account Table
-                        $person_type = Config::get('common.person_type_customer');
+                        $person_type = $customer_type;
                         $person_id = $request->customer_id;
                         $personData = PersonalAccount::where(['person_id' => $person_id, 'person_type' => $person_type])->first();
                         $personData->balance += $due_amount;
@@ -163,9 +167,13 @@ class DiscardedMaterialSaleController extends Controller
     public function edit($id)
     {
         $customers = Customer::where('status', 1)->lists('name', 'id');
+        $suppliers = Supplier::where('status', 1)->lists('company_name', 'id');
+        $employees = Supplier::where('status', 1)->lists('name', 'id');
+        $providers = Supplier::where('status', 1)->lists('name', 'id');
+
         $materials = Material::where('type', array_flip(Config::get('common.material_type'))['Discarded'])->lists('name','id');
         $discardedSales = DiscardedSales::with(['DiscardedSalesDetail' => function ($q) {$q->where('status', 1);}])->findOrFail($id);
-        return view('discardedSales.edit', compact('discardedSales', 'customers', 'materials'));
+        return view('discardedSales.edit', compact('discardedSales', 'customers', 'materials', 'suppliers', 'employees', 'providers'));
     }
 
     public function update($id, DiscardedSalesRequest $request)
@@ -173,6 +181,7 @@ class DiscardedMaterialSaleController extends Controller
         try {
             DB::transaction(function () use ($request, $id) {
                 $workspace_id = Auth::user()->workspace_id;
+                $customer_type = $request->customer_type;
                 $customer_id = $request->customer_id;
                 $total_amount = $request->total_amount;
                 $paid_amount = $request->paid_amount;
@@ -194,6 +203,7 @@ class DiscardedMaterialSaleController extends Controller
 
                     $discardedSales->year = CommonHelper::get_current_financial_year();
                     $discardedSales->date = $request->date;
+                    $discardedSales->customer_type = $request->customer_type;
                     $discardedSales->customer_id = $request->customer_id;
                     $discardedSales->total_amount = $request->total_amount;
                     $discardedSales->paid_amount = $request->paid_amount;
@@ -313,7 +323,7 @@ class DiscardedMaterialSaleController extends Controller
                         $discardedWorkspaceData->update();
 
                         // Personal Account Table
-                        $person_type = Config::get('common.person_type_customer');
+                        $person_type = $customer_type;
                         $person_id = $request->customer_id;
                         $personData = PersonalAccount::where(['person_id' => $person_id, 'person_type' => $person_type])->first();
                         if($old_due_amount>$due_amount)

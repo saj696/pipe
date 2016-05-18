@@ -107,7 +107,6 @@ class SalesOrderController extends Controller
                     $salesOderItems->save();
 
                     unset($data);
-
                 }
 
                 $user_id = Auth::user()->id;
@@ -139,7 +138,6 @@ class SalesOrderController extends Controller
                     $journal->created_by = $user_id;
                     $journal->created_at = $time;
                     $journal->save();
-
                 }
 
                 if ($inputs['labour_cost'] > 0) {
@@ -203,7 +201,6 @@ class SalesOrderController extends Controller
                     $journal->created_by = $user_id;
                     $journal->created_at = $time;
                     $journal->save();
-
                 }
 
                 $workspace = WorkspaceLedger::where(['account_code' => 31000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
@@ -335,7 +332,6 @@ class SalesOrderController extends Controller
                         if ($salesOrderItem) {
                             $salesOrderItem->delete();
                         }
-
                     }
                 }
 
@@ -941,7 +937,6 @@ class SalesOrderController extends Controller
     public function invoice_print($id)
     {
         $salesOrder = SalesOrder::where('id', $id)->where('status', '!=', 4)->with(['salesOrderItems', 'salesOrderItems.product'])->first();
-//        dd($salesOrder);
         return view('sales.salesOrder.invoice')->with(compact('salesOrder'));
     }
 }
