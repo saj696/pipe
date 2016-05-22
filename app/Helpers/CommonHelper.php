@@ -138,4 +138,93 @@ class CommonHelper extends Facade
         return $stock->quantity;
     }
 
+    public static function customer_balance_due_before_date($person_id, $type, $date)
+    {
+        $salesOrder = DB::table('sales_order')
+            ->where(['customer_type' => $type, 'customer_id' => $person_id])
+            ->select(DB::raw('SUM(total) as sum_total'), DB::raw('SUM(transport_cost) as sum_transport_cost'), DB::raw('SUM(labour_cost) as sum_labour_cost'), DB::raw('SUM(paid) as sum_paid'))
+            ->where('date', '<', $date)
+            ->first();
+        $salesReturn = DB::table('sales_return')
+            ->where(['customer_type' => $type, 'customer_id' => $person_id])
+            ->select(DB::raw('SUM(total_amount) as sum_total_amount'), DB::raw('SUM(due_paid) as sum_due_paid'))
+            ->where('date', '<', $date)
+            ->first();
+        $defect = DB::table('defects')
+            ->where(['customer_type' => $type, 'customer_id' => $person_id])
+            ->select(DB::raw('SUM(cash) as sum_cash'), DB::raw('SUM(replacement) as sum_replacement'), DB::raw('SUM(total) as sum_total'))
+            ->where('date', '<', $date)
+            ->first();
+        $receivedPayments = DB::table('payments')
+            ->where(['from_whom_type' => $type, 'from_whom' => $person_id])
+            ->select(DB::raw('SUM(amount) as sum_amount'))
+            ->where('date', '<', $date)
+            ->first();
+        $makePayments = DB::table('payments')
+            ->where(['from_whom_type' => $type, 'from_whom' => $person_id, 'account_code' => 12200])
+            ->select(DB::raw('SUM(amount) as sum_amount'))
+            ->where('date', '<', $date)
+            ->first();
+
+        $paidValue = $salesOrder->sum_total + $salesOrder->sum_transport_cost + $salesOrder->sum_labour_cost + $defect->sum_replacement + $defect->sum_cash + $makePayments->sum_amount + $salesReturn->sum_total_amount - $salesReturn->sum_due_paid;
+        $receivedValue = $salesOrder->sum_paid + $salesReturn->sum_total_amount + $defect->sum_total + $receivedPayments->sum_amount;
+
+        $arr = [];
+        if($paidValue > $receivedValue):
+            $arr['balance'] = 0;
+            $arr['due'] = $paidValue - $receivedValue;
+        elseif($receivedValue > $paidValue):
+            $arr['balance'] = $receivedValue - $paidValue;
+            $arr['due'] = 0;
+        else:
+            $arr['balance'] = 0;
+            $arr['due'] = 0;
+        endif;
+        return $arr;
+    }
+
+    public static function customer_balance_due_after_date($person_id, $type, $date)
+    {
+        $salesOrder = DB::table('sales_order')
+            ->where(['customer_type' => $type, 'customer_id' => $person_id])
+            ->select(DB::raw('SUM(total) as sum_total'), DB::raw('SUM(transport_cost) as sum_transport_cost'), DB::raw('SUM(labour_cost) as sum_labour_cost'), DB::raw('SUM(paid) as sum_paid'))
+            ->where('date', '<=', $date)
+            ->first();
+        $salesReturn = DB::table('sales_return')
+            ->where(['customer_type' => $type, 'customer_id' => $person_id])
+            ->select(DB::raw('SUM(total_amount) as sum_total_amount'), DB::raw('SUM(due_paid) as sum_due_paid'))
+            ->where('date', '<=', $date)
+            ->first();
+        $defect = DB::table('defects')
+            ->where(['customer_type' => $type, 'customer_id' => $person_id])
+            ->select(DB::raw('SUM(cash) as sum_cash'), DB::raw('SUM(replacement) as sum_replacement'), DB::raw('SUM(total) as sum_total'))
+            ->where('date', '<=', $date)
+            ->first();
+        $receivedPayments = DB::table('payments')
+            ->where(['from_whom_type' => $type, 'from_whom' => $person_id])
+            ->select(DB::raw('SUM(amount) as sum_amount'))
+            ->where('date', '<=', $date)
+            ->first();
+        $makePayments = DB::table('payments')
+            ->where(['from_whom_type' => $type, 'from_whom' => $person_id, 'account_code' => 12200])
+            ->select(DB::raw('SUM(amount) as sum_amount'))
+            ->where('date', '<=', $date)
+            ->first();
+
+        $paidValue = $salesOrder->sum_total + $salesOrder->sum_transport_cost + $salesOrder->sum_labour_cost + $defect->sum_replacement + $defect->sum_cash + $makePayments->sum_amount + $salesReturn->sum_total_amount - $salesReturn->sum_due_paid;
+        $receivedValue = $salesOrder->sum_paid + $salesReturn->sum_total_amount + $defect->sum_total + $receivedPayments->sum_amount;
+
+        $arr = [];
+        if($paidValue > $receivedValue):
+            $arr['balance'] = 0;
+            $arr['due'] = $paidValue - $receivedValue;
+        elseif($receivedValue > $paidValue):
+            $arr['balance'] = $receivedValue - $paidValue;
+            $arr['due'] = 0;
+        else:
+            $arr['balance'] = 0;
+            $arr['due'] = 0;
+        endif;
+        return $arr;
+    }
 }

@@ -7,11 +7,11 @@
             <div class="portlet box yellow">
                 <div class="portlet-title">
                     <div class="caption">
-                        <i class="fa fa-coffee"></i>Sales Generator
+                        <i class="fa fa-coffee"></i>Sales Payment
                     </div>
                     <div>
                         <a style="margin: 12px; padding: 5px;" class="label label-success pull-right"
-                           href="{{ url('/salary_payment/create' )}}">Payment Salary</a>
+                           href="{{ url('/salary_payment/create' )}}">Pay</a>
                     </div>
                 </div>
                 <div class="portlet-body">
@@ -34,7 +34,6 @@
                                 <th>
                                     Action
                                 </th>
-
                             </tr>
                             </thead>
                             <tbody>

@@ -37,36 +37,7 @@
 </div>
 
 <div class="from_whom_div">
-    @if(isset($recorder->from_whom_type) && $recorder->from_whom_type>0)
-        @if($recorder->from_whom_type==1)
-            <?php
-            $from_whom_data = $customers;
-            $label = 'Customer';
-            ?>
-        @elseif($recorder->from_whom_type==2)
-            <?php
-            $from_whom_data = $suppliers;
-            $label = 'Supplier';
-            ?>
-        @elseif($recorder->from_whom_type==3)
-            <?php
-            $from_whom_data = $employees;
-            $label = 'Employee';
-            ?>
-        @elseif($recorder->from_whom_type==4)
-            <?php
-            $from_whom_data = $providers;
-            $label = 'Service Provider';
-            ?>
-        @endif
 
-        <div class="form-group">
-            {{ Form::label('from_whom', $label, ['class'=>'col-md-3 control-label']) }}
-            <div class="col-md-7">
-                {{ Form::select('from_whom', $from_whom_data, null,['class'=>'form-control employee_customer_supplier select2me','placeholder'=>'Select']) }}
-            </div>
-        </div>
-    @endif
 </div>
 
 <div class="total_amount_div form-group">
@@ -97,6 +68,13 @@
     {{ Form::label('due', 'Due', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7">
         {{ Form::text('due', null,['class'=>'form-control due']) }}
+    </div>
+</div>
+
+<div class="form-group due_div">
+    {{ Form::label('voucher_no', 'Voucher No.', ['class'=>'col-md-3 control-label']) }}
+    <div class="col-md-7">
+        {{ Form::text('voucher_no', null,['class'=>'form-control']) }}
     </div>
 </div>
 
@@ -217,11 +195,7 @@
         });
 
         $("form").submit(function( event ) {
-            if($('#from_whom').val()>0)
-            {
-
-            }
-            else
+            if(!($('#from_whom').val()>0))
             {
                 alert("Please select a person!");
                 event.preventDefault();

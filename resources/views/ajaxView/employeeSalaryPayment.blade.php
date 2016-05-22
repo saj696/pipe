@@ -38,7 +38,7 @@
     <div class="form-group">
         {{ Form::label('voucher_no', 'Voucher No.', ['class'=>'col-md-3 control-label']) }}
         <div class="col-md-7">
-            {{ Form::number('voucher_no', null,['class'=>'form-control','min'=>0,'step'=>0.01]) }}
+            {{ Form::text('voucher_no', null,['class'=>'form-control']) }}
         </div>
     </div>
 

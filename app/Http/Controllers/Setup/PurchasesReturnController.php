@@ -86,6 +86,21 @@ class PurchasesReturnController extends Controller
             $purchase->purchase_return_date = $request->input('purchase_return_date');
             $purchase->transportation_cost = $request->input('transportation_cost');
             $purchase->total_amout = $request->input('total');
+
+            if($inputs['return_type']==1):
+                $purchase->due = 0;
+                $purchase->due_paid = 0;
+            elseif($inputs['return_type']==2):
+                $purchase->due = 0;
+                $purchase->due_paid = $request->input('total');
+            elseif($inputs['return_type']==3):
+                $purchase->due = $request->input('total');
+                $purchase->due_paid = 0;
+            elseif($inputs['return_type']==4):
+                $purchase->due = 0;
+                $purchase->due_paid = $request->input('pay_due_amount');
+            endif;
+
             $purchase->return_type = $request->input('return_type');
             $purchase->created_at = time();
             $purchase->created_by = $user_id;
@@ -101,19 +116,55 @@ class PurchasesReturnController extends Controller
                 //update stock info
                 RawStock::where(['material_id' => $item['material_id'], 'year' => $year, 'stock_type' => $balance_type])->decrement('quantity', $item['quantity'], ['updated_at' => $time, 'updated_by' => $user_id]);
             }
+
+            if ($inputs['transportation_cost'] > 0) {
+                // Update Workspace Ledger
+                $workspace = WorkspaceLedger::where(['account_code' => 29997, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
+                $workspace->balance += $inputs['transportation_cost'];
+                $workspace->updated_by = $user_id;
+                $workspace->updated_at = $time;
+                $workspace->save();
+
+                $workspace = WorkspaceLedger::where(['account_code' => 11000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
+                $workspace->balance -= $inputs['transportation_cost'];
+                $workspace->updated_by = $user_id;
+                $workspace->updated_at = $time;
+                $workspace->save();
+
+                //Insert data into General Journal
+                $journal = new GeneralJournal();
+                $journal->date = strtotime($request->input('purchase_return_date'));
+                $journal->transaction_type = $transaction_type;
+                $journal->reference_id = $purchase_return_id;
+                $journal->year = $year;
+                $journal->account_code = 11000;
+                $journal->workspace_id = $workspace_id;
+                $journal->amount = $inputs['transportation_cost'];
+                $journal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
+                $journal->created_by = $user_id;
+                $journal->created_at = $time;
+                $journal->save();
+
+                $journal = new GeneralJournal();
+                $journal->date = strtotime($request->input('purchase_return_date'));
+                $journal->transaction_type = $transaction_type;
+                $journal->reference_id = $purchase_return_id;
+                $journal->year = $year;
+                $journal->account_code = 29997; //purchase return transportation cost
+                $journal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
+                $journal->workspace_id = $workspace_id;
+                $journal->amount = $inputs['transportation_cost'];
+                $journal->created_by = $user_id;
+                $journal->created_at = $time;
+                $journal->save();
+            }
+
             //general journal entry
             if ($inputs['return_type'] == 1)//For Cash
             {
                 // Update Workspace Ledger
                 WorkspaceLedger::where(['account_code' => 11000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])
                     ->increment('balance', $inputs['total'], ['updated_at' => $time, 'updated_by' => $user_id]);
-//                $workspace = WorkspaceLedger::where(['account_code' => 11000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-//
-//                $workspace->balance += $inputs['total']; //add Cash
-//
-//                $workspace->updated_by = $user_id;
-//                $workspace->updated_at = $time;
-//                $workspace->save();
 
                 $workspace = WorkspaceLedger::where(['account_code' => 26000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
                 $workspace->balance += $inputs['total']; //Add Purchase Return
@@ -201,7 +252,7 @@ class PurchasesReturnController extends Controller
             {
                 // Update Workspace Ledger
                 $workspace = WorkspaceLedger::where(['account_code' => 12000, 'workspace_id' => $workspace_id, 'balance_type' => $balance_type, 'year' => $year])->first();
-                $workspace->balance += $inputs['total']; //Account Receiveable
+                $workspace->balance += $inputs['total']; //Account Receivable
                 $workspace->updated_by = $user_id;
                 $workspace->updated_at = $time;
                 $workspace->save();

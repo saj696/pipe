@@ -130,8 +130,7 @@ class AjaxController extends Controller
         $slice = $request->input('slice');
         $person_id = $request->input('person_id');
 
-        if($type == Config::get('common.person_type_employee'))
-        {
+        if ($type == Config::get('common.person_type_employee')) {
             $personal = PersonalAccount::where(['person_type' => $type, 'person_id' => $person_id])->first();
 
             $dueSalary = DB::table('salaries')
@@ -139,17 +138,15 @@ class AjaxController extends Controller
                 ->where('employee_id', $person_id)
                 ->first();
 
-            $sumDueSalary = $dueSalary->sum_net_due+$dueSalary->sum_over_time_due+$dueSalary->sum_bonus_due;
-            $employeeAmount = $personal->balance+$personal->overtime_balance+$personal->bonus_balance-$sumDueSalary;
+            $sumDueSalary = $dueSalary->sum_net_due + $dueSalary->sum_over_time_due + $dueSalary->sum_bonus_due;
+            $employeeAmount = $personal->balance + $personal->overtime_balance + $personal->bonus_balance - $sumDueSalary;
 
             if ($slice == 1) {
                 return response()->json(isset($personal->due) ? $personal->due : 0);
             } elseif ($slice == 4) {
                 return response()->json(isset($employeeAmount) ? $employeeAmount : 0);
             }
-        }
-        else
-        {
+        } else {
             $personal = PersonalAccount::where(['person_type' => $type, 'person_id' => $person_id])->first();
             if ($slice == 1) {
                 return response()->json(isset($personal->due) ? $personal->due : 0);
@@ -266,8 +263,7 @@ class AjaxController extends Controller
         $code = $request->input('code');
         $person_id = $request->input('person_id');
 
-        if($code==12200)
-        {
+        if ($code == 12200) {
             $salesOrder = DB::table('sales_order')
                 ->where(['customer_type' => $type, 'customer_id' => $person_id])
                 ->select(DB::raw('SUM(total) as sum_total'), DB::raw('SUM(transport_cost) as sum_transport_cost'), DB::raw('SUM(labour_cost) as sum_labour_cost'), DB::raw('SUM(paid) as sum_paid'))
@@ -281,24 +277,79 @@ class AjaxController extends Controller
                 ->select(DB::raw('SUM(due_paid) as sum_due_paid'), DB::raw('SUM(replacement) as sum_replacement'))
                 ->first();
             $payments = DB::table('payments')
-                ->where(['from_whom_type' => $type, 'from_whom' => $person_id, 'account_code'=>12200])
+                ->where(['from_whom_type' => $type, 'from_whom' => $person_id, 'account_code' => 12200])
                 ->select(DB::raw('SUM(amount) as sum_amount'))
                 ->first();
 
             $amount = $salesOrder->sum_total + $salesOrder->sum_transport_cost + $salesOrder->sum_labour_cost + $defect->sum_replacement - $salesOrder->sum_paid - $salesReturn->sum_due_paid - $defect->sum_due_paid - $payments->sum_amount;
             return response()->json(isset($amount) ? $amount : 0);
-        }
-        elseif($code==12300)
-        {
+        } elseif ($code == 12300) {
             $discarded = DB::table('discarded_sales')
                 ->where(['customer_type' => $type, 'customer_id' => $person_id])
                 ->select(DB::raw('SUM(due_amount) as sum_due_amount'))
                 ->first();
             $payments = DB::table('payments')
-                ->where(['from_whom_type' => $type, 'from_whom' => $person_id, 'account_code'=>12300])
+                ->where(['from_whom_type' => $type, 'from_whom' => $person_id, 'account_code' => 12300])
                 ->select(DB::raw('SUM(amount) as sum_amount'))
                 ->first();
             $amount = $discarded->sum_due_amount - $payments->sum_amount;
+            return response()->json(isset($amount) ? $amount : 0);
+        } elseif ($code == 26000) {
+            $purchase = DB::table('purchases')
+                ->where(['supplier_id' => $person_id])
+                ->select(DB::raw('SUM(total) as sum_total'), DB::raw('SUM(paid) as sum_paid'))
+                ->first();
+            $purchaseReturn = DB::table('purchases_return')
+                ->where(['supplier_id' => $person_id])
+                ->select(DB::raw('SUM(total_amount) as sum_total_amount'), DB::raw('SUM(due) as sum_due'), DB::raw('SUM(due_paid) as sum_due_paid'))
+                ->first();
+        }
+    }
+
+    public function getMakePaymentAmount(Request $request)
+    {
+        $type = $request->input('type');
+        $code = $request->input('code');
+        $person_id = $request->input('person_id');
+
+        if ($code == 32000) {
+            $salesOrder = DB::table('sales_order')
+                ->where(['customer_type' => $type, 'customer_id' => $person_id])
+                ->select(DB::raw('SUM(total) as sum_total'), DB::raw('SUM(transport_cost) as sum_transport_cost'), DB::raw('SUM(labour_cost) as sum_labour_cost'), DB::raw('SUM(paid) as sum_paid'))
+                ->first();
+            $salesReturn = DB::table('sales_return')
+                ->where(['customer_type' => $type, 'customer_id' => $person_id])
+                ->select(DB::raw('SUM(total_amount) as sum_total_amount'), DB::raw('SUM(due_paid) as sum_due_paid'))
+                ->first();
+            $defect = DB::table('defects')
+                ->where(['customer_type' => $type, 'customer_id' => $person_id])
+                ->select(DB::raw('SUM(cash) as sum_cash'), DB::raw('SUM(replacement) as sum_replacement'), DB::raw('SUM(total) as sum_total'))
+                ->first();
+            $salesReturnPayments = DB::table('payments')
+                ->where(['from_whom_type' => $type, 'from_whom' => $person_id, 'account_code' => 32000])
+                ->select(DB::raw('SUM(amount) as sum_amount'))
+                ->first();
+            $salesReceivablePayments = DB::table('payments')
+                ->where(['from_whom_type' => $type, 'from_whom' => $person_id, 'account_code' => 12200])
+                ->select(DB::raw('SUM(amount) as sum_amount'))
+                ->first();
+
+            $paidValue = $salesOrder->sum_total + $salesOrder->sum_transport_cost + $salesOrder->sum_labour_cost + $defect->sum_replacement + $defect->sum_cash + $salesReturnPayments->sum_amount + $salesReturn->sum_total_amount - $salesReturn->sum_due_paid;
+            $receivedValue = $salesOrder->sum_paid + $salesReturn->sum_total_amount + $defect->sum_total + $salesReceivablePayments->sum_amount;
+            $amount = $receivedValue - $paidValue;
+            return response()->json($amount > 0 ? $amount : 0);
+        } else {
+            $recorder = DB::table('transaction_recorders')
+                ->where(['from_whom_type' => $type, 'from_whom' => $person_id, 'account_code' => $code])
+                ->select(DB::raw('SUM(total_amount) as sum_total_amount'), DB::raw('SUM(amount) as sum_amount'))
+                ->first();
+
+            $payments = DB::table('payments')
+                ->where(['from_whom_type' => $type, 'from_whom' => $person_id, 'account_code' => $code])
+                ->select(DB::raw('SUM(amount) as sum_amount'))
+                ->first();
+
+            $amount = $recorder->sum_total_amount - $recorder->sum_amount - $payments->sum_amount;
             return response()->json(isset($amount) ? $amount : 0);
         }
     }

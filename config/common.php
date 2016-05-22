@@ -30,7 +30,7 @@ return [
     'balance_type_opening'=>0,
     'balance_type_intermediate'=>1,
     'balance_type_closing'=>2,
-    'transaction_type'=> ['general'=>1,'sales'=>2,'sales_return'=>3,'purchase'=>4,'purchase_return'=>5,'wage'=>6, 'personal'=>7, 'draw'=>8, 'investment'=>9, 'office_supply'=>10,'salary'=>11,'salary_payment'=>12,'cash_transfer'=>13, 'jakat'=>14, 'donation'=>15, 'cash_adjustment'=>16, 'discarded_sale'=>17, 'wage_payment' => 18, 'defect_receive' => 19, 'bank_deposit'=>20, 'bank_withdraw'=>21, 'bank_interest'=>22, 'bank_charge'=>23,'sales_due'=>24,'defect_sales_due'=>25,'purchase_due'=>26],
+    'transaction_type'=> ['general'=>1,'sales'=>2,'sales_return'=>3,'purchase'=>4,'purchase_return'=>5,'wage'=>6, 'personal'=>7, 'draw'=>8, 'investment'=>9, 'office_supply'=>10,'salary'=>11,'salary_payment'=>12,'cash_transfer'=>13, 'jakat'=>14, 'donation'=>15, 'cash_adjustment'=>16, 'discarded_sale'=>17, 'wage_payment' => 18, 'defect_receive' => 19, 'bank_deposit'=>20, 'bank_withdraw'=>21, 'bank_interest'=>22, 'bank_charge'=>23,'sales_due'=>24,'defect_sales_due'=>25,'purchase_due'=>26, 'payment'=>27],
     'debit_credit_indicator'=>['debit'=>1,'credit'=>2],
     'month' => [
         'January' => '01',
@@ -61,6 +61,7 @@ return [
     'sales_order_type' => ['sales'=>1,'replacement'=>2],
     'cash_adjustment_type' => ['Invisible Expense' => 29994, 'Invisible Income' => 37000],
     'debtor_creditor_type' => [1 => 'Debtors', 2 => 'Creditors'],
+    'transaction_statement_type' => [2 => 'Supplier', 3 => 'Customer'],
     'account_type'=>[1=>'Current',2=>'Savings'],
     'bank_transaction_type'=>[1=>'Deposit',2=>'Withdraw',3=>'Interest', 4=>'Charge'],
 ];

@@ -114,6 +114,8 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('cash_flow_report',array('as'=>'ajax.cash_flow_report', 'uses'=>'Report\DailyCashFlowReportController@getReport'));
     Route::get('debtors_creditors_report', 'Report\DebtorsCreditorsReportController@index');
     Route::post('debtors_creditors_report',array('as'=>'ajax.debtors_creditors_report', 'uses'=>'Report\DebtorsCreditorsReportController@getReport'));
+    Route::get('transaction_statements_report', 'Report\TransactionStatementsReportController@index');
+    Route::post('transaction_statements_report',array('as'=>'ajax.transaction_statements_report', 'uses'=>'Report\TransactionStatementsReportController@getReport'));
 });
 
 Route::post('module_select', array('as' => 'ajax.module_select', 'uses' => 'AjaxController@getModules'));
@@ -127,6 +129,7 @@ Route::post('get_personal_account_balance', array('as' => 'ajax.get_personal_acc
 
 Route::post('transaction_recorder_amount', array('as' => 'ajax.transaction_recorder_amount', 'uses' => 'AjaxController@getTransactionRecorderAmount'));
 Route::post('receive_payment_amount', array('as' => 'ajax.receive_payment_amount', 'uses' => 'AjaxController@getReceivePaymentAmount'));
+Route::post('make_payment_amount', array('as' => 'ajax.make_payment_amount', 'uses' => 'AjaxController@getMakePaymentAmount'));
 
 Route::controllers([
     'auth' => 'Auth\AuthController',

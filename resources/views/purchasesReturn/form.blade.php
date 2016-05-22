@@ -336,7 +336,7 @@ $old_items = isset($purchase) ? $purchase['purchaseDetails'] : false;
             if (parseFloat($(this).html()))
                 total += parseFloat($(this).html());
         });
-        total += parseFloat($('#transportation_cost').val());
+
         if (total)
             $('#total_amount').val(total.toFixed(2));
         /*$('#total_amount').css('background', '#F7F779');

@@ -37,36 +37,7 @@
 </div>
 
 <div class="to_whom_div">
-    @if(isset($recorder->to_whom_type) && $recorder->to_whom_type>0)
-        @if($recorder->to_whom_type==1)
-            <?php
-            $to_whom_data = $customers;
-            $label = 'Customer';
-            ?>
-        @elseif($recorder->to_whom_type==2)
-            <?php
-            $to_whom_data = $suppliers;
-            $label = 'Supplier';
-            ?>
-        @elseif($recorder->to_whom_type==3)
-            <?php
-            $to_whom_data = $employees;
-            $label = 'Employee';
-            ?>
-        @elseif($recorder->to_whom_type==4)
-            <?php
-            $to_whom_data = $providers;
-            $label = 'Service Provider';
-            ?>
-        @endif
 
-        <div class="form-group">
-            {{ Form::label('to_whom', $label, ['class'=>'col-md-3 control-label']) }}
-            <div class="col-md-7">
-                {{ Form::select('to_whom', $to_whom_data, null,['class'=>'form-control employee_customer_supplier select2me','placeholder'=>'Select']) }}
-            </div>
-        </div>
-    @endif
 </div>
 
 <div class="total_amount_div form-group">
@@ -97,6 +68,13 @@
     {{ Form::label('due', 'Due', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7">
         {{ Form::text('due', null,['class'=>'form-control due']) }}
+    </div>
+</div>
+
+<div class="form-group due_div">
+    {{ Form::label('voucher_no', 'Voucher No.', ['class'=>'col-md-3 control-label']) }}
+    <div class="col-md-7">
+        {{ Form::text('voucher_no', null,['class'=>'form-control']) }}
     </div>
 </div>
 
@@ -202,7 +180,7 @@
             if ($(this).val() > 0 && code.length > 1) {
                 $('.total_amount').val('');
                 $.ajax({
-                    url: '{{ route('ajax.receive_payment_amount') }}',
+                    url: '{{ route('ajax.make_payment_amount') }}',
                     type: 'POST',
                     dataType: "JSON",
                     data: {type: type, code: code, person_id: person_id},
@@ -217,11 +195,7 @@
         });
 
         $("form").submit(function( event ) {
-            if($('#to_whom').val()>0)
-            {
-
-            }
-            else
+            if(!($('#to_whom').val()>0))
             {
                 alert("Please select a person!");
                 event.preventDefault();

@@ -78,6 +78,7 @@ class SalesOrderController extends Controller
                 $salesOrder->customer_id = $inputs['customer_id'];
                 $salesOrder->customer_type = $inputs['customer_type'];
                 $salesOrder->total = $inputs['total'] - $inputs['discount'];
+                $salesOrder->date = $inputs['date'];
                 $salesOrder->discount = $inputs['discount'];
                 $salesOrder->transport_cost = $inputs['transport_cost'];
                 $salesOrder->labour_cost = $inputs['labour_cost'];
@@ -259,6 +260,7 @@ class SalesOrderController extends Controller
                 }
             });
         } catch (\Exception $e) {
+            dd($e);
             Session()->flash('error_message', 'Sales Order not created!');
             return Redirect::back();
         }

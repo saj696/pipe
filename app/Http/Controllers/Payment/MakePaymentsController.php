@@ -10,6 +10,7 @@ use App\Models\ChartOfAccount;
 use App\Models\GeneralJournal;
 use App\Models\PersonalAccount;
 use App\Models\Payment;
+use App\Models\TransactionRecorder;
 use App\Models\WorkspaceLedger;
 use DB;
 use Illuminate\Support\Facades\Auth;
@@ -34,7 +35,7 @@ class MakePaymentsController extends Controller
 
     public function create()
     {
-        $accounts = ChartOfAccount::where('account_type', 1)->where('code','like', '2%')->lists('name', 'code');
+        $accounts = ChartOfAccount::where('account_type', 1)->where('code','like', '2%')->orWhere('code', '32000')->lists('name', 'code');
         $types = Config::get('common.transaction_customer_type');
         $years = CommonHelper::get_years();
         return view('makePayment.create', compact('accounts', 'types', 'years'));
@@ -57,6 +58,7 @@ class MakePaymentsController extends Controller
                 $payment->year = $currentYear;
                 $payment->workspace_id = Auth::user()->workspace_id;
                 $payment->account_code = $request->account_code;
+                $payment->voucher_no = $request->voucher_no;
                 $payment->created_by = Auth::user()->id;
                 $payment->created_at = time();
                 $payment->save();
@@ -65,42 +67,37 @@ class MakePaymentsController extends Controller
 
                 $workspace_id = Auth::user()->workspace_id;
                 $cashCode = 11000;
-                $accountReceivableCode = 12000;
+                $accountPayableCode = 41000;
+                $transaction_type = Config::get('common.transaction_type.payment');
 
-                if($request->account_code==12200):
-                    $transaction_type = Config::get('common.transaction_type.sales_due');
-                elseif($request->account_code==12300):
-                    $transaction_type = Config::get('common.transaction_type.defect_sales_due');
-                endif;
-
-                // Workspace Ledger Account Receivable Credit(-)
-                $accountReceivableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => $accountReceivableCode, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear])->first();
+                // Workspace Ledger Account Payable Debit(-)
+                $accountReceivableWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => $accountPayableCode, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear])->first();
                 $accountReceivableWorkspaceData->balance -= $request->amount;
                 $accountReceivableWorkspaceData->update();
-                // Workspace Ledger Cash Debit(+)
+                // Workspace Ledger Cash Credit(-)
                 $cashWorkspaceData = WorkspaceLedger::where(['workspace_id' => $workspace_id, 'account_code' => $cashCode, 'balance_type' => Config::get('common.balance_type_intermediate'), 'year' => $currentYear])->first();
                 $cashWorkspaceData->balance += $request->amount;
                 $cashWorkspaceData->update();
-                // Personal Account Due(-)
+                // Personal Account balance(-)
                 $person_type = $request->to_whom_type;
                 $person_id = $request->to_whom;
                 $personData = PersonalAccount::where(['person_id' => $person_id, 'person_type' => $person_type])->first();
-                $personData->due -= $request->amount;
+                $personData->balance -= $request->amount;
                 $personData->update();
-                // General Journals Account Receivable Credit
+                // General Journals Account Payable Debit
                 $generalJournal = New GeneralJournal;
                 $generalJournal->date = strtotime($request->date);
                 $generalJournal->transaction_type = $transaction_type;
                 $generalJournal->reference_id = $payment->id;
                 $generalJournal->year = $currentYear;
-                $generalJournal->account_code = $accountReceivableCode;
+                $generalJournal->account_code = $accountPayableCode;
                 $generalJournal->workspace_id = $workspace_id;
                 $generalJournal->amount = $request->amount;
-                $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
+                $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
                 $generalJournal->created_by = Auth::user()->id;
                 $generalJournal->created_at = time();
                 $generalJournal->save();
-                // General Journals Cash Debit
+                // General Journals Cash Credit
                 $generalJournal = New GeneralJournal;
                 $generalJournal->date = strtotime($request->date);
                 $generalJournal->transaction_type = $transaction_type;
@@ -109,18 +106,18 @@ class MakePaymentsController extends Controller
                 $generalJournal->account_code = $cashCode;
                 $generalJournal->workspace_id = $workspace_id;
                 $generalJournal->amount = $request->amount;
-                $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.debit');
+                $generalJournal->dr_cr_indicator = Config::get('common.debit_credit_indicator.credit');
                 $generalJournal->created_by = Auth::user()->id;
                 $generalJournal->created_at = time();
                 $generalJournal->save();
             });
         } catch (\Exception $e) {
             //dd($e);
-            Session()->flash('error_message', 'Payment Creation Failed.');
+            Session()->flash('error_message', 'Payment Creation Failed!');
             return redirect('make_payments');
         }
 
-        Session()->flash('flash_message', 'Payment done Successfully.');
+        Session()->flash('flash_message', 'Payment Done Successfully!');
         return redirect('make_payments');
     }
 

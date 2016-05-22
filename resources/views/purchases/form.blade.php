@@ -25,7 +25,7 @@
 <div class="form-group" style="margin-bottom: 40px">
     {{ Form::label('transportation_cost', 'Transportation Cost', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('transportation_cost') ? ' has-error' : '' }}">
-        {{ Form::text('transportation_cost', 0,['class'=>'form-control']) }}
+        {{ Form::text('transportation_cost', null,['class'=>'form-control']) }}
         @if ($errors->has('transportation_cost'))
             <span class="help-block">
                 <strong>{{ $errors->first('transportation_cost') }}</strong>
@@ -222,7 +222,7 @@ $old_items = isset($purchase) ? $purchase['purchaseDetails'] : false;
                             if (parseFloat($(this).html()))
                                 total += parseFloat($(this).html());
                         });
-                        total += parseFloat($('#transportation_cost').val());
+
                         if (total)
                             $('#total_amount').val(total);
                         $('#total_amount').css('background', '#F7F779');

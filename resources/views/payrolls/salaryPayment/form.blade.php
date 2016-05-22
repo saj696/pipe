@@ -15,7 +15,6 @@
 <div class="form-group">
     <div class="col-md-offset-4 col-md-4">
         {{ Form::text('', null,['class'=>'form-control','placeholder'=>'Search Employee','id'=>'employee']) }}
-
     </div>
 </div>
 

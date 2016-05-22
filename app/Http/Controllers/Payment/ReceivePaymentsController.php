@@ -26,15 +26,15 @@ class ReceivePaymentsController extends Controller
 
     public function index()
     {
-        $payments = Payment::where('account_code', 'like', '12%')->paginate(Config::get('common.pagination'));
-        $accounts = ChartOfAccount::where('account_type', 3)->where('code','like', '12%')->lists('name', 'code');
+        $payments = Payment::where('account_code', 'like', '12%')->orWhere('account_code', 26000)->paginate(Config::get('common.pagination'));
+        $accounts = ChartOfAccount::where('account_type', 3)->lists('name', 'code');
         $status = Config::get('common.status');
         return view('receivePayment.index', compact('payments', 'status', 'accounts'));
     }
 
     public function create()
     {
-        $accounts = ChartOfAccount::where('account_type', 3)->where('code','like', '12%')->lists('name', 'code');
+        $accounts = ChartOfAccount::where('account_type', 3)->lists('name', 'code');
         $types = Config::get('common.transaction_customer_type');
         $years = CommonHelper::get_years();
         return view('receivePayment.create', compact('accounts', 'types', 'years'));
@@ -57,6 +57,7 @@ class ReceivePaymentsController extends Controller
                 $payment->year = $currentYear;
                 $payment->workspace_id = Auth::user()->workspace_id;
                 $payment->account_code = $request->account_code;
+                $payment->voucher_no = $request->voucher_no;
                 $payment->created_by = Auth::user()->id;
                 $payment->created_at = time();
                 $payment->save();

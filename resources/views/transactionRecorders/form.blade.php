@@ -462,11 +462,7 @@
 
             if ((slice == 1 || slice == 2 || slice == 3) && code!=29930 && code!=29960 && code!=29940)
             {
-                if($('#from_whom').val()>0)
-                {
-
-                }
-                else
+                if(!($('#from_whom').val()>0))
                 {
                     alert("From whom required!");
                     event.preventDefault();
@@ -474,11 +470,7 @@
             }
             else if (slice == 4)
             {
-                if($('#to_whom').val()>0)
-                {
-
-                }
-                else
+                if(!($('#to_whom').val()>0))
                 {
                     alert("To whom required!");
                     event.preventDefault();

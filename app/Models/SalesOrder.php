@@ -18,4 +18,14 @@ class SalesOrder extends Model
     {
         return $this->belongsTo('App\Models\Workspace', 'workspace_id');
     }
+
+    public function getDateAttribute($value)
+    {
+        return date('d-m-Y', $value);
+    }
+
+    public function setDateAttribute($value)
+    {
+        $this->attributes['date'] = strtotime($value);
+    }
 }

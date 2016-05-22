@@ -56,6 +56,18 @@
 </div>
 
 <div class="form-group">
+    {{ Form::label('date', 'Date', ['class'=>'col-md-3 control-label']) }}
+    <div class="col-md-7{{ $errors->has('total') ? ' has-error' : '' }}">
+        {{ Form::text('date', null,['class'=>'form-control datepicker','id'=>'date']) }}
+        @if ($errors->has('date'))
+            <span class="help-block">
+                <strong>{{ $errors->first('date') }}</strong>
+            </span>
+        @endif
+    </div>
+</div>
+
+<div class="form-group">
     {{ Form::label('total', 'Total Amount', ['class'=>'col-md-3 control-label']) }}
     <div class="col-md-7{{ $errors->has('total') ? ' has-error' : '' }}">
         {{ Form::text('total', null,['class'=>'form-control','readonly']) }}
@@ -66,7 +78,6 @@
         @endif
     </div>
 </div>
-
 
 <div class="form-group">
     {{ Form::label('discount', 'Discount', ['class'=>'col-md-3 control-label']) }}
@@ -172,6 +183,10 @@
 </div>
 
 <script>
+    $(function () {
+        $("#date").datepicker({maxDate: new Date});
+    });
+
     $(document).ready(function () {
         $(document).on('change', '#sales_customer_type', function () {
             var type = $(this).val();
